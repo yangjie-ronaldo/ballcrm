@@ -1,0 +1,7 @@
+server:
+  port: 8080
+#日志级别
+logging:
+  level:
+    # 打开mybatis的sql debug
+    org.nothink.ballcrm.mapper: debug
