@@ -7,6 +7,10 @@ spring:
   profiles:
     #指定激活哪个环境
     active: dev
+  #日期格式化
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 
 #Mybatis相关配置
 mybatis:

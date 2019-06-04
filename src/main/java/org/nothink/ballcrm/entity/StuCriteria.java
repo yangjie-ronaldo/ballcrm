@@ -157,7 +157,20 @@ public class StuCriteria extends PagedCriteria {
     public String toString() {
         return "StuCriteria{" +
                 "sid=" + sid +
+                ", createDate=" + createDate +
                 ", name='" + name + '\'' +
+                ", nikiName='" + nikiName + '\'' +
+                ", birthday=" + birthday +
+                ", sex='" + sex + '\'' +
+                ", tel='" + tel + '\'' +
+                ", status='" + status + '\'' +
+                ", verifyStatus='" + verifyStatus + '\'' +
+                ", channel='" + channel + '\'' +
+                ", channelNote='" + channelNote + '\'' +
+                ", type='" + type + '\'' +
+                ", wechat='" + wechat + '\'' +
+                ", cc=" + cc +
+                ", node=" + node +
                 '}';
     }
 }

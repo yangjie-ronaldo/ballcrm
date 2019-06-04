@@ -1,8 +1,9 @@
 package org.nothink.ballcrm.config;
 
-import org.nothink.ballcrm.interceptor.LoginInterceptor;
+import org.nothink.ballcrm.component.DateConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -27,8 +28,8 @@ public class SpringMVCConfig implements WebMvcConfigurer {
     }
 
     //添加SpringMVC的拦截器
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
 //        registry.addInterceptor(new LoginInterceptor())
 //                // 拦截所有请求 /**
 //                .addPathPatterns("/**")
@@ -36,12 +37,18 @@ public class SpringMVCConfig implements WebMvcConfigurer {
 //                .excludePathPatterns("/", "/pages/login", "/action/login",
 //                        // 排除静态资源请求 这些目录下的静态资源可以直接访问
 //                        "/css/**", "/js/**", "/img/**");
-//    }
+    }
 
     //添加静态文件路径到绝对路径的映射
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler(staticAccessPath).addResourceLocations("file:" + uploadFolder);
 
+    }
+
+    //添加转换器
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverter(new DateConverter());
     }
 }

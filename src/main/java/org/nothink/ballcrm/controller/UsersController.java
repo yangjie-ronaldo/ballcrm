@@ -26,7 +26,7 @@ public class UsersController {
     /**
      * 按学员编号查询某个学员
      * @param sid
-     * @return StuEntity
+     * @return s
      */
     @GetMapping("/stu/{sid}")
     @ResponseBody
@@ -36,7 +36,11 @@ public class UsersController {
         return s;
     }
 
-    // 查询所有学员(有条件查询、分页)
+    /**
+     * 查询所有学员(有条件查询、分页)
+     * @param c
+     * @return out
+     */
     @GetMapping("/stu")
     @ResponseBody
     public PagedResult<StuEntity> getAll(StuCriteria c){
@@ -45,8 +49,12 @@ public class UsersController {
         return out;
     }
 
-    // 测试插入学员
-    @GetMapping("/addStu")
+    /**
+     * 新增学员
+     * @param c
+     * @return
+     */
+    @PostMapping("/stu")
     @ResponseBody
     public int insertStu(StuCriteria c){
         System.out.println(c);
