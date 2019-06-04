@@ -1,7 +1,39 @@
 server:
-  port: 8080
+  port: 8888
 #日志级别
 logging:
   level:
     # 打开mybatis的sql debug
     org.nothink.ballcrm.mapper: debug
+
+spring:
+#配置数据源
+  datasource:
+    username: root
+    password: 123456
+    #mysql8 以上后面要指定时区
+    url: jdbc:mysql://127.0.0.1:3306/ballcrm?useUnicode=true&characterEncoding=utf8
+    #mysql8 以上要用新的驱动类
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    #driver-class-name: com.mysql.jdbc.Driver
+    #Druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    #数据源其他配置, DataSourceProperties中没有相关属性,默认无法绑定，定义了Druid配置类后注入
+    initialSize: 8
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+    #配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+    filters: stat,wall
+    maxPoolPreparedStatementPerConnectionSize: 25
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+  transaction:
+    rollback-on-commit-failure: true

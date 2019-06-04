@@ -1,7 +1,10 @@
 package org.nothink.ballcrm.controller;
 
-import org.nothink.ballcrm.entity.PageBean;
-import org.nothink.ballcrm.entity.ResponseMsg;
+import org.nothink.ballcrm.entity.PagedResult;
+import org.nothink.ballcrm.entity.StuCriteria;
+import org.nothink.ballcrm.entity.StuEntity;
+import org.nothink.ballcrm.service.EmpInfoService;
+import org.nothink.ballcrm.service.StuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,23 +16,56 @@ import java.util.Map;
 
 @Controller
 public class UsersController {
-    // 日志对象
+
     Logger logger = LoggerFactory.getLogger(getClass());
+    @Autowired
+    EmpInfoService empInfoService;
+    @Autowired
+    StuService stuService;
+
+    /**
+     * 按学员编号查询某个学员
+     * @param sid
+     * @return StuEntity
+     */
+    @GetMapping("/stu/{sid}")
+    @ResponseBody
+    public StuEntity getStuById(@PathVariable(value = "sid") int sid){
+        StuEntity s=stuService.findById(sid);
+        logger.info(s==null?"查无学员信息":s.toString());
+        return s;
+    }
+
+    // 查询所有学员(有条件查询、分页)
+    @GetMapping("/stu")
+    @ResponseBody
+    public PagedResult<StuEntity> getAll(StuCriteria c){
+        System.out.println("查询的页数："+c.getCurrentPage()+" 每页条数："+c.getPageSize());
+        PagedResult<StuEntity> out=stuService.getAllByCriteria(c);
+        return out;
+    }
+
+    // 测试插入学员
+    @GetMapping("/addStu")
+    @ResponseBody
+    public int insertStu(StuCriteria c){
+        System.out.println(c);
+        return stuService.addOne(c);
+    }
 
 
+//下面是演示用登录------------------------------------------------------
 
     //登录页面
     @GetMapping({"/", "/pages/login"})
     public String gotoLogin() {
         return "login";
     }
-
     //首页页面
     @GetMapping("/pages/main")
     public String gotoMain() {
         return "main";
     }
-
     //登录处理
     @PostMapping("/action/login")
     public String doLogin(@RequestParam("username") String username,
@@ -48,7 +84,6 @@ public class UsersController {
             return "login";
         }
     }
-
     //退出登录处理
     @GetMapping("/action/logout")
     public String doLogout(HttpSession session) {
@@ -56,5 +91,4 @@ public class UsersController {
         session.invalidate();
         return "redirect:/";
     }
-
 }

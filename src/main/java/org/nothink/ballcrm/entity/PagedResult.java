@@ -2,7 +2,7 @@ package org.nothink.ballcrm.entity;
 
 import java.util.List;
 
-public class PageBean<T> {
+public class PagedResult<T> {
     // 当前页
     private Integer currentPage = 1;
     // 每页显示的总条数
@@ -18,11 +18,11 @@ public class PageBean<T> {
     // 分页结果
     private List<T> items;
 
-    public PageBean() {
+    public PagedResult() {
         super();
     }
 
-    public PageBean(Integer currentPage, Integer pageSize, Integer totalNum) {
+    public PagedResult(Integer currentPage, Integer pageSize, Integer totalNum) {
         super();
         this.currentPage = currentPage;
         this.pageSize = pageSize;

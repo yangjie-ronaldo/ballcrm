@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@MapperScan("org.nothink.jaycrm.mapper")
+@MapperScan("org.nothink.ballcrm.mapper")
 @EnableTransactionManagement
 @EnableAsync
 @EnableScheduling
