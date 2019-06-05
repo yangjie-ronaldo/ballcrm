@@ -3,164 +3,241 @@ package org.nothink.ballcrm.entity;
 import java.util.Date;
 
 public class StuEntity {
-  private Integer sid;
 
-  private Date createDate;
+    private Integer sid;
 
-  private String name;
+    private Date createDate;
 
-  private String nikiName;
+    private String name;
 
-  private Date birthday;
+    private String nikiName;
 
-  private String sex;
+    private Date birthday;
 
-  private String tel;
+    private String sex;
 
-  private String status;
+    private String sexDef;
 
-  private String verifyStatus;
+    private String tel;
 
-  private String channel;
+    private String status;
 
-  private String channelNote;
+    private String statusDef;
 
-  private String type;
+    private String verifyStatus;
 
-  private String wechat;
+    private String verifyStatusDef;
 
-  private Integer cc;
+    private String channel;
 
-  private Integer node;
+    private String channelNote;
 
-  public Integer getSid() {
-    return sid;
-  }
+    private String type;
+    private String typeDef;
 
-  public void setSid(Integer sid) {
-    this.sid = sid;
-  }
+    private String wechat;
 
-  public Date getCreateDate() {
-    return createDate;
-  }
+    private Integer cc;
+    private Integer ccName;
 
-  public void setCreateDate(Date createDate) {
-    this.createDate = createDate;
-  }
 
-  public String getName() {
-    return name;
-  }
+    private Integer node;
+    private Integer nodeName;
 
-  public void setName(String name) {
-    this.name = name == null ? null : name.trim();
-  }
 
-  public String getNikiName() {
-    return nikiName;
-  }
+    public Integer getSid() {
+        return sid;
+    }
 
-  public void setNikiName(String nikiName) {
-    this.nikiName = nikiName == null ? null : nikiName.trim();
-  }
+    public void setSid(Integer sid) {
+        this.sid = sid;
+    }
 
-  public Date getBirthday() {
-    return birthday;
-  }
+    public Date getCreateDate() {
+        return createDate;
+    }
 
-  public void setBirthday(Date birthday) {
-    this.birthday = birthday;
-  }
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
 
-  public String getSex() {
-    return sex;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setSex(String sex) {
-    this.sex = sex == null ? null : sex.trim();
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String getTel() {
-    return tel;
-  }
+    public String getNikiName() {
+        return nikiName;
+    }
 
-  public void setTel(String tel) {
-    this.tel = tel == null ? null : tel.trim();
-  }
+    public void setNikiName(String nikiName) {
+        this.nikiName = nikiName;
+    }
 
-  public String getStatus() {
-    return status;
-  }
+    public Date getBirthday() {
+        return birthday;
+    }
 
-  public void setStatus(String status) {
-    this.status = status == null ? null : status.trim();
-  }
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
 
-  public String getVerifyStatus() {
-    return verifyStatus;
-  }
+    public String getSex() {
+        return sex;
+    }
 
-  public void setVerifyStatus(String verifyStatus) {
-    this.verifyStatus = verifyStatus == null ? null : verifyStatus.trim();
-  }
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
 
-  public String getChannel() {
-    return channel;
-  }
+    public String getSexDef() {
+        return sexDef;
+    }
 
-  public void setChannel(String channel) {
-    this.channel = channel == null ? null : channel.trim();
-  }
+    public void setSexDef(String sexDef) {
+        this.sexDef = sexDef;
+    }
 
-  public String getChannelNote() {
-    return channelNote;
-  }
+    public String getTel() {
+        return tel;
+    }
 
-  public void setChannelNote(String channelNote) {
-    this.channelNote = channelNote == null ? null : channelNote.trim();
-  }
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
 
-  public String getType() {
-    return type;
-  }
+    public String getStatus() {
+        return status;
+    }
 
-  public void setType(String type) {
-    this.type = type == null ? null : type.trim();
-  }
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-  public String getWechat() {
-    return wechat;
-  }
+    public String getStatusDef() {
+        return statusDef;
+    }
 
-  public void setWechat(String wechat) {
-    this.wechat = wechat == null ? null : wechat.trim();
-  }
+    public void setStatusDef(String statusDef) {
+        this.statusDef = statusDef;
+    }
 
-  public Integer getCc() {
-    return cc;
-  }
+    public String getVerifyStatus() {
+        return verifyStatus;
+    }
 
-  public void setCc(Integer cc) {
-    this.cc = cc;
-  }
+    public void setVerifyStatus(String verifyStatus) {
+        this.verifyStatus = verifyStatus;
+    }
 
-  public Integer getNode() {
-    return node;
-  }
+    public String getVerifyStatusDef() {
+        return verifyStatusDef;
+    }
 
-  public void setNode(Integer node) {
-    this.node = node;
-  }
+    public void setVerifyStatusDef(String verifyStatusDef) {
+        this.verifyStatusDef = verifyStatusDef;
+    }
 
-  @Override
-  public String toString() {
-    return "StuEntity{" +
-            "sid=" + sid +
-            ", name='" + name + '\'' +
-            ", tel='" + tel + '\'' +
-            ", status='" + status + '\'' +
-            ", cc=" + cc +
-            '}';
-  }
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    public String getChannelNote() {
+        return channelNote;
+    }
+
+    public void setChannelNote(String channelNote) {
+        this.channelNote = channelNote;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTypeDef() {
+        return typeDef;
+    }
+
+    public void setTypeDef(String typeDef) {
+        this.typeDef = typeDef;
+    }
+
+    public String getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
+    }
+
+    public Integer getCc() {
+        return cc;
+    }
+
+    public void setCc(Integer cc) {
+        this.cc = cc;
+    }
+
+    public Integer getCcName() {
+        return ccName;
+    }
+
+    public void setCcName(Integer ccName) {
+        this.ccName = ccName;
+    }
+
+    public Integer getNode() {
+        return node;
+    }
+
+    public void setNode(Integer node) {
+        this.node = node;
+    }
+
+    public Integer getNodeName() {
+        return nodeName;
+    }
+
+    public void setNodeName(Integer nodeName) {
+        this.nodeName = nodeName;
+    }
+
+    @Override
+    public String toString() {
+        return "StuEntity{" +
+                "sid=" + sid +
+                ", createDate=" + createDate +
+                ", name='" + name + '\'' +
+
+                ", nikiName='" + nikiName + '\'' +
+                ", birthday=" + birthday +
+                ", sex='" + sex + '\'' +
+                ", sexDef='" + sexDef + '\'' +
+                ", tel='" + tel + '\'' +
+                ", status='" + status + '\'' +
+                ", statusDef='" + statusDef + '\'' +
+                ", verifyStatus='" + verifyStatus + '\'' +
+                ", verifyStatusDef='" + verifyStatusDef + '\'' +
+                ", channel='" + channel + '\'' +
+                ", channelNote='" + channelNote + '\'' +
+                ", type='" + type + '\'' +
+                ", typeDef='" + typeDef + '\'' +
+                ", wechat='" + wechat + '\'' +
+                ", cc=" + cc +
+                ", ccName=" + ccName +
+                ", node=" + node +
+                ", nodeName=" + nodeName +
+                '}';
+    }
 }

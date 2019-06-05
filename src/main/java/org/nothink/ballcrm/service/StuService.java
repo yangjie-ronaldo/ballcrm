@@ -15,10 +15,14 @@ import java.util.List;
 public class StuService {
     @Autowired
     StuMapper stuMapper;
+    @Autowired
+    CacheService cache;
 
     // 根据id查询学员
     public StuEntity findById(int sid){
         StuEntity s=stuMapper.findById(sid);
+        //翻译代码值
+        stuCodeTrans(s);
         return s;
     }
 
@@ -28,11 +32,23 @@ public class StuService {
         //执行查询
         List<StuEntity> list = stuMapper.getAll(c);
         PagedResult<StuEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());
+        //翻译代码值
+        if (list!=null)
+            for (StuEntity stu:list)
+                stuCodeTrans(stu);
         result.setItems(list);
         return result;
     }
 
+    // 新增学员
     public int addOne(StuCriteria c){
         return stuMapper.insert(c);
+    }
+
+    private void stuCodeTrans(StuEntity stu){
+        stu.setSexDef(cache.CodeDefCache().get(stu.getSex()));
+        stu.setTypeDef(cache.CodeDefCache().get(stu.getType()));
+        stu.setStatusDef(cache.CodeDefCache().get(stu.getStatus()));
+        stu.setVerifyStatusDef(cache.CodeDefCache().get(stu.getVerifyStatusDef()));
     }
 }

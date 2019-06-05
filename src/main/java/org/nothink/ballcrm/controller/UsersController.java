@@ -32,7 +32,7 @@ public class UsersController {
     @ResponseBody
     public StuEntity getStuById(@PathVariable(value = "sid") int sid){
         StuEntity s=stuService.findById(sid);
-        logger.info(s==null?"查无学员信息":s.toString());
+        logger.info(s==null?"查无学员信息":"查询单个学员："+s.toString());
         return s;
     }
 
@@ -44,7 +44,7 @@ public class UsersController {
     @GetMapping("/stu")
     @ResponseBody
     public PagedResult<StuEntity> getAll(StuCriteria c){
-        System.out.println("查询的页数："+c.getCurrentPage()+" 每页条数："+c.getPageSize());
+        logger.info("查询学员，页数："+c.getCurrentPage()+" 每页条数："+c.getPageSize());
         PagedResult<StuEntity> out=stuService.getAllByCriteria(c);
         return out;
     }
@@ -57,7 +57,7 @@ public class UsersController {
     @PostMapping("/stu")
     @ResponseBody
     public int insertStu(StuCriteria c){
-        System.out.println(c);
+        logger.info(c.toString());
         return stuService.addOne(c);
     }
 

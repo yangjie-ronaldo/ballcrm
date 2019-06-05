@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.nothink.ballcrm.mapper.CommonMapper" >
+
+  <select id="getCodeDef" resultType="org.nothink.ballcrm.entity.CodeDefEntity">
+  select * from code_def
+  </select>
+
+  <insert id="insert" parameterType="org.nothink.ballcrm.entity.CodeDefEntity" >
+  insert into code_def (code, category, definition)
+  values (#{code,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, #{definition,jdbcType=VARCHAR})
+  </insert>
+</mapper>
