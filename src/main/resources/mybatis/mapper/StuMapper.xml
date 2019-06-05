@@ -11,6 +11,8 @@
     <if test="status!=null and status!='' "> and status = #{status} </if>
     <if test="type!=null and type!='' "> and type = #{type} </if>
     <if test="verifyStatus!=null and verifyStatus!='' "> and verify_status = #{verifyStatus} </if>
+    <if test="cc!=null and cc!=''"> and cc = #{cc} </if>
+    <if test="node!=null and node!=''"> and node = #{node} </if>
   </select>
   <insert id="insertAndGetSid" useGeneratedKeys="true" keyProperty="sid"  parameterType="org.nothink.ballcrm.entity.StuCriteria" >
     insert into stu (create_date, name,
