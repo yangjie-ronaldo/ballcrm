@@ -65,7 +65,7 @@ public class StuController {
         int i=stuService.addOne(c);
         if (i<=0){
             out.setMsg("新增不成功");
-            out.setCode("300");
+            out.setCode(30001);
         }
         return out;
     }

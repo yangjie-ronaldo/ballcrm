@@ -1,7 +1,7 @@
 package org.nothink.ballcrm.entity;
 
 public class ResponseMsg {
-    private String code;
+    private int code;
     private String msg;
     private Object data;
 
@@ -9,7 +9,7 @@ public class ResponseMsg {
         super();
     }
 
-    public ResponseMsg(String code, String msg, Object data) {
+    public ResponseMsg(int code, String msg, Object data) {
         super();
         this.code = code;
         this.msg = msg;
@@ -18,7 +18,7 @@ public class ResponseMsg {
 
     public ResponseMsg(String status) {
         if ("ok".equals(status)) {
-            this.code = "20000";
+            this.code = 20000;
             this.msg = "操作成功";
         } else {
         }
@@ -29,11 +29,11 @@ public class ResponseMsg {
         return "ResponseMsg [code=" + code + ", msg=" + msg + ", data=" + data + "]";
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 

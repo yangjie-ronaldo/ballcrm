@@ -29,7 +29,7 @@ public class ContactPlanController {
         int r=planService.addNewPlan(plan);
         if (r<=0){
             out.setMsg("失败");
-            out.setCode("300");
+            out.setCode(30001);
         }
         return out;
     }
