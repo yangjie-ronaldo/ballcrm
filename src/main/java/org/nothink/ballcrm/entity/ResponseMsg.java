@@ -17,7 +17,7 @@ public class ResponseMsg {
     }
 
     public ResponseMsg(String status) {
-        if ("success".equals(status)) {
+        if ("ok".equals(status)) {
             this.code = "201";
             this.msg = "操作成功";
         } else {

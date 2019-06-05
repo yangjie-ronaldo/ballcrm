@@ -25,21 +25,22 @@ public class ContactPlanController {
     @PostMapping("/plan")
     @ResponseBody
     public ResponseMsg addPlan(ContactPlanEntity plan){
-        ResponseMsg out=new ResponseMsg();
+        ResponseMsg out=new ResponseMsg("ok");
         int r=planService.addNewPlan(plan);
-        if (r==0){
-            out.setMsg("添加失败");
-        } else {
-            out.setMsg("添加成功");
+        if (r<=0){
+            out.setMsg("失败");
+            out.setCode("300");
         }
         return out;
     }
 
     @GetMapping("plan")
     @ResponseBody
-    public PagedResult<ContactPlanEntity> getPlanList(PlanCriteria c){
+    public ResponseMsg getPlanList(PlanCriteria c){
+        ResponseMsg out=new ResponseMsg("ok");
         logger.info("查询联系计划，页数："+c.getCurrentPage()+" 每页条数："+c.getPageSize());
-        PagedResult<ContactPlanEntity> out=planService.getPlanList(c);
+        PagedResult<ContactPlanEntity> pagelist=planService.getPlanList(c);
+        out.setData(pagelist);
         return out;
     }
 }

@@ -1,9 +1,6 @@
 package org.nothink.ballcrm.controller;
 
-import org.nothink.ballcrm.entity.PagedResult;
-import org.nothink.ballcrm.entity.StuCriteria;
-import org.nothink.ballcrm.entity.StuEntity;
-import org.nothink.ballcrm.entity.StuStatusEntity;
+import org.nothink.ballcrm.entity.*;
 import org.nothink.ballcrm.service.EmpInfoService;
 import org.nothink.ballcrm.service.StuService;
 import org.slf4j.Logger;
@@ -32,10 +29,12 @@ public class StuController {
      */
     @GetMapping("/stu/{sid}")
     @ResponseBody
-    public StuEntity getStuById(@PathVariable(value = "sid") int sid){
+    public ResponseMsg getStuById(@PathVariable(value = "sid") int sid){
+        ResponseMsg out=new ResponseMsg("ok");
         StuEntity s=stuService.findById(sid);
         logger.info(s==null?"查无学员信息":"查询单个学员："+s.toString());
-        return s;
+        out.setData(s);
+        return out;
     }
 
     /**
@@ -45,9 +44,11 @@ public class StuController {
      */
     @GetMapping("/stu")
     @ResponseBody
-    public PagedResult<StuEntity> getAll(StuCriteria c){
+    public ResponseMsg getAll(StuCriteria c){
+        ResponseMsg out=new ResponseMsg("ok");
         logger.info("查询学员，页数："+c.getCurrentPage()+" 每页条数："+c.getPageSize());
-        PagedResult<StuEntity> out=stuService.getAllByCriteria(c);
+        PagedResult<StuEntity> pageout=stuService.getAllByCriteria(c);
+        out.setData(pageout);
         return out;
     }
 
@@ -58,9 +59,15 @@ public class StuController {
      */
     @PostMapping("/stu")
     @ResponseBody
-    public int insertStu(StuCriteria c){
+    public ResponseMsg insertStu(StuCriteria c){
+        ResponseMsg out=new ResponseMsg("ok");
         logger.info(c.toString());
-        return stuService.addOne(c);
+        int i=stuService.addOne(c);
+        if (i<=0){
+            out.setMsg("新增不成功");
+            out.setCode("300");
+        }
+        return out;
     }
 
     /**
@@ -69,9 +76,11 @@ public class StuController {
      */
     @GetMapping("/stustatus")
     @ResponseBody
-    public PagedResult<StuStatusEntity> getStuStatusHis(StuCriteria c){
+    public ResponseMsg getStuStatusHis(StuCriteria c){
+        ResponseMsg out=new ResponseMsg("ok");
         logger.info("查询状态历史，页数："+c.getCurrentPage()+" 每页条数："+c.getPageSize());
-        PagedResult<StuStatusEntity> out=stuService.getStuStatusList(c);
+        PagedResult<StuStatusEntity> pagelist=stuService.getStuStatusList(c);
+        out.setData(pagelist);
         return out;
     }
 
