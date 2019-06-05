@@ -38,11 +38,11 @@ public class StuEntity {
     private String wechat;
 
     private Integer cc;
-    private Integer ccName;
+    private String ccName;
 
 
     private Integer node;
-    private Integer nodeName;
+    private String nodeName;
 
 
     public Integer getSid() {
@@ -189,11 +189,11 @@ public class StuEntity {
         this.cc = cc;
     }
 
-    public Integer getCcName() {
+    public String getCcName() {
         return ccName;
     }
 
-    public void setCcName(Integer ccName) {
+    public void setCcName(String ccName) {
         this.ccName = ccName;
     }
 
@@ -205,11 +205,11 @@ public class StuEntity {
         this.node = node;
     }
 
-    public Integer getNodeName() {
+    public String getNodeName() {
         return nodeName;
     }
 
-    public void setNodeName(Integer nodeName) {
+    public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
     }
 

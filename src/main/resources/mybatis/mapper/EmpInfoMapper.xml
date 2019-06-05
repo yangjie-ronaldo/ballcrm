@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.nothink.ballcrm.mapper.EmpInfoMapper" >
+  <insert id="insert" parameterType="org.nothink.ballcrm.entity.EmpInfoEntity" >
+    insert into emp_info (name, loginid, pass, role)
+    values (#{name,jdbcType=VARCHAR}, #{loginid,jdbcType=VARCHAR},
+      #{pass,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR})
+  </insert>
+</mapper>

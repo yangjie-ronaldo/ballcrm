@@ -1,6 +1,7 @@
 package org.nothink.ballcrm.service;
 
 import org.nothink.ballcrm.entity.CodeDefEntity;
+import org.nothink.ballcrm.entity.EmpInfoEntity;
 import org.nothink.ballcrm.mapper.CommonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,6 +23,18 @@ public class CacheService {
         if (list != null) {
             for (CodeDefEntity cd : list) {
                 map.put(cd.getCode(),cd.getDefinition());
+            }
+        }
+        return map;
+    }
+
+    @Cacheable(cacheNames="mainCache",key="#root.methodName")
+    public Map<Integer, String> EmpCache() {
+        HashMap<Integer, String> map = new HashMap<>();
+        List<EmpInfoEntity> list = commonMapper.getEmpInfo();
+        if (list != null) {
+            for (EmpInfoEntity e : list) {
+                map.put(e.getEid(),e.getName());
             }
         }
         return map;

@@ -2,19 +2,29 @@ package org.nothink.ballcrm.service;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import org.nothink.ballcrm.entity.PagedResult;
-import org.nothink.ballcrm.entity.StuCriteria;
-import org.nothink.ballcrm.entity.StuEntity;
+import org.nothink.ballcrm.entity.*;
+import org.nothink.ballcrm.mapper.StuCourseMapper;
 import org.nothink.ballcrm.mapper.StuMapper;
+import org.nothink.ballcrm.mapper.StuStatusMapper;
+import org.nothink.ballcrm.util.CodeDef;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class StuService {
+    Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     StuMapper stuMapper;
+    @Autowired
+    StuStatusMapper stuStatusMapper;
+    @Autowired
+    StuCourseMapper stuCourseMapper;
     @Autowired
     CacheService cache;
 
@@ -22,7 +32,8 @@ public class StuService {
     public StuEntity findById(int sid){
         StuEntity s=stuMapper.findById(sid);
         //翻译代码值
-        stuCodeTrans(s);
+        if (s!=null)
+            stuCodeTrans(s);
         return s;
     }
 
@@ -40,15 +51,37 @@ public class StuService {
         return result;
     }
 
+    @Transactional
     // 新增学员
     public int addOne(StuCriteria c){
-        return stuMapper.insert(c);
+        logger.info("插入前的学员信息："+c.toString());
+        //1.新增学员基本信息到学员表
+        int i=stuMapper.insertAndGetSid(c);
+        int sid=c.getSid();
+        logger.info("插入后的学员ID："+sid);
+        //2.新增学员初始状态到学员状态流水表
+        StuStatusEntity sst=new StuStatusEntity();
+        sst.setSid(sid);
+        sst.setStatus(CodeDef.PROTENTIAL);
+        sst.setNote("潜力客户来咯！努力与他建立良好关系吧！");
+        stuStatusMapper.insert(sst);
+        //3.新增DEMO课程
+        StuCourseEntity stc=new StuCourseEntity();
+        stc.setCourseTypeId(1);
+        stc.setFee(0);
+        stc.setNum(1);
+        stc.setSid(sid);
+        stuCourseMapper.insert(stc);
+        return i;
     }
 
     private void stuCodeTrans(StuEntity stu){
+        //代码翻译
         stu.setSexDef(cache.CodeDefCache().get(stu.getSex()));
         stu.setTypeDef(cache.CodeDefCache().get(stu.getType()));
         stu.setStatusDef(cache.CodeDefCache().get(stu.getStatus()));
         stu.setVerifyStatusDef(cache.CodeDefCache().get(stu.getVerifyStatusDef()));
+        //所属cc翻译
+        stu.setCcName(cache.EmpCache().get(stu.getCc()));
     }
 }

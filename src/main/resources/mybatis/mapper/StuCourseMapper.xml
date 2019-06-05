@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.nothink.ballcrm.mapper.StuCourseMapper" >
+  <insert id="insert" parameterType="org.nothink.ballcrm.entity.StuCourseEntity" >
+    insert into stu_course (sid, course_type_id, num, fee, create_date, end_date)
+    values (#{sid,jdbcType=INTEGER}, #{courseTypeId,jdbcType=INTEGER},
+      #{num,jdbcType=INTEGER}, #{fee,jdbcType=INTEGER}, now(),
+      #{endDate,jdbcType=TIMESTAMP})
+  </insert>
+</mapper>

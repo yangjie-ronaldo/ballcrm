@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.nothink.ballcrm.mapper.StuStatusMapper" >
+  <insert id="insert" parameterType="org.nothink.ballcrm.entity.StuStatusEntity" >
+    insert into stu_status (sid, create_date, status, note)
+    values (#{sid,jdbcType=INTEGER}, now(),
+      #{status,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR})
+  </insert>
+</mapper>

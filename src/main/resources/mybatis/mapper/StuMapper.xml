@@ -7,12 +7,12 @@
   </select>
   <select id="getAll" resultType="org.nothink.ballcrm.entity.StuEntity" parameterType="org.nothink.ballcrm.entity.StuCriteria">
     select * from stu where 1=1
-    <if test="name != null and name!='' "> and name like CONCAT('%',#{name},'%') </if>
+    <if test="name != null and name!='' "> and name like CONCAT('%',#{name},'%') or niki_name like CONCAT('%',#{name},'%') </if>
     <if test="status!=null and status!='' "> and status = #{status} </if>
     <if test="type!=null and type!='' "> and type = #{type} </if>
     <if test="verifyStatus!=null and verifyStatus!='' "> and verify_status = #{verifyStatus} </if>
   </select>
-  <insert id="insert" parameterType="org.nothink.ballcrm.entity.StuCriteria" >
+  <insert id="insertAndGetSid" useGeneratedKeys="true" keyProperty="sid"  parameterType="org.nothink.ballcrm.entity.StuCriteria" >
     insert into stu (create_date, name,
       niki_name, birthday, sex, 
       tel, status, verify_status, 
@@ -23,98 +23,5 @@
       #{tel,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{verifyStatus,jdbcType=VARCHAR}, 
       #{channel,jdbcType=VARCHAR}, #{channelNote,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
       #{wechat,jdbcType=VARCHAR}, #{cc,jdbcType=INTEGER}, #{node,jdbcType=INTEGER})
-  </insert>
-  <insert id="insertSelective" parameterType="org.nothink.ballcrm.entity.StuCriteria" >
-    insert into stu
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="sid != null" >
-        sid,
-      </if>
-        create_date,
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="nikiName != null" >
-        niki_name,
-      </if>
-      <if test="birthday != null" >
-        birthday,
-      </if>
-      <if test="sex != null" >
-        sex,
-      </if>
-      <if test="tel != null" >
-        tel,
-      </if>
-      <if test="status != null" >
-        status,
-      </if>
-      <if test="verifyStatus != null" >
-        verify_status,
-      </if>
-      <if test="channel != null" >
-        channel,
-      </if>
-      <if test="channelNote != null" >
-        channel_note,
-      </if>
-      <if test="type != null" >
-        type,
-      </if>
-      <if test="wechat != null" >
-        wechat,
-      </if>
-      <if test="cc != null" >
-        cc,
-      </if>
-      <if test="node != null" >
-        node,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="sid != null" >
-        #{sid,jdbcType=INTEGER},
-      </if>
-      now(),
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="nikiName != null" >
-        #{nikiName,jdbcType=VARCHAR},
-      </if>
-      <if test="birthday != null" >
-        #{birthday,jdbcType=DATE},
-      </if>
-      <if test="sex != null" >
-        #{sex,jdbcType=VARCHAR},
-      </if>
-      <if test="tel != null" >
-        #{tel,jdbcType=VARCHAR},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=VARCHAR},
-      </if>
-      <if test="verifyStatus != null" >
-        #{verifyStatus,jdbcType=VARCHAR},
-      </if>
-      <if test="channel != null" >
-        #{channel,jdbcType=VARCHAR},
-      </if>
-      <if test="channelNote != null" >
-        #{channelNote,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null" >
-        #{type,jdbcType=VARCHAR},
-      </if>
-      <if test="wechat != null" >
-        #{wechat,jdbcType=VARCHAR},
-      </if>
-      <if test="cc != null" >
-        #{cc,jdbcType=INTEGER},
-      </if>
-      <if test="node != null" >
-        #{node,jdbcType=INTEGER},
-      </if>
-    </trim>
   </insert>
 </mapper>
