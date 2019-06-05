@@ -11,7 +11,17 @@ public class StuStatusEntity {
 
     private String status;
 
+    private String statusDef;
+
     private String note;
+
+    public String getStatusDef() {
+        return statusDef;
+    }
+
+    public void setStatusDef(String statusDef) {
+        this.statusDef = statusDef;
+    }
 
     public Integer getPkid() {
         return pkid;

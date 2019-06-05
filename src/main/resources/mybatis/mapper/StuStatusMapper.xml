@@ -6,4 +6,7 @@
     values (#{sid,jdbcType=INTEGER}, now(),
       #{status,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR})
   </insert>
+  <select id="getStuStatusListBySid" resultType="org.nothink.ballcrm.entity.StuStatusEntity">
+    select * from stu_status where sid=#{sid} order by create_date desc
+  </select>
 </mapper>

@@ -11,6 +11,16 @@ public class EmpInfoEntity {
 
     private String role;
 
+    private Integer nid;
+
+    public Integer getNid() {
+        return nid;
+    }
+
+    public void setNid(Integer nid) {
+        this.nid = nid;
+    }
+
     public Integer getEid() {
         return eid;
     }

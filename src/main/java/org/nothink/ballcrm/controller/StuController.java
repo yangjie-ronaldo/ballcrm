@@ -3,6 +3,7 @@ package org.nothink.ballcrm.controller;
 import org.nothink.ballcrm.entity.PagedResult;
 import org.nothink.ballcrm.entity.StuCriteria;
 import org.nothink.ballcrm.entity.StuEntity;
+import org.nothink.ballcrm.entity.StuStatusEntity;
 import org.nothink.ballcrm.service.EmpInfoService;
 import org.nothink.ballcrm.service.StuService;
 import org.slf4j.Logger;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @Controller
-public class UsersController {
+public class StuController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
@@ -59,6 +60,18 @@ public class UsersController {
     public int insertStu(StuCriteria c){
         logger.info(c.toString());
         return stuService.addOne(c);
+    }
+
+    /**
+     * 查询学员成长历史
+     * @return
+     */
+    @GetMapping("/stustatus")
+    @ResponseBody
+    public PagedResult<StuStatusEntity> getStuStatusHis(StuCriteria c){
+        logger.info("查询状态历史，页数："+c.getCurrentPage()+" 每页条数："+c.getPageSize());
+        PagedResult<StuStatusEntity> out=stuService.getStuStatusList(c);
+        return out;
     }
 
 

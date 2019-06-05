@@ -4,7 +4,7 @@ public abstract class PagedCriteria {
     // 当前页
     int currentPage = 1;
     // 每页显示的总条数
-    int pageSize = 3;
+    int pageSize = 10;
 
     public int getCurrentPage() {
         return currentPage;

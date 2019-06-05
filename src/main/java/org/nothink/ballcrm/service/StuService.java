@@ -28,7 +28,11 @@ public class StuService {
     @Autowired
     CacheService cache;
 
-    // 根据id查询学员
+    /**
+     * 根据id查询学员
+     * @param sid
+     * @return
+     */
     public StuEntity findById(int sid){
         StuEntity s=stuMapper.findById(sid);
         //翻译代码值
@@ -37,7 +41,11 @@ public class StuService {
         return s;
     }
 
-    // 根据条件筛选所有学员 分页
+    /**
+     * 根据条件筛选所有学员 分页
+     * @param c
+     * @return
+     */
     public PagedResult<StuEntity> getAllByCriteria(StuCriteria c){
         Page p= PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
         //执行查询
@@ -51,11 +59,17 @@ public class StuService {
         return result;
     }
 
+    /**
+     * 新增学员
+     * @param c
+     * @return
+     */
     @Transactional
-    // 新增学员
     public int addOne(StuCriteria c){
         logger.info("插入前的学员信息："+c.toString());
         //1.新增学员基本信息到学员表
+        c.setStatus(CodeDef.THINKING);
+        c.setType(CodeDef.PROTENTIAL);
         int i=stuMapper.insertAndGetSid(c);
         int sid=c.getSid();
         logger.info("插入后的学员ID："+sid);
@@ -73,6 +87,25 @@ public class StuService {
         stc.setSid(sid);
         stuCourseMapper.insert(stc);
         return i;
+    }
+
+    /**
+     * 查询学员状态历史 按学员编号查询
+     * @param c
+     * @return
+     */
+    public PagedResult<StuStatusEntity> getStuStatusList(StuCriteria c){
+        Page p= PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
+
+        //执行查询
+        List<StuStatusEntity> list = stuStatusMapper.getStuStatusListBySid(c.getSid());
+        PagedResult<StuStatusEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());
+        //翻译代码值
+        if (list!=null)
+            for (StuStatusEntity s:list)
+                s.setStatusDef(cache.CodeDefCache().get(s.getStatus()));
+        result.setItems(list);
+        return result;
     }
 
     private void stuCodeTrans(StuEntity stu){
