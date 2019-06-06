@@ -36,7 +36,7 @@ public class ContactPlanController {
 
     @GetMapping("plan")
     @ResponseBody
-    public ResponseMsg getPlanList(PlanCriteria c){
+    public ResponseMsg getPlanList(ContactPlanEntity c){
         ResponseMsg out=new ResponseMsg("ok");
         logger.info("查询联系计划，页数："+c.getCurrentPage()+" 每页条数："+c.getPageSize());
         PagedResult<ContactPlanEntity> pagelist=planService.getPlanList(c);

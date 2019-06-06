@@ -2,7 +2,7 @@ package org.nothink.ballcrm.entity;
 
 import java.util.Date;
 
-public class StuEntity {
+public class StuEntity extends PagedCriteria {
 
     private Integer sid;
 

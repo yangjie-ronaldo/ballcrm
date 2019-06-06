@@ -1,12 +1,88 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.StuStatusMapper" >
-  <insert id="insert" parameterType="org.nothink.ballcrm.entity.StuStatusEntity" >
-    insert into stu_status (sid, create_date, status, note)
-    values (#{sid,jdbcType=INTEGER}, now(),
-      #{status,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR})
-  </insert>
   <select id="getStuStatusListBySid" resultType="org.nothink.ballcrm.entity.StuStatusEntity">
     select * from stu_status where sid=#{sid} order by create_date desc
   </select>
+
+  <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.StuStatusEntity" parameterType="java.lang.Integer" >
+    select
+    *
+    from stu_status
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stu_status
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.nothink.ballcrm.entity.StuStatusEntity" >
+    insert into stu_status (pkid, sid, create_date,
+      status, note)
+    values (#{pkid,jdbcType=INTEGER}, #{sid,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},
+      #{status,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.nothink.ballcrm.entity.StuStatusEntity" >
+    insert into stu_status
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pkid != null" >
+        pkid,
+      </if>
+      <if test="sid != null" >
+        sid,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="note != null" >
+        note,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pkid != null" >
+        #{pkid,jdbcType=INTEGER},
+      </if>
+      <if test="sid != null" >
+        #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        #{note,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.nothink.ballcrm.entity.StuStatusEntity" >
+    update stu_status
+    <set >
+      <if test="sid != null" >
+        sid = #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null" >
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.nothink.ballcrm.entity.StuStatusEntity" >
+    update stu_status
+    set sid = #{sid,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR}
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </update>
+
 </mapper>

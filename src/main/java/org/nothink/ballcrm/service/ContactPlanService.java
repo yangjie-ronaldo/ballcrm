@@ -4,7 +4,6 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.nothink.ballcrm.entity.ContactPlanEntity;
 import org.nothink.ballcrm.entity.PagedResult;
-import org.nothink.ballcrm.entity.PlanCriteria;
 import org.nothink.ballcrm.mapper.ContactPlanMapper;
 import org.nothink.ballcrm.util.CodeDef;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,7 @@ public class ContactPlanService {
      * @param c
      * @return
      */
-    public PagedResult<ContactPlanEntity> getPlanList(PlanCriteria c){
+    public PagedResult<ContactPlanEntity> getPlanList(ContactPlanEntity c){
         Page p= PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
         //执行查询
         List<ContactPlanEntity> list = planMapper.getPlanList(c);
@@ -55,6 +54,5 @@ public class ContactPlanService {
 
     private void CodeTrans(ContactPlanEntity p){
         p.setStatusDef(cache.CodeDefCache().get(p.getStatus()));
-        p.setVerifyStautsDef(cache.CodeDefCache().get(p.getVerifyStatus()));
     }
 }

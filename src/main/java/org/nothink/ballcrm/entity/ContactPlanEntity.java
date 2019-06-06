@@ -2,14 +2,18 @@ package org.nothink.ballcrm.entity;
 
 import java.util.Date;
 
-public class ContactPlanEntity {
+public class ContactPlanEntity extends PagedCriteria {
     private Integer pkid;
 
     private String planNote;
 
+    private String finishNote;
+
     private Date createDate;
 
     private Date planDate;
+
+    private Date finishDate;
 
     private Integer sid;
 
@@ -18,20 +22,9 @@ public class ContactPlanEntity {
     private String status;
     private String statusDef;
 
-    private String verifyStatus;
-    private String verifyStautsDef;
-
     private String verifyNote;
 
     private Integer verifyEid;
-
-    public String getStatusDef() {
-        return statusDef;
-    }
-
-    public void setStatusDef(String statusDef) {
-        this.statusDef = statusDef;
-    }
 
     public Integer getPkid() {
         return pkid;
@@ -46,7 +39,15 @@ public class ContactPlanEntity {
     }
 
     public void setPlanNote(String planNote) {
-        this.planNote = planNote == null ? null : planNote.trim();
+        this.planNote = planNote;
+    }
+
+    public String getFinishNote() {
+        return finishNote;
+    }
+
+    public void setFinishNote(String finishNote) {
+        this.finishNote = finishNote;
     }
 
     public Date getCreateDate() {
@@ -63,6 +64,14 @@ public class ContactPlanEntity {
 
     public void setPlanDate(Date planDate) {
         this.planDate = planDate;
+    }
+
+    public Date getFinishDate() {
+        return finishDate;
+    }
+
+    public void setFinishDate(Date finishDate) {
+        this.finishDate = finishDate;
     }
 
     public Integer getSid() {
@@ -86,7 +95,15 @@ public class ContactPlanEntity {
     }
 
     public void setStatus(String status) {
-        this.status = status == null ? null : status.trim();
+        this.status = status;
+    }
+
+    public String getStatusDef() {
+        return statusDef;
+    }
+
+    public void setStatusDef(String statusDef) {
+        this.statusDef = statusDef;
     }
 
     public String getVerifyNote() {
@@ -103,21 +120,5 @@ public class ContactPlanEntity {
 
     public void setVerifyEid(Integer verifyEid) {
         this.verifyEid = verifyEid;
-    }
-
-    public String getVerifyStatus() {
-        return verifyStatus;
-    }
-
-    public void setVerifyStatus(String verifyStatus) {
-        this.verifyStatus = verifyStatus;
-    }
-
-    public String getVerifyStautsDef() {
-        return verifyStautsDef;
-    }
-
-    public void setVerifyStautsDef(String verifyStautsDef) {
-        this.verifyStautsDef = verifyStautsDef;
     }
 }

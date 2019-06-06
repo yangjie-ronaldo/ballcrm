@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -44,7 +45,7 @@ public class StuController {
      */
     @GetMapping("/stu")
     @ResponseBody
-    public ResponseMsg getAll(StuCriteria c){
+    public ResponseMsg getAll(StuEntity c){
         ResponseMsg out=new ResponseMsg("ok");
         logger.info("查询学员，页数："+c.getCurrentPage()+" 每页条数："+c.getPageSize());
         PagedResult<StuEntity> pageout=stuService.getAllByCriteria(c);
@@ -59,7 +60,7 @@ public class StuController {
      */
     @PostMapping("/stu")
     @ResponseBody
-    public ResponseMsg insertStu(StuCriteria c){
+    public ResponseMsg insertStu(StuEntity c){
         ResponseMsg out=new ResponseMsg("ok");
         logger.info(c.toString());
         int i=stuService.addOne(c);
@@ -76,13 +77,27 @@ public class StuController {
      */
     @GetMapping("/stustatus")
     @ResponseBody
-    public ResponseMsg getStuStatusHis(StuCriteria c){
+    public ResponseMsg getStuStatusHis(StuEntity c){
         ResponseMsg out=new ResponseMsg("ok");
         logger.info("查询状态历史，页数："+c.getCurrentPage()+" 每页条数："+c.getPageSize());
         PagedResult<StuStatusEntity> pagelist=stuService.getStuStatusList(c);
         out.setData(pagelist);
         return out;
     }
+
+    /**
+     * 查询学员已买课程
+     * @return
+     */
+    @GetMapping("/stucourse")
+    @ResponseBody
+    public ResponseMsg getStuCourse(StuEntity c){
+        ResponseMsg out=new ResponseMsg("ok");
+        List<StuCourseEntity> pagelist=stuService.getStuCourseList(c);
+        out.setData(pagelist);
+        return out;
+    }
+
 
 
 //下面是演示用登录------------------------------------------------------

@@ -6,11 +6,7 @@
   select * from code_def
   </select>
 
-  <select id="getEmpInfo" resultType="org.nothink.ballcrm.entity.EmpInfoEntity">
-  select * from emp_info
-  </select>
-
-  <insert id="insert" parameterType="org.nothink.ballcrm.entity.CodeDefEntity" >
+  <insert id="insertCodeDef" parameterType="org.nothink.ballcrm.entity.CodeDefEntity" >
   insert into code_def (code, category, definition)
   values (#{code,jdbcType=VARCHAR}, #{category,jdbcType=VARCHAR}, #{definition,jdbcType=VARCHAR})
   </insert>

@@ -1,11 +1,21 @@
 package org.nothink.ballcrm.mapper;
 
 import org.nothink.ballcrm.entity.ContactPlanEntity;
-import org.nothink.ballcrm.entity.PlanCriteria;
 
 import java.util.List;
 
 public interface ContactPlanMapper {
+    List<ContactPlanEntity> getPlanList(ContactPlanEntity c);
+
+    int deleteByPrimaryKey(Integer pkid);
+
     int insert(ContactPlanEntity record);
-    List<ContactPlanEntity> getPlanList(PlanCriteria c);
+
+    int insertSelective(ContactPlanEntity record);
+
+    ContactPlanEntity selectByPrimaryKey(Integer pkid);
+
+    int updateByPrimaryKeySelective(ContactPlanEntity record);
+
+    int updateByPrimaryKey(ContactPlanEntity record);
 }

@@ -8,6 +8,7 @@ public class StuCourseEntity {
     private Integer sid;
 
     private Integer courseTypeId;
+    private String courseName;
 
     private Integer num;
 
@@ -16,6 +17,14 @@ public class StuCourseEntity {
     private Date createDate;
 
     private Date endDate;
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
 
     public Integer getPkid() {
         return pkid;

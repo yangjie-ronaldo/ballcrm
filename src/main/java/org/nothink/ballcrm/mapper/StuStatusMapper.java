@@ -5,7 +5,18 @@ import org.nothink.ballcrm.entity.StuStatusEntity;
 import java.util.List;
 
 public interface StuStatusMapper {
-    int insert(StuStatusEntity record);
     List<StuStatusEntity> getStuStatusListBySid(Integer sid);
+
+    int deleteByPrimaryKey(Integer pkid);
+
+    int insert(StuStatusEntity record);
+
+    int insertSelective(StuStatusEntity record);
+
+    StuStatusEntity selectByPrimaryKey(Integer pkid);
+
+    int updateByPrimaryKeySelective(StuStatusEntity record);
+
+    int updateByPrimaryKey(StuStatusEntity record);
 
 }
