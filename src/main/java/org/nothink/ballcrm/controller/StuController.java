@@ -72,6 +72,27 @@ public class StuController {
     }
 
     /**
+     * 修改学员基本信息
+     * @param c
+     * @return
+     */
+    @PutMapping("/stu")
+    @ResponseBody
+    public ResponseMsg updateStu(StuEntity c){
+        ResponseMsg out=new ResponseMsg("ok");
+        logger.info(c.getSid().toString());
+        int i=0;
+        if (c.getSid()!=0){
+            i=stuService.updateStuBySid(c);
+        }
+        if (i<=0){
+            out.setMsg("修改失败");
+            out.setCode(30001);
+        }
+        return out;
+    }
+
+    /**
      * 查询学员成长历史
      * @return
      */

@@ -6,10 +6,9 @@
   <select id="getPlanList" resultType="org.nothink.ballcrm.entity.ContactPlanEntity" parameterType="org.nothink.ballcrm.entity.ContactPlanEntity">
     select * from contact_plan where 1=1
     <if test="status!=null and status!=''"> and status = #{status} </if>
-    <if test="sid!=null and sid!=''"> and sid = #{sid} </if>
-    <if test="eid!=null and eid!=''"> and eid = #{eid} </if>
-    <if test="planDate!=null and planDate!=''"> and plan_date = #{planDate} </if>
-    <if test="verifyStatus!=null and verifyStatus!=''"> and verify_status = #{verifyStatus} </if>
+    <if test="sid!=null"> and sid = #{sid} </if>
+    <if test="eid!=null"> and eid = #{eid} </if>
+    <if test="planDate!=null"> and plan_date = #{planDate,jdbcType=DATE} </if>
   </select>
 
 

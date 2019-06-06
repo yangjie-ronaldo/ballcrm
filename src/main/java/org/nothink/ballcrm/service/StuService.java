@@ -31,30 +31,32 @@ public class StuService {
 
     /**
      * 根据id查询学员
+     *
      * @param sid
      * @return
      */
-    public StuEntity findById(int sid){
-        StuEntity s=stuMapper.selectByPrimaryKey(sid);
+    public StuEntity findById(int sid) {
+        StuEntity s = stuMapper.selectByPrimaryKey(sid);
         //翻译代码值
-        if (s!=null)
+        if (s != null)
             stuCodeTrans(s);
         return s;
     }
 
     /**
      * 根据条件筛选所有学员 分页
+     *
      * @param c
      * @return
      */
-    public PagedResult<StuEntity> getAllByCriteria(StuEntity c){
-        Page p= PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
+    public PagedResult<StuEntity> getAllByCriteria(StuEntity c) {
+        Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
         //执行查询
         List<StuEntity> list = stuMapper.getStuList(c);
         PagedResult<StuEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());
         //翻译代码值
-        if (list!=null)
-            for (StuEntity stu:list)
+        if (list != null)
+            for (StuEntity stu : list)
                 stuCodeTrans(stu);
         result.setItems(list);
         return result;
@@ -62,24 +64,25 @@ public class StuService {
 
     /**
      * 新增学员
+     *
      * @param c
      * @return
      */
     @Transactional
-    public int addOne(StuEntity c){
-        logger.info("插入前的学员信息："+c.toString());
+    public int addOne(StuEntity c) {
+        logger.info("插入前的学员信息：" + c.toString());
         //1.新增学员基本信息到学员表
         c.setType(CodeDef.PROTENTIAL);
         c.setCreateDate(new Date());
-        int i=stuMapper.insertSelectiveAndGetKey(c);
-        int sid=c.getSid();
-        logger.info("插入后的学员ID："+sid);
+        int i = stuMapper.insertSelectiveAndGetKey(c);
+        int sid = c.getSid();
+        logger.info("插入后的学员ID：" + sid);
 
         //2.更新学员状态
-        updateStuStatus(c,CodeDef.THINKING);
+        updateStuStatus(c, CodeDef.THINKING);
 
         //3.赠送DEMO课程
-        StuCourseEntity stc=new StuCourseEntity();
+        StuCourseEntity stc = new StuCourseEntity();
         stc.setCourseTypeId(1);
         stc.setFee(0);
         stc.setNum(1);
@@ -90,19 +93,29 @@ public class StuService {
     }
 
     /**
+     * 更新学员基本信息 id
+     */
+    @Transactional
+    public int updateStuBySid(StuEntity c) {
+        logger.info("更新学员基本信息" + c.getSid());
+        return stuMapper.updateByPrimaryKeySelective(c);
+    }
+
+    /**
      * 查询学员状态历史 按学员编号查询
+     *
      * @param c
      * @return
      */
-    public PagedResult<StuStatusEntity> getStuStatusList(StuEntity c){
-        Page p= PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
+    public PagedResult<StuStatusEntity> getStuStatusList(StuEntity c) {
+        Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
 
         //执行查询
         List<StuStatusEntity> list = stuStatusMapper.getStuStatusListBySid(c.getSid());
         PagedResult<StuStatusEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());
         //翻译代码值
-        if (list!=null)
-            for (StuStatusEntity s:list)
+        if (list != null)
+            for (StuStatusEntity s : list)
                 s.setStatusDef(cache.CodeDefCache().get(s.getStatus()));
         result.setItems(list);
         return result;
@@ -110,13 +123,14 @@ public class StuService {
 
     /**
      * 查询学员已买课程列表
+     *
      * @param c
      */
-    public List<StuCourseEntity> getStuCourseList(StuEntity c){
+    public List<StuCourseEntity> getStuCourseList(StuEntity c) {
         return stuCourseMapper.getStuCourseListBySid(c.getSid());
     }
 
-    private void stuCodeTrans(StuEntity stu){
+    private void stuCodeTrans(StuEntity stu) {
         //代码翻译
         stu.setSexDef(cache.CodeDefCache().get(stu.getSex()));
         stu.setTypeDef(cache.CodeDefCache().get(stu.getType()));
@@ -127,12 +141,12 @@ public class StuService {
     }
 
     //根据客户编号更新客最新状态、记历史
-    private void updateStuStatus(StuEntity stu,String status){
+    private void updateStuStatus(StuEntity stu, String status) {
         //设置学员最新状态
         stu.setStatus(status);
         stuMapper.updateByPrimaryKeySelective(stu);
         //状态变化历史记录
-        StuStatusEntity sta=new StuStatusEntity();
+        StuStatusEntity sta = new StuStatusEntity();
         sta.setStatus(status);
         sta.setNote("新添一枚客户！即时维护加油鸭！");
         sta.setSid(stu.getSid());

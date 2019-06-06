@@ -121,4 +121,22 @@ public class ContactPlanEntity extends PagedCriteria {
     public void setVerifyEid(Integer verifyEid) {
         this.verifyEid = verifyEid;
     }
+
+    @Override
+    public String toString() {
+        return "ContactPlanEntity{" +
+                "pkid=" + pkid +
+                ", planNote='" + planNote + '\'' +
+                ", finishNote='" + finishNote + '\'' +
+                ", createDate=" + createDate +
+                ", planDate=" + planDate +
+                ", finishDate=" + finishDate +
+                ", sid=" + sid +
+                ", eid=" + eid +
+                ", status='" + status + '\'' +
+                ", statusDef='" + statusDef + '\'' +
+                ", verifyNote='" + verifyNote + '\'' +
+                ", verifyEid=" + verifyEid +
+                '}';
+    }
 }

@@ -29,7 +29,9 @@
                 </jdbcConnection> -->
 
         <!--mysql数据库链接URL，用户名、密码 -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://127.0.0.1:3306/ballcrm?useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=GMT%2B8" userId="root" password="123456">
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+            connectionURL="jdbc:mysql://127.0.0.1:3306/ballcrm?useUnicode=true&amp;characterEncoding=utf8&amp;serverTimezone=GMT%2B8&amp;useSSL=true"
+            userId="root" password="123456">
         </jdbcConnection>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
@@ -49,13 +51,8 @@
         </javaClientGenerator>
 
         <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
-        <!--<table tableName="stu" domainObjectName="StuEntity" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"/>-->
-        <!--<table tableName="contact_plan" domainObjectName="ContactPlanEntity" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"/>-->
-        <!--<table tableName="course_type" domainObjectName="CourseTypeEntity" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"/>-->
-        <!--<table tableName="emp_info" domainObjectName="EmpInfoEntity" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"/>-->
-        <!--<table tableName="node_info" domainObjectName="NodeInfoEntity" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"/>-->
         <table tableName="stu_course" domainObjectName="StuCourseEntity" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"/>
-        <!--<table tableName="stu_status" domainObjectName="StuStatusEntity" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"/>-->
+
         <!-- 下面可以添加更多要生成的表 -->
 
     </context>
