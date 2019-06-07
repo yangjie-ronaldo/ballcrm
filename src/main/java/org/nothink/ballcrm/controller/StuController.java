@@ -119,6 +119,22 @@ public class StuController {
         return out;
     }
 
+    /**
+     * 学员买课
+     * @return
+     */
+    @PostMapping("stucourse")
+    @ResponseBody
+    public ResponseMsg buyCourse(StuCourseEntity sc){
+        ResponseMsg out=new ResponseMsg("ok");
+        int i=stuService.buyCourse(sc);
+        if (i>0){
+            out.setMsg("成功买课");
+        } else {
+            out.setMsg("买课失败");
+        }
+        return out;
+    }
 
 
 //下面是演示用登录------------------------------------------------------

@@ -5,7 +5,7 @@ import org.nothink.ballcrm.entity.EmpInfoEntity;
 import java.util.List;
 
 public interface EmpInfoMapper {
-    List<EmpInfoEntity> getEmpList();
+    List<EmpInfoEntity> getEmpList(EmpInfoEntity e);
 
     int deleteByPrimaryKey(Integer eid);
 

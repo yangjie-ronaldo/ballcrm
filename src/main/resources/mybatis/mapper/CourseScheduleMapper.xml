@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.nothink.ballcrm.mapper.CourseScheduleMapper" >
+
+  <select id="getCourseScheduleList" resultType="org.nothink.ballcrm.entity.CourseScheduleEntity" parameterType="org.nothink.ballcrm.entity.CourseScheduleEntity">
+    select * from course_schedule
+    where 1=1
+    <if test="sid!=null and sid!=''"> and sid = #{sid} </if>
+  </select>
+
+  <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.CourseScheduleEntity" parameterType="java.lang.Integer" >
+    select 
+    *
+    from course_schedule
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from course_schedule
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.nothink.ballcrm.entity.CourseScheduleEntity" >
+    insert into course_schedule (pkid, sid, booking_date, 
+      course_type_id, teach_eid, notify_status, 
+      notify_note, sign_status, trace_status, 
+      trace_note, create_date)
+    values (#{pkid,jdbcType=INTEGER}, #{sid,jdbcType=INTEGER}, #{bookingDate,jdbcType=DATE}, 
+      #{courseTypeId,jdbcType=INTEGER}, #{teachEid,jdbcType=INTEGER}, #{notifyStatus,jdbcType=VARCHAR}, 
+      #{notifyNote,jdbcType=VARCHAR}, #{signStatus,jdbcType=VARCHAR}, #{traceStatus,jdbcType=VARCHAR}, 
+      #{traceNote,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="org.nothink.ballcrm.entity.CourseScheduleEntity" >
+    insert into course_schedule
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pkid != null" >
+        pkid,
+      </if>
+      <if test="sid != null" >
+        sid,
+      </if>
+      <if test="bookingDate != null" >
+        booking_date,
+      </if>
+      <if test="courseTypeId != null" >
+        course_type_id,
+      </if>
+      <if test="teachEid != null" >
+        teach_eid,
+      </if>
+      <if test="notifyStatus != null" >
+        notify_status,
+      </if>
+      <if test="notifyNote != null" >
+        notify_note,
+      </if>
+      <if test="signStatus != null" >
+        sign_status,
+      </if>
+      <if test="traceStatus != null" >
+        trace_status,
+      </if>
+      <if test="traceNote != null" >
+        trace_note,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pkid != null" >
+        #{pkid,jdbcType=INTEGER},
+      </if>
+      <if test="sid != null" >
+        #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="bookingDate != null" >
+        #{bookingDate,jdbcType=DATE},
+      </if>
+      <if test="courseTypeId != null" >
+        #{courseTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="teachEid != null" >
+        #{teachEid,jdbcType=INTEGER},
+      </if>
+      <if test="notifyStatus != null" >
+        #{notifyStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyNote != null" >
+        #{notifyNote,jdbcType=VARCHAR},
+      </if>
+      <if test="signStatus != null" >
+        #{signStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="traceStatus != null" >
+        #{traceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="traceNote != null" >
+        #{traceNote,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.nothink.ballcrm.entity.CourseScheduleEntity" >
+    update course_schedule
+    <set >
+      <if test="sid != null" >
+        sid = #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="bookingDate != null" >
+        booking_date = #{bookingDate,jdbcType=DATE},
+      </if>
+      <if test="courseTypeId != null" >
+        course_type_id = #{courseTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="teachEid != null" >
+        teach_eid = #{teachEid,jdbcType=INTEGER},
+      </if>
+      <if test="notifyStatus != null" >
+        notify_status = #{notifyStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyNote != null" >
+        notify_note = #{notifyNote,jdbcType=VARCHAR},
+      </if>
+      <if test="signStatus != null" >
+        sign_status = #{signStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="traceStatus != null" >
+        trace_status = #{traceStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="traceNote != null" >
+        trace_note = #{traceNote,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.nothink.ballcrm.entity.CourseScheduleEntity" >
+    update course_schedule
+    set sid = #{sid,jdbcType=INTEGER},
+      booking_date = #{bookingDate,jdbcType=DATE},
+      course_type_id = #{courseTypeId,jdbcType=INTEGER},
+      teach_eid = #{teachEid,jdbcType=INTEGER},
+      notify_status = #{notifyStatus,jdbcType=VARCHAR},
+      notify_note = #{notifyNote,jdbcType=VARCHAR},
+      sign_status = #{signStatus,jdbcType=VARCHAR},
+      trace_status = #{traceStatus,jdbcType=VARCHAR},
+      trace_note = #{traceNote,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </update>
+</mapper>

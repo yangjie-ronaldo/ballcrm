@@ -34,7 +34,7 @@ public class CacheService {
     @Cacheable(cacheNames="mainCache",key="#root.methodName")
     public Map<Integer, String> EmpCache() {
         HashMap<Integer, String> map = new HashMap<>();
-        List<EmpInfoEntity> list = eMapper.getEmpList();
+        List<EmpInfoEntity> list = eMapper.getEmpList(new EmpInfoEntity());
         if (list != null) {
             for (EmpInfoEntity e : list) {
                 map.put(e.getEid(),e.getName());

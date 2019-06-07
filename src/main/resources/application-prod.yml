@@ -1,21 +1,21 @@
 server:
-  port: 8888
+  port: 8082
 #日志级别
 logging:
   level:
     # 打开mybatis的sql debug
-    # org.nothink.ballcrm.mapper: debug
+    org.nothink.ballcrm.mapper: debug
 
 spring:
 #配置数据源
   datasource:
-    username: root
-    password: 123456
+    username: nothink
+    password: nothink123
     #mysql8 以上后面要指定时区
-    url: jdbc:mysql://127.0.0.1:3306/ballcrm?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://127.0.0.1:3306/ballcrm?useUnicode=true&characterEncoding=utf8&useSSL=true
     #mysql8 以上要用新的驱动类
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    #driver-class-name: com.mysql.jdbc.Driver
+    #driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
     #Druid数据源
     type: com.alibaba.druid.pool.DruidDataSource
     #数据源其他配置, DataSourceProperties中没有相关属性,默认无法绑定，定义了Druid配置类后注入

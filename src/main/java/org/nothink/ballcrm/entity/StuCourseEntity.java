@@ -6,6 +6,8 @@ public class StuCourseEntity {
     private Integer pkid;
 
     private Integer sid;
+    private Integer eid;
+    private String eName;
 
     private Integer courseTypeId;
     private String courseName;
@@ -17,6 +19,22 @@ public class StuCourseEntity {
     private Date createDate;
 
     private Date endDate;
+
+    public Integer getEid() {
+        return eid;
+    }
+
+    public void setEid(Integer eid) {
+        this.eid = eid;
+    }
+
+    public String geteName() {
+        return eName;
+    }
+
+    public void seteName(String eName) {
+        this.eName = eName;
+    }
 
     public String getCourseName() {
         return courseName;

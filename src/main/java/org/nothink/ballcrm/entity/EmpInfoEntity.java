@@ -1,6 +1,6 @@
 package org.nothink.ballcrm.entity;
 
-public class EmpInfoEntity {
+public class EmpInfoEntity extends PagedCriteria {
     private Integer eid;
 
     private String name;

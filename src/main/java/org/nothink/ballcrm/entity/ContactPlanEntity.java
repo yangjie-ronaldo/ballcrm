@@ -3,6 +3,9 @@ package org.nothink.ballcrm.entity;
 import java.util.Date;
 
 public class ContactPlanEntity extends PagedCriteria {
+    private Date startDate;
+    private Date endDate;
+
     private Integer pkid;
 
     private String planNote;
@@ -16,8 +19,10 @@ public class ContactPlanEntity extends PagedCriteria {
     private Date finishDate;
 
     private Integer sid;
+    private String sName;
 
     private Integer eid;
+    private String eName;
 
     private String status;
     private String statusDef;
@@ -25,6 +30,57 @@ public class ContactPlanEntity extends PagedCriteria {
     private String verifyNote;
 
     private Integer verifyEid;
+    private String verifyEName;
+
+    private Integer node;
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Integer getNode() {
+        return node;
+    }
+
+    public void setNode(Integer node) {
+        this.node = node;
+    }
+
+    public String getVerifyEName() {
+        return verifyEName;
+    }
+
+    public void setVerifyEName(String verifyEName) {
+        this.verifyEName = verifyEName;
+    }
+
+    public String getsName() {
+        return sName;
+    }
+
+    public void setsName(String sName) {
+        this.sName = sName;
+    }
+
+    public String geteName() {
+        return eName;
+    }
+
+    public void seteName(String eName) {
+        this.eName = eName;
+    }
 
     public Integer getPkid() {
         return pkid;

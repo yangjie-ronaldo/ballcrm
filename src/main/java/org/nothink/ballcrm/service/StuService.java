@@ -72,14 +72,14 @@ public class StuService {
     public int addOne(StuEntity c) {
         logger.info("插入前的学员信息：" + c.toString());
         //1.新增学员基本信息到学员表
-        c.setType(CodeDef.PROTENTIAL);
+        c.setType(CodeDef.STU_NEW);
         c.setCreateDate(new Date());
         int i = stuMapper.insertSelectiveAndGetKey(c);
         int sid = c.getSid();
         logger.info("插入后的学员ID：" + sid);
 
         //2.更新学员状态
-        updateStuStatus(c, CodeDef.THINKING);
+        updateStuStatus(c, CodeDef.STU_NEW, "新添一枚客户！即时维护加油鸭！");
 
         //3.赠送DEMO课程
         StuCourseEntity stc = new StuCourseEntity();
@@ -130,25 +130,69 @@ public class StuService {
         return stuCourseMapper.getStuCourseListBySid(c.getSid());
     }
 
-    private void stuCodeTrans(StuEntity stu) {
-        //代码翻译
-        stu.setSexDef(cache.CodeDefCache().get(stu.getSex()));
-        stu.setTypeDef(cache.CodeDefCache().get(stu.getType()));
-        stu.setStatusDef(cache.CodeDefCache().get(stu.getStatus()));
-        stu.setVerifyStatusDef(cache.CodeDefCache().get(stu.getVerifyStatusDef()));
-        //所属cc翻译
-        stu.setCcName(cache.EmpCache().get(stu.getCc()));
+    /**
+     * 学员买课
+     *
+     * @param sc
+     * @return
+     */
+    @Transactional
+    public int buyCourse(StuCourseEntity sc) {
+        sc.setCreateDate(new Date());
+        StuEntity stu = this.findById(sc.getSid());
+        if (stu == null)
+            return 0;
+        // 1.新增买课记录
+        int r=stuCourseMapper.insertSelective(sc);
+
+        // 2.修改学员状态
+        String status = null, note = null;
+        if (sc.getCourseTypeId() == 2) {
+            //买小课包
+            status = CodeDef.STU_BUY198;
+            note = "成为小课包学员！再接再厉！";
+            stu.setType(CodeDef.TYPE_198);
+        } else if (sc.getCourseTypeId() == 3) {
+            //买了正课
+            status = CodeDef.STU_BUYVIP;
+            note = "成就达成！成为正式年卡会员!";
+            stu.setType(CodeDef.TYPE_YEARVIP);
+        }
+        this.updateStuStatus(stu, status, note);
+        return r;
     }
 
-    //根据客户编号更新客最新状态、记历史
-    private void updateStuStatus(StuEntity stu, String status) {
+    //放弃客户处理
+    public int abandonStu(Integer sid){
+        StuEntity stu=stuMapper.selectByPrimaryKey(sid);
+        if (stu==null)
+            return 0;
+        stu.setType(CodeDef.TYPE_HOUXUAN);
+        this.updateStuStatus(stu,CodeDef.STU_HOUXUAN,"主管同意放弃客户，以后再维护吧");
+        return 1;
+    }
+
+    private void stuCodeTrans(StuEntity stu) {
+        //代码翻译
+        if (stu!=null){
+            stu.setSexDef(cache.CodeDefCache().get(stu.getSex()));
+            stu.setTypeDef(cache.CodeDefCache().get(stu.getType()));
+            stu.setStatusDef(cache.CodeDefCache().get(stu.getStatus()));
+            stu.setVerifyStatusDef(cache.CodeDefCache().get(stu.getVerifyStatusDef()));
+            //所属cc翻译
+            stu.setCcName(cache.EmpCache().get(stu.getCc()));
+        }
+    }
+
+    //根据客户 更新客最新状态、记历史
+    public void updateStuStatus(StuEntity stu, String status, String note) {
         //设置学员最新状态
         stu.setStatus(status);
         stuMapper.updateByPrimaryKeySelective(stu);
         //状态变化历史记录
         StuStatusEntity sta = new StuStatusEntity();
         sta.setStatus(status);
-        sta.setNote("新添一枚客户！即时维护加油鸭！");
+        sta.setNote(note);
         sta.setSid(stu.getSid());
         sta.setCreateDate(new Date());
         stuStatusMapper.insertSelective(sta);

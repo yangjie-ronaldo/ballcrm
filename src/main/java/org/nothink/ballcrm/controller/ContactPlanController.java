@@ -53,6 +53,44 @@ public class ContactPlanController {
     }
 
     /**
+     * 完成联系计划
+     * @param plan
+     * @return
+     */
+    @PutMapping("/finishplan")
+    @ResponseBody
+    public ResponseMsg finishPlan(ContactPlanEntity plan){
+        ResponseMsg out=new ResponseMsg("ok");
+        int r=planService.finishPlan(plan);
+        if (r==-1){
+            out.setMsg("未到时间，不能完成");
+            out.setCode(30001);
+        }
+        if (r==0){
+            out.setMsg("完成出错");
+            out.setCode(30001);
+        }
+        return out;
+    }
+
+    /**
+     * 审核联系计划
+     * @param plan
+     * @return
+     */
+    @PutMapping("/verifyplan")
+    @ResponseBody
+    public ResponseMsg verifyPlan(ContactPlanEntity plan){
+        ResponseMsg out=new ResponseMsg("ok");
+        int r=planService.verifyPlan(plan);
+        if (r==0){
+            out.setMsg("审核出错");
+            out.setCode(30001);
+        }
+        return out;
+    }
+
+    /**
      * 查询联系计划列表 默认查当天
      * @param c
      * @return
@@ -66,4 +104,19 @@ public class ContactPlanController {
         out.setData(pagelist);
         return out;
     }
+
+    /**
+     * 查询待审核的联系计划列表
+     * @param c
+     * @return
+     */
+    @GetMapping("verifyplan")
+    @ResponseBody
+    public ResponseMsg getVerifyPlanByEid(ContactPlanEntity c){
+        ResponseMsg out=new ResponseMsg("ok");
+        PagedResult<ContactPlanEntity> pagelist=planService.getVerifyPlanByEid(c);
+        out.setData(pagelist);
+        return out;
+    }
+
 }
