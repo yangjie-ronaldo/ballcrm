@@ -9,6 +9,7 @@ import org.nothink.ballcrm.entity.StuEntity;
 import org.nothink.ballcrm.mapper.CourseScheduleMapper;
 import org.nothink.ballcrm.mapper.StuCourseMapper;
 import org.nothink.ballcrm.util.CodeDef;
+import org.nothink.ballcrm.util.DateUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,11 +78,29 @@ public class CourseScheduleService {
     }
 
     /**
-     * 明日上课提醒列表 员工查
+     * 明日上课提醒列表
      */
     public PagedResult notifyScheduleList(CourseScheduleEntity cs) {
         Page p = PageHelper.startPage(cs.getCurrentPage(), cs.getPageSize());
         List<CourseScheduleEntity> list = csMapper.getNotifyScheduleList(cs);
+        PagedResult<CourseScheduleEntity> result = new PagedResult<>(cs.getCurrentPage(), cs.getPageSize(), (int) p.getTotal());
+        //翻译代码值
+        if (list != null)
+            for (CourseScheduleEntity item : list)
+                transCode(item);
+        result.setItems(list);
+        return result;
+
+    }
+
+    /**
+     * 本日上课课程列表
+     */
+    public PagedResult scheduleListToday(CourseScheduleEntity cs) {
+        Page p = PageHelper.startPage(cs.getCurrentPage(), cs.getPageSize());
+        //设为查当日
+        cs.setBookingDate(DateUtils.getToday());
+        List<CourseScheduleEntity> list = csMapper.getScheduleToday(cs);
         PagedResult<CourseScheduleEntity> result = new PagedResult<>(cs.getCurrentPage(), cs.getPageSize(), (int) p.getTotal());
         //翻译代码值
         if (list != null)
@@ -119,8 +138,30 @@ public class CourseScheduleService {
     }
 
     /**
-     * 签到
+     * 本日上课处理
      *
+     * @param cs
+     */
+    @Transactional
+    public int handleScheduleToday(CourseScheduleEntity cs) {
+        CourseScheduleEntity relCs = csMapper.selectByPrimaryKey(cs.getPkid());
+        if (relCs == null)
+            return 0;
+        relCs.setTraceStatus(CodeDef.HANDLED);
+        relCs.setTraceNote(cs.getTraceNote());
+
+        if (CodeDef.SIGN_WAITING.equals(relCs.getSignStatus()) && CodeDef.SIGN_TRUANCY.equals(cs.getSignStatus())){
+            // 学员未签到，是旷课情况处理
+            relCs.setSignStatus(CodeDef.SIGN_TRUANCY);
+            StuEntity stu = stuService.findById(cs.getSid());
+            stuService.updateStuStatus(stu,CodeDef.STU_TRUANCY,"爽约未上课，及时跟进");
+        }
+        int r = csMapper.updateByPrimaryKeySelective(relCs);
+        return r;
+    }
+
+    /**
+     * 签到
      * @param cs
      */
     @Transactional

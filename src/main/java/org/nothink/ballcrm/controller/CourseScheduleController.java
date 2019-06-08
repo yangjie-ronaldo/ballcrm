@@ -57,8 +57,20 @@ public class CourseScheduleController {
     @GetMapping("/notifylist")
     @ResponseBody
     public Map notifyScheduleList(CourseScheduleEntity cs){
-        Map resp=ComUtils.getResp("success");
+        Map resp=ComUtils.getResp(20000,"查询成功",null);
         PagedResult list=csService.notifyScheduleList(cs);
+        resp.put("data",list);
+        return resp;
+    }
+
+    /**
+     * 查看本日上课课程表
+     */
+    @GetMapping("/coursetoday")
+    @ResponseBody
+    public Map scheduleListToday(CourseScheduleEntity cs){
+        Map resp=ComUtils.getResp(20000,"查询成功",null);
+        PagedResult list=csService.scheduleListToday(cs);
         resp.put("data",list);
         return resp;
     }
@@ -69,8 +81,19 @@ public class CourseScheduleController {
     @PutMapping("/handlenotify")
     @ResponseBody
     public Map handleNotifySchedule(CourseScheduleEntity cs){
-        Map resp=ComUtils.getResp("success");
+        Map resp=ComUtils.getResp(20000,"查询成功",null);
         int i=csService.handleScheduleNotify(cs);
+        return resp;
+    }
+
+    /**
+     * 本日上课跟进处理
+     */
+    @PutMapping("/handletrace")
+    @ResponseBody
+    public Map handleTrace(CourseScheduleEntity cs){
+        Map resp=ComUtils.getResp(20000,"查询成功",null);
+        int i=csService.handleScheduleToday(cs);
         return resp;
     }
 
@@ -80,7 +103,7 @@ public class CourseScheduleController {
     @PutMapping("/signin")
     @ResponseBody
     public Map signIn(CourseScheduleEntity cs){
-        Map resp=ComUtils.getResp("success");
+        Map resp=ComUtils.getResp(20000,"查询成功",null);
         int i=csService.signIn(cs);
         return resp;
     }

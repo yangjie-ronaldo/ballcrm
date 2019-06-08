@@ -3,10 +3,13 @@ package org.nothink.ballcrm.service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.nothink.ballcrm.entity.EmpInfoEntity;
+import org.nothink.ballcrm.entity.EmpRoleRelEntity;
 import org.nothink.ballcrm.entity.LoginTokenEntity;
 import org.nothink.ballcrm.entity.PagedResult;
 import org.nothink.ballcrm.mapper.EmpInfoMapper;
+import org.nothink.ballcrm.mapper.EmpRoleRelMapper;
 import org.nothink.ballcrm.mapper.LoginTokenMapper;
+import org.nothink.ballcrm.util.ComUtils;
 import org.nothink.ballcrm.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,9 @@ public class EmpInfoService {
     EmpInfoMapper eMapper;
     @Autowired
     LoginTokenMapper ltMapper;
+    @Autowired
+    EmpRoleRelMapper empRoleRelMapper;
+
     @Autowired
     EmpInfoService eService;
 
@@ -50,61 +56,57 @@ public class EmpInfoService {
     //注册新员工
     @Transactional
     public Map<String,Object> register(EmpInfoEntity e){
-        Map<String,Object> map = new HashMap<>();
         if(StringUtils.isEmpty(e.getLoginid())){
-            map.put("msg", "登录名不能为空");
-            return map;
+            return ComUtils.getResp(50000,"登录名不能为空",null);
         }
         if(StringUtils.isEmpty(e.getPass())){
-            map.put("msg","密码不能为空");
-            return  map;
+            return ComUtils.getResp(50000,"密码不能为空",null);
         }
         if(StringUtils.isEmpty(e.getName())){
-            map.put("msg","用户名不能为空");
-            return  map;
+            return ComUtils.getResp(50000,"用户名不能为空",null);
         }
 
         EmpInfoEntity user = eMapper.getEmpByLoginid(e.getLoginid());
         if(user != null){
-            map.put("msg","登录号已被注册");
-            return  map;
+            return ComUtils.getResp(50000,"登录号已被注册",null);
         }
         //TODO 先直接注册 不加密
         eMapper.insertSelectiveAndGetKey(e);
-
         System.out.println("注册后的编号为："+e.getEid());
+        return ComUtils.getResp(20000,"注册成功",null);
 
-        return map;
     }
 
     //登录
     public Map loginin(EmpInfoEntity e){
-        Map<String,Object> map = new HashMap<String,Object>();
         if(StringUtils.isEmpty(e.getLoginid())){
-            map.put("msg","登录名不能为空");
-            return map;
+            return ComUtils.getResp(50000,"登录名不能为空",null);
         }
 
         if(StringUtils.isEmpty(e.getPass())){
-            map.put("msg","密码不能为空");
-            return map;
+            return ComUtils.getResp(50000,"密码不能为空",null);
         }
 
         EmpInfoEntity rel = eMapper.getEmpByLoginid(e.getLoginid());
         if (rel == null){
-            map.put("msg","登录名不存在");
-            return map;
+            return ComUtils.getResp(50000,"用户不存在",null);
         }
 
         if (!rel.getPass().equals(e.getPass())) {
-            map.put("msg", "密码错误");
-            return map;
+            return ComUtils.getResp(50000,"密码错误",null);
         }
 
         //否则密码正确，记录token
-        eService.addLoginToken(rel.getEid(),map);
-        //放入员工信息
-        map.put("data",rel);
+        Map map=ComUtils.getResp(20000,"登陆成功",null);
+        Map<String,Object> data=new HashMap<>();
+        // 查询员工的角色列表
+        List roles=empRoleRelMapper.selectByEid(rel.getEid());
+        rel.setRoles(roles);
+        // 组装返回数据
+        data.put("emp",rel);
+        eService.addLoginToken(rel.getEid(),data);
+        //最后放入data
+        map.put("data",data);
         return map;
     }
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.nothink.ballcrm.mapper.EmpRoleRelMapper" >
+
+  <select id="selectByEid" parameterType="java.lang.Integer" resultType="org.nothink.ballcrm.entity.EmpRoleRelEntity">
+    select
+     rel.*,
+     r.name as role_name
+     from emp_role_rel rel inner join roles r on rel.role=r.role
+    where rel.eid=#{eid}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="org.nothink.ballcrm.entity.EmpRoleRelEntity" >
+    delete from emp_role_rel
+    where eid = #{eid,jdbcType=INTEGER}
+      and role = #{role,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="org.nothink.ballcrm.entity.EmpRoleRelEntity" >
+    insert into emp_role_rel (eid, role)
+    values (#{eid,jdbcType=INTEGER}, #{role,jdbcType=VARCHAR})
+  </insert>
+</mapper>

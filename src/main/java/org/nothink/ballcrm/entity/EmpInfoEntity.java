@@ -1,5 +1,7 @@
 package org.nothink.ballcrm.entity;
 
+import java.util.List;
+
 public class EmpInfoEntity extends PagedCriteria {
     private Integer eid;
 
@@ -11,7 +13,17 @@ public class EmpInfoEntity extends PagedCriteria {
 
     private String role;
 
+    private List roles;
+
     private Integer nid;
+
+    public List getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List roles) {
+        this.roles = roles;
+    }
 
     public Integer getNid() {
         return nid;
