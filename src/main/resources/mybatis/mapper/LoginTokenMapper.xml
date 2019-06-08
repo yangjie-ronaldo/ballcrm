@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.nothink.ballcrm.mapper.LoginTokenMapper" >
+
+  <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.LoginTokenEntity" parameterType="java.lang.Integer" >
+    select 
+    *
+    from login_token
+    where eid = #{eid,jdbcType=INTEGER}
+  </select>
+  <select id="selectByToken" resultType="org.nothink.ballcrm.entity.LoginTokenEntity" parameterType="java.lang.String">
+    select * from login_token
+    where token=#{token}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from login_token
+    where eid = #{eid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.nothink.ballcrm.entity.LoginTokenEntity" >
+    insert into login_token (eid, token, expired, 
+      status)
+    values (#{eid,jdbcType=INTEGER}, #{token,jdbcType=VARCHAR}, #{expired,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.nothink.ballcrm.entity.LoginTokenEntity" >
+    insert into login_token
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="eid != null" >
+        eid,
+      </if>
+      <if test="token != null" >
+        token,
+      </if>
+      <if test="expired != null" >
+        expired,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="eid != null" >
+        #{eid,jdbcType=INTEGER},
+      </if>
+      <if test="token != null" >
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="expired != null" >
+        #{expired,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.nothink.ballcrm.entity.LoginTokenEntity" >
+    update login_token
+    <set >
+      <if test="token != null" >
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="expired != null" >
+        expired = #{expired,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where eid = #{eid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.nothink.ballcrm.entity.LoginTokenEntity" >
+    update login_token
+    set token = #{token,jdbcType=VARCHAR},
+      expired = #{expired,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER}
+    where eid = #{eid,jdbcType=INTEGER}
+  </update>
+</mapper>

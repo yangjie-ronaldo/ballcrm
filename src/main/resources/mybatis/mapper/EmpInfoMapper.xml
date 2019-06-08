@@ -14,6 +14,11 @@
     from emp_info
     where eid = #{eid,jdbcType=INTEGER}
   </select>
+
+  <select id="getEmpByLoginid" resultType="org.nothink.ballcrm.entity.EmpInfoEntity" parameterType="java.lang.String" >
+    select * from emp_info
+    where loginid=#{loginid} limit 1
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from emp_info
     where eid = #{eid,jdbcType=INTEGER}
@@ -24,7 +29,7 @@
     values (#{eid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{loginid,jdbcType=VARCHAR},
       #{pass,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR}, #{nid,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="org.nothink.ballcrm.entity.EmpInfoEntity" >
+  <insert id="insertSelectiveAndGetKey" useGeneratedKeys="true" keyProperty="eid"  parameterType="org.nothink.ballcrm.entity.EmpInfoEntity" >
     insert into emp_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="eid != null" >
