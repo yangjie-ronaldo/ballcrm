@@ -2,18 +2,15 @@ package org.nothink.ballcrm.controller;
 
 import org.nothink.ballcrm.entity.*;
 import org.nothink.ballcrm.service.CourseScheduleService;
-import org.nothink.ballcrm.service.EmpInfoService;
-import org.nothink.ballcrm.service.StuService;
+import org.nothink.ballcrm.util.ComUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
 import java.util.Map;
+
 
 @CrossOrigin
 @Controller
@@ -47,10 +44,45 @@ public class CourseScheduleController {
      */
     @GetMapping("/courseschedule")
     @ResponseBody
-    public ResponseMsg getCourseSchedule(CourseScheduleEntity c){
-        ResponseMsg out=new ResponseMsg("ok");
-        PagedResult<CourseScheduleEntity> pagelist=csService.CourseScheduleList(c);
+    public ResponseMsg getCourseSchedule(CourseScheduleEntity c) {
+        ResponseMsg out = new ResponseMsg("ok");
+        PagedResult<CourseScheduleEntity> pagelist = csService.CourseScheduleList(c);
         out.setData(pagelist);
         return out;
     }
+
+    /**
+     * 查看明日上课提醒列表
+     */
+    @GetMapping("/notifylist")
+    @ResponseBody
+    public Map notifyScheduleList(CourseScheduleEntity cs){
+        Map resp=ComUtils.getResp("success");
+        PagedResult list=csService.notifyScheduleList(cs);
+        resp.put("data",list);
+        return resp;
+    }
+
+    /**
+     * 处理明日上课提醒
+     */
+    @PutMapping("/handlenotify")
+    @ResponseBody
+    public Map handleNotifySchedule(CourseScheduleEntity cs){
+        Map resp=ComUtils.getResp("success");
+        int i=csService.handleScheduleNotify(cs);
+        return resp;
+    }
+
+    /**
+     * 签到
+     */
+    @PutMapping("/signin")
+    @ResponseBody
+    public Map signIn(CourseScheduleEntity cs){
+        Map resp=ComUtils.getResp("success");
+        int i=csService.signIn(cs);
+        return resp;
+    }
+
 }

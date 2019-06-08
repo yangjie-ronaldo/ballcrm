@@ -7,6 +7,20 @@
     where 1=1
     <if test="sid!=null and sid!=''"> and sid = #{sid} </if>
   </select>
+  <select id="getNotifyScheduleList" resultType="org.nothink.ballcrm.entity.CourseScheduleEntity" parameterType="org.nothink.ballcrm.entity.CourseScheduleEntity">
+    select
+    c.*,
+    s.name as s_name,
+    course.type_name as course_type_name
+    from course_schedule c inner join stu s on s.sid=c.sid
+    inner join course_type course on course.pkid=c.course_type_id
+    where
+    c.booking_date &gt; now() and booking_date &lt; date_add(now(), interval 1 day)
+    <if test="eid!=null"> and s.cc=#{eid} </if>
+    <if test="nid!=null"> and s.node=#{nid} </if>
+    <if test="notifyStatus!=null and notifyStatus!='' "> and c.notify_stauts = #{notifyStatus} </if>
+
+  </select>
 
   <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.CourseScheduleEntity" parameterType="java.lang.Integer" >
     select 

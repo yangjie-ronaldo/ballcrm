@@ -5,6 +5,9 @@ import org.nothink.ballcrm.entity.StuCourseEntity;
 import java.util.List;
 
 public interface StuCourseMapper {
+
+    StuCourseEntity getStuCourseAvailable(StuCourseEntity sc);
+
     List<StuCourseEntity> getStuCourseListBySid(Integer sid);
 
     int deleteByPrimaryKey(Integer pkid);

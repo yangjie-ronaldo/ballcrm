@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.NodeInfoMapper" >
+
+  <select id="getNodeList" resultType="org.nothink.ballcrm.entity.NodeInfoEntity">
+    select * from node_info
+  </select>
+
   <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.NodeInfoEntity" parameterType="java.lang.Integer" >
     select 
     *

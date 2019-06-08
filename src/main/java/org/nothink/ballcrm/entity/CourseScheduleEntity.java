@@ -3,15 +3,21 @@ package org.nothink.ballcrm.entity;
 import java.util.Date;
 
 public class CourseScheduleEntity extends PagedCriteria {
+    private Integer eid;//查询条件 查员工名下
+    private Integer nid;// 查机构的明日待上课
+
     private Integer pkid;
 
     private Integer sid;
+    private String sName;
 
     private Date bookingDate;
 
     private Integer courseTypeId;
+    private String courseTypeName;
 
     private Integer teachEid;
+    private String teacheName;
 
     private String notifyStatus;
     private String notifyStatusDef;
@@ -27,6 +33,46 @@ public class CourseScheduleEntity extends PagedCriteria {
     private String traceNote;
 
     private Date createDate;
+
+    public Integer getNid() {
+        return nid;
+    }
+
+    public void setNid(Integer nid) {
+        this.nid = nid;
+    }
+
+    public Integer getEid() {
+        return eid;
+    }
+
+    public void setEid(Integer eid) {
+        this.eid = eid;
+    }
+
+    public String getsName() {
+        return sName;
+    }
+
+    public void setsName(String sName) {
+        this.sName = sName;
+    }
+
+    public String getCourseTypeName() {
+        return courseTypeName;
+    }
+
+    public void setCourseTypeName(String courseTypeName) {
+        this.courseTypeName = courseTypeName;
+    }
+
+    public String getTeacheName() {
+        return teacheName;
+    }
+
+    public void setTeacheName(String teacheName) {
+        this.teacheName = teacheName;
+    }
 
     public Integer getPkid() {
         return pkid;

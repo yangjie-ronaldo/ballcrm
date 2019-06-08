@@ -2,6 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.StuCourseMapper" >
 
+
+  <select id="getStuCourseAvailable" resultType="org.nothink.ballcrm.entity.StuCourseEntity" parameterType="java.lang.Integer">
+    select
+      buy.*,
+      c.type_name as course_name
+    from
+      stu_course buy inner join course_type c on buy.course_type_id=c.pkid
+    where buy.sid=#{sid}
+    and buy.course_type_id=#{courseTypeId}
+    and buy.num &gt; 0
+    limit 1
+  </select>
   <select id="getStuCourseListBySid" resultType="org.nothink.ballcrm.entity.StuCourseEntity" parameterType="java.lang.Integer">
     select
       buy.*,
@@ -22,10 +34,10 @@
     where pkid = #{pkid,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="org.nothink.ballcrm.entity.StuCourseEntity" >
-    insert into stu_course (pkid, sid, course_type_id,
+    insert into stu_course (pkid, sid, eid, course_type_id,
       num, fee, create_date,
       end_date)
-    values (#{pkid,jdbcType=INTEGER}, #{sid,jdbcType=INTEGER}, #{courseTypeId,jdbcType=INTEGER},
+    values (#{pkid,jdbcType=INTEGER}, #{sid,jdbcType=INTEGER}, #{eid,jdbcType=INTEGER},#{courseTypeId,jdbcType=INTEGER},
       #{num,jdbcType=INTEGER}, #{fee,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},
       #{endDate,jdbcType=TIMESTAMP})
   </insert>
@@ -37,6 +49,9 @@
       </if>
       <if test="sid != null" >
         sid,
+      </if>
+      <if test="eid != null" >
+        eid,
       </if>
       <if test="courseTypeId != null" >
         course_type_id,
@@ -61,6 +76,9 @@
       <if test="sid != null" >
         #{sid,jdbcType=INTEGER},
       </if>
+      <if test="eid != null" >
+        #{eid,jdbcType=INTEGER},
+      </if>
       <if test="courseTypeId != null" >
         #{courseTypeId,jdbcType=INTEGER},
       </if>
@@ -84,6 +102,9 @@
       <if test="sid != null" >
         sid = #{sid,jdbcType=INTEGER},
       </if>
+      <if test="eid != null" >
+        eid = #{eid,jdbcType=INTEGER},
+      </if>
       <if test="courseTypeId != null" >
         course_type_id = #{courseTypeId,jdbcType=INTEGER},
       </if>
@@ -105,6 +126,7 @@
   <update id="updateByPrimaryKey" parameterType="org.nothink.ballcrm.entity.StuCourseEntity" >
     update stu_course
     set sid = #{sid,jdbcType=INTEGER},
+      eid = #{eid,jdbcType=INTEGER},
       course_type_id = #{courseTypeId,jdbcType=INTEGER},
       num = #{num,jdbcType=INTEGER},
       fee = #{fee,jdbcType=INTEGER},

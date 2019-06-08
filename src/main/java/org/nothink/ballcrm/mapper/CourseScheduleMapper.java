@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface CourseScheduleMapper {
 
+    List<CourseScheduleEntity> getNotifyScheduleList(CourseScheduleEntity cs);
+
     List<CourseScheduleEntity> getCourseScheduleList(CourseScheduleEntity cs);
 
     int deleteByPrimaryKey(Integer pkid);
