@@ -9,6 +9,7 @@ import org.nothink.ballcrm.entity.StuEntity;
 import org.nothink.ballcrm.mapper.CourseScheduleMapper;
 import org.nothink.ballcrm.mapper.StuCourseMapper;
 import org.nothink.ballcrm.util.CodeDef;
+import org.nothink.ballcrm.util.ComUtils;
 import org.nothink.ballcrm.util.DateUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 @Service
@@ -39,12 +41,13 @@ public class CourseScheduleService {
      * @return
      */
     @Transactional
-    public int bookCourse(CourseScheduleEntity book) {
+    public Map bookCourse(CourseScheduleEntity book) {
         int sid = book.getSid();
         StuEntity stu = stuService.findById(sid);
-        if (stu != null && CodeDef.STU_BOOKED.equals(stu.getStatus())) {
-            //已预约课
-            return -1;
+        if (stu==null)
+            return ComUtils.getResp(40008,"无学员信息",null);
+        if (CodeDef.STU_BOOKED.equals(stu.getStatus())) {
+            return ComUtils.getResp(40008,"已有预约课程",null);
         }
 
         //新增约课记录
@@ -57,7 +60,7 @@ public class CourseScheduleService {
 
         //学员状态改变
         stuService.updateStuStatus(stu, CodeDef.STU_BOOKED, "");
-        return i;
+        return ComUtils.getResp(20000,"已成功约课",null);
     }
 
     /**
@@ -165,11 +168,12 @@ public class CourseScheduleService {
      * @param cs
      */
     @Transactional
-    public int signIn(CourseScheduleEntity cs) {
+    public Map signIn(CourseScheduleEntity cs) {
         // 本次课签到
         CourseScheduleEntity course = csMapper.selectByPrimaryKey(cs.getPkid());
         if (course == null)
-            return 0;
+            return ComUtils.getResp(40008,"未找到上课信息",null);
+        // 更新此次上课签到状态
         course.setSignStatus(CodeDef.SIGN_OK);
         csMapper.updateByPrimaryKeySelective(course);
 
@@ -179,9 +183,10 @@ public class CourseScheduleService {
         c.setCourseTypeId(cs.getCourseTypeId());
         StuCourseEntity sc = stuCoureMapper.getStuCourseAvailable(c);
         System.out.println("买的课："+sc);
-        if (sc != null) {
-            sc.setNum(sc.getNum() - 1);
+        if (sc == null){
+            return ComUtils.getResp(40008,"学员已无课时信息！",null);
         }
+        sc.setNum(sc.getNum() - 1);
         stuCoureMapper.updateByPrimaryKeySelective(sc);
 
         //更新学员状态 如果课时已为0了 则学员上完课了
@@ -192,8 +197,7 @@ public class CourseScheduleService {
         } else {
             stuService.updateStuStatus(stu, CodeDef.STU_COURSE_OVER, "课程完成！及时跟进营销！");
         }
-
-        return 1;
+        return ComUtils.getResp(20000,"成功签到",null);
     }
 
 

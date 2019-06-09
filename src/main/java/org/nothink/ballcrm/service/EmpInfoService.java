@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
 import java.util.*;
 
 @Service
@@ -34,119 +35,130 @@ public class EmpInfoService {
     EmpInfoService eService;
 
     // 查询本店的员工列表
-    public PagedResult<EmpInfoEntity> getEmpList(EmpInfoEntity c){
-        if (c.getNid()==0){
-            return null;
+    public Map getEmpList(EmpInfoEntity c) {
+        if (c.getNid() == 0) {
+            return ComUtils.getResp(40008,"无门店编号",null);
         }
         Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
         //执行查询
         List<EmpInfoEntity> list = eMapper.getEmpList(c);
         PagedResult<EmpInfoEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());
         result.setItems(list);
-        return result;
+        return ComUtils.getResp(20000,"查询成功",result);
     }
 
     // 新增员工 废弃
     @Transactional
-    public int addEmp(EmpInfoEntity e){
-        return 1;
+    public Map addEmp(EmpInfoEntity e) {
+        return ComUtils.getResp(40008,"暂无用交易",null);
     }
 
 
     //注册新员工
     @Transactional
-    public Map<String,Object> register(EmpInfoEntity e){
-        if(StringUtils.isEmpty(e.getLoginid())){
-            return ComUtils.getResp(50000,"登录名不能为空",null);
+    public Map register(EmpInfoEntity e) {
+        if (StringUtils.isEmpty(e.getLoginid())) {
+            return ComUtils.getResp(40008, "登录名不能为空", null);
         }
-        if(StringUtils.isEmpty(e.getPass())){
-            return ComUtils.getResp(50000,"密码不能为空",null);
+        if (StringUtils.isEmpty(e.getPass())) {
+            return ComUtils.getResp(40008, "密码不能为空", null);
         }
-        if(StringUtils.isEmpty(e.getName())){
-            return ComUtils.getResp(50000,"用户名不能为空",null);
+        if (StringUtils.isEmpty(e.getName())) {
+            return ComUtils.getResp(40008, "用户名不能为空", null);
         }
 
         EmpInfoEntity user = eMapper.getEmpByLoginid(e.getLoginid());
-        if(user != null){
-            return ComUtils.getResp(50000,"登录号已被注册",null);
+        if (user != null) {
+            return ComUtils.getResp(40008, "登录号已被注册", null);
         }
         //TODO 先直接注册 不加密
         eMapper.insertSelectiveAndGetKey(e);
-        System.out.println("注册后的编号为："+e.getEid());
-        return ComUtils.getResp(20000,"注册成功",null);
-
+        logger.info("注册后的编号为：" + e.getEid());
+        return ComUtils.getResp(20000, "注册成功", null);
     }
 
-    //登录
-    public Map loginin(EmpInfoEntity e){
-        if(StringUtils.isEmpty(e.getLoginid())){
-            return ComUtils.getResp(50000,"登录名不能为空",null);
+    //员工登录
+    public Map loginin(EmpInfoEntity e) {
+        if (StringUtils.isEmpty(e.getLoginid())) {
+            return ComUtils.getResp(40008, "登录名不能为空", null);
         }
 
-        if(StringUtils.isEmpty(e.getPass())){
-            return ComUtils.getResp(50000,"密码不能为空",null);
+        if (StringUtils.isEmpty(e.getPass())) {
+            return ComUtils.getResp(40008, "密码不能为空", null);
         }
 
         EmpInfoEntity rel = eMapper.getEmpByLoginid(e.getLoginid());
-        if (rel == null){
-            return ComUtils.getResp(50000,"用户不存在",null);
+        if (rel == null) {
+            return ComUtils.getResp(40008, "用户不存在", null);
         }
 
         if (!rel.getPass().equals(e.getPass())) {
-            return ComUtils.getResp(50000,"密码错误",null);
+            return ComUtils.getResp(40008, "密码错误", null);
         }
 
-        //否则密码正确，记录token
-        Map map=ComUtils.getResp(20000,"登陆成功",null);
-        Map<String,Object> data=new HashMap<>();
-        // 查询员工的角色列表
-        List roles=empRoleRelMapper.selectByEid(rel.getEid());
-        rel.setRoles(roles);
-        // 组装返回数据
-        data.put("emp",rel);
-        eService.addLoginToken(rel.getEid(),data);
+        //否则密码正确，登录成功
+        Map map = ComUtils.getResp(20000, "登陆成功", null);
+
+        Map<String, Object> data = new HashMap<>();
+
+        //返回eid 和 token
+        data.put("eid", rel.getEid());
+        eService.addLoginToken(rel.getEid(), data);
         //最后放入data
-        map.put("data",data);
+        map.put("data", data);
         return map;
     }
 
+    // 查询单个员工信息
+    public Map getEmpInfo(EmpInfoEntity e) {
+        if (e.getEid() == null)
+            return ComUtils.getResp(40008, "无员工编号", null);
+        EmpInfoEntity emp = eMapper.selectByPrimaryKey(e.getEid());
+        if (emp == null)
+            return ComUtils.getResp(40008, "无此员工信息", null);
+        // 查询员工的角色列表
+        List roles = empRoleRelMapper.selectByEid(emp.getEid());
+        emp.setRoles(roles);
+        return ComUtils.getResp(20000,"查询成功",emp);
+    }
+
     //注销
-    public Map logout(Integer eid){
-        Map<String,Object> map = new HashMap<>();
+    public Map logout(Integer eid) {
         LoginTokenEntity lt = ltMapper.selectByPrimaryKey(eid);
-        if (lt!=null){
+        if (lt != null) {
             lt.setStatus(0);
             ltMapper.updateByPrimaryKeySelective(lt);
+            return ComUtils.getResp(20000, "注销成功", null);
+        } else {
+            return ComUtils.getResp(40008, "注销失败", null);
         }
-        map.put("msg","注销成功");
-        map.put("status",20000);
-        return map;
     }
 
 
     @Transactional
     // 记录并返回token
-    public void addLoginToken(int eid,Map map){
-        LoginTokenEntity lt=new LoginTokenEntity();
+    public void addLoginToken(int eid, Map map) {
+        LoginTokenEntity lt = new LoginTokenEntity();
         lt.setEid(eid);
-        lt=ltMapper.selectByPrimaryKey(eid);
-        boolean exsist=false;
-        if (lt!=null) {
+        lt = ltMapper.selectByPrimaryKey(eid);
+        boolean exsist = false;
+        if (lt != null) {
             exsist = true;
         }
-        lt=new LoginTokenEntity();
+        lt = new LoginTokenEntity();
         lt.setEid(eid);
         lt.setStatus(1);
-        lt.setToken(UUID.randomUUID().toString().replaceAll("-",""));
-        Date now15=new Date();
-        now15=DateUtils.addDate(now15,0,0,0,0,15,0,0);
+        lt.setToken(UUID.randomUUID().toString().replaceAll("-", ""));
+        Date now15 = new Date();
+        now15 = DateUtils.addDate(now15, 0, 0, 0, 0, 15, 0, 0);
+        // 15分钟后超时
         lt.setExpired(now15);
 
-        if (exsist){
+        if (exsist) {
             ltMapper.updateByPrimaryKeySelective(lt);
         } else {
             ltMapper.insertSelective(lt);
         }
-        map.put("token",lt.getToken());
+        map.put("token", lt.getToken());
     }
 }

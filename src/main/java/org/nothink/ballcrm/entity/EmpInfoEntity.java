@@ -1,5 +1,7 @@
 package org.nothink.ballcrm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 public class EmpInfoEntity extends PagedCriteria {
@@ -9,8 +11,9 @@ public class EmpInfoEntity extends PagedCriteria {
 
     private String loginid;
 
+    @JsonIgnore
     private String pass;
-
+    @JsonIgnore
     private String role;
 
     private List roles;

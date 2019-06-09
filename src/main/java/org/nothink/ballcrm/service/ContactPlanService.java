@@ -7,6 +7,7 @@ import org.nothink.ballcrm.entity.ContactPlanEntity;
 import org.nothink.ballcrm.entity.PagedResult;
 import org.nothink.ballcrm.mapper.ContactPlanMapper;
 import org.nothink.ballcrm.util.CodeDef;
+import org.nothink.ballcrm.util.ComUtils;
 import org.nothink.ballcrm.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ContactPlanService {
@@ -34,32 +36,29 @@ public class ContactPlanService {
      * @return
      */
     @Transactional
-    public int addNewPlan(ContactPlanEntity plan){
+    public Map addNewPlan(ContactPlanEntity plan){
         if (StringUtils.isEmpty(plan.getEid()) || StringUtils.isEmpty(plan.getSid()))
-            return 0;
+            return ComUtils.getResp(40008,"无员工或学员编号",null);
         plan.setCreateDate(new Date());
-
         if (plan.getStatus()!=null && CodeDef.HANDLE_ABANDEN_STU.equals(plan.getStatus())){
             //放弃客户申请
-
         } else {
             //普通联系计划
             Date day30=new Date();
             //30天后
             day30=DateUtils.addDate(day30,0,0,30,0,0,0,0);
-            System.out.println("30天后："+DateUtils.parseDateToStr(day30,DateUtils.DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI));
-            System.out.println("计划联系时间："+DateUtils.parseDateToStr(plan.getPlanDate(),DateUtils.DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI));
             if (DateUtils.isAfterOrEqual(plan.getPlanDate(),day30)){
                 //30天后需审核
-                System.out.println("在30天后！！");
                 plan.setStatus(CodeDef.HANDLE_WAITING_VERIFY);
             } else {
-                System.out.println("不在30天后");
                 plan.setStatus(CodeDef.HANDLE_WAITING);
             }
         }
-        System.out.println(plan);
-        return planMapper.insert(plan);
+        int i=planMapper.insert(plan);
+        if (i>0)
+            return ComUtils.getResp(20000,"新建联系计划成功",null);
+        else
+            return ComUtils.getResp(40008,"新建联系计划失败",null);
     }
 
 
@@ -132,22 +131,25 @@ public class ContactPlanService {
      * @param plan
      */
     @Transactional
-    public int finishPlan(ContactPlanEntity plan){
+    public Map finishPlan(ContactPlanEntity plan){
         Date now=new Date();
         ContactPlanEntity rel=planMapper.selectByPrimaryKey(plan.getPkid());
         if (rel==null){
-            return 0;
+            return ComUtils.getResp(40008,"无此联系计划信息",null);
         }
         if (DateUtils.isBefore(now,rel.getPlanDate())){
             //处理时间小于计划时间  不能完成
-            return -1;
+            return ComUtils.getResp(40008,"未到计划联系时间，不能处理",null);
         }
         // 完成计划
         rel.setStatus(CodeDef.HANDLED);
         rel.setFinishDate(now);
         rel.setFinishNote(plan.getFinishNote());
         int r=planMapper.updateByPrimaryKeySelective(rel);
-        return r;
+        if (r>0)
+            return ComUtils.getResp(20000,"处理成功",null);
+        else
+            return ComUtils.getResp(40008,"处理失败",null);
     }
 
     /**

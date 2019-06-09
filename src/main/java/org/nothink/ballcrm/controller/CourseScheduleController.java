@@ -20,22 +20,11 @@ public class CourseScheduleController {
     @Autowired
     CourseScheduleService csService;
 
-    /**
-     * 约课
-     * @param book
-     * @return s
-     */
+    //学员约课
     @PostMapping("/bookingcourse")
     @ResponseBody
-    public ResponseMsg getStuById(CourseScheduleEntity book){
-        ResponseMsg out=new ResponseMsg("ok");
-        int i=csService.bookCourse(book);
-        if (i==-1){
-            out.setData("已有约课，不能再约");
-        } else if (i==1){
-            out.setData("成功");
-        }
-        return out;
+    public Map getStuById(CourseScheduleEntity book){
+        return csService.bookCourse(book);
     }
 
     /**
@@ -103,9 +92,6 @@ public class CourseScheduleController {
     @PutMapping("/signin")
     @ResponseBody
     public Map signIn(CourseScheduleEntity cs){
-        Map resp=ComUtils.getResp(20000,"查询成功",null);
-        int i=csService.signIn(cs);
-        return resp;
+        return csService.signIn(cs);
     }
-
 }

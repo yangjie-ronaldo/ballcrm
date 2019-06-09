@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Map;
+
 @Controller
 public class ContactPlanController {
     Logger logger = LoggerFactory.getLogger(getClass());
@@ -25,32 +27,26 @@ public class ContactPlanController {
      */
     @PostMapping("/plan")
     @ResponseBody
-    public ResponseMsg addPlan(ContactPlanEntity plan){
-        ResponseMsg out=new ResponseMsg("ok");
-        int r=planService.addNewPlan(plan);
-        if (r<=0){
-            out.setMsg("失败");
-            out.setCode(30001);
-        }
-        return out;
+    public Map addPlan(ContactPlanEntity plan){
+        return planService.addNewPlan(plan);
     }
 
     /**
-     * 修改联系计划基本信息
+     * 修改联系计划基本信息 废弃
      * @param plan
      * @return
      */
-    @PutMapping("/plan")
-    @ResponseBody
-    public ResponseMsg updatePlanBase(ContactPlanEntity plan){
-        ResponseMsg out=new ResponseMsg("ok");
-        int r=planService.updatePlanBase(plan);
-        if (r<=0){
-            out.setMsg("不能修改本计划");
-            out.setCode(30001);
-        }
-        return out;
-    }
+//    @PutMapping("/plan")
+//    @ResponseBody
+//    public ResponseMsg updatePlanBase(ContactPlanEntity plan){
+//        ResponseMsg out=new ResponseMsg("ok");
+//        int r=planService.updatePlanBase(plan);
+//        if (r<=0){
+//            out.setMsg("不能修改本计划");
+//            out.setCode(30001);
+//        }
+//        return out;
+//    }
 
     /**
      * 完成联系计划
@@ -59,18 +55,8 @@ public class ContactPlanController {
      */
     @PutMapping("/finishplan")
     @ResponseBody
-    public ResponseMsg finishPlan(ContactPlanEntity plan){
-        ResponseMsg out=new ResponseMsg("ok");
-        int r=planService.finishPlan(plan);
-        if (r==-1){
-            out.setMsg("未到时间，不能完成");
-            out.setCode(30001);
-        }
-        if (r==0){
-            out.setMsg("完成出错");
-            out.setCode(30001);
-        }
-        return out;
+    public Map finishPlan(ContactPlanEntity plan){
+        return planService.finishPlan(plan);
     }
 
     /**

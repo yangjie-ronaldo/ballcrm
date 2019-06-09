@@ -28,19 +28,15 @@ public class EmpController {
      */
     @GetMapping("/emp")
     @ResponseBody
-    public ResponseMsg getEmpList(EmpInfoEntity e){
-        ResponseMsg out=new ResponseMsg("ok");
-        PagedResult<EmpInfoEntity> pagelist=eService.getEmpList(e);
-        out.setData(pagelist);
-        return out;
+    public Map getEmpList(EmpInfoEntity e){
+        return eService.getEmpList(e);
     }
 
+    //添加员工 暂时不用
     @PostMapping("/emp")
     @ResponseBody
-    public ResponseMsg addEmp(EmpInfoEntity e){
-        ResponseMsg out=new ResponseMsg("ok");
-        int r=eService.addEmp(e);
-        return out;
+    public Map addEmp(EmpInfoEntity e){
+        return eService.addEmp(e);
     }
 
     /**
@@ -49,8 +45,7 @@ public class EmpController {
     @PostMapping("/reg")
     @ResponseBody
     public Map regEmp(EmpInfoEntity e){
-        Map map=eService.register(e);
-        return map;
+        return eService.register(e);
     }
 
     /**
@@ -59,8 +54,7 @@ public class EmpController {
     @PostMapping("/login")
     @ResponseBody
     public Map loginEmp(EmpInfoEntity e){
-        Map map=eService.loginin(e);
-        return map;
+        return eService.loginin(e);
     }
 
     /**
@@ -69,8 +63,13 @@ public class EmpController {
     @GetMapping("/logout")
     @ResponseBody
     public Map logout(Integer eid){
-        Map map=eService.logout(eid);
-        return map;
+        return eService.logout(eid);
+    }
+
+    @GetMapping("/empinfo")
+    @ResponseBody
+    public Map getEmpInfo(EmpInfoEntity e){
+        return eService.getEmpInfo(e);
     }
 
 }
