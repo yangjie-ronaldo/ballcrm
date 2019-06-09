@@ -38,7 +38,7 @@ CREATE TABLE `code_def` (
 
 LOCK TABLES `code_def` WRITE;
 /*!40000 ALTER TABLE `code_def` DISABLE KEYS */;
-INSERT INTO `code_def` VALUES ('PST01','PLANSTATUS','待联系'),('PST02','PLANSTATUS','已处理'),('PST03','PLANSTATUS','待经理审核'),('SEX01','SEX','帅哥'),('SEX02','SEX','美女'),('SST01','STUSTATUS','考虑中'),('SST02','STUSTATUS','已预约'),('STP01','STUTYPE','潜力客户'),('STP02','STUTYPE','小课包客户'),('STP03','STUTYPE','年卡客户');
+INSERT INTO `code_def` VALUES ('PST01','PLANSTATUS','待处理'),('PST02','PLANSTATUS','已处理'),('PST03','PLANSTATUS','待经理审核'),('PST04','PLANSTATUS','作废'),('PST05','PLANSTATUS','申请客户放弃'),('SEX01','SEX','帅哥'),('SEX02','SEX','美女'),('SIG01','SIGNSTATUS','已签到'),('SIG02','SIGNSTATUS','等待上课'),('SIG03','SIGNSTATUS','旷课'),('SIG04','SIGNSTATUS','改期'),('SST01','STUSTATUS','新客户，考虑中'),('SST02','STUSTATUS','已预约，待上课'),('SST03','STUSTATUS','课程结束'),('SST04','STUSTATUS','已上课，待预约'),('SST05','STUSTATUS','闲置中，待预约'),('SST06','STUSTATUS','旷课中，待联系'),('SST07','STUSTATUS','已买小课包'),('SST08','STUSTATUS','已购买年卡'),('SST09','STUSTATUS','客户被放弃'),('STP01','STUTYPE','新客户'),('STP02','STUTYPE','小课包客户'),('STP03','STUTYPE','年卡客户'),('STP04','STUTYPE','候选潜力客户');
 /*!40000 ALTER TABLE `code_def` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -62,7 +62,7 @@ CREATE TABLE `contact_plan` (
   `verify_note` varchar(45) DEFAULT NULL COMMENT '审核意见',
   `verify_eid` int(11) DEFAULT NULL COMMENT '审核主管编号',
   PRIMARY KEY (`pkid`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='联系计划';
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8 COMMENT='联系计划';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -71,8 +71,41 @@ CREATE TABLE `contact_plan` (
 
 LOCK TABLES `contact_plan` WRITE;
 /*!40000 ALTER TABLE `contact_plan` DISABLE KEYS */;
-INSERT INTO `contact_plan` VALUES (1,'这个客户优质，要联系！',NULL,'2019-06-05 18:54:38','2019-09-11',NULL,1,1,'PST02',NULL,NULL),(2,'改333',NULL,'2019-06-05 19:00:40','2019-09-01',NULL,1,1,'PST01',NULL,NULL),(3,'联系周云龙！',NULL,'2019-06-05 19:38:50','2019-09-11',NULL,1,1,'PST01',NULL,NULL),(4,'联系周云龙！',NULL,'2019-06-05 19:52:58','2019-09-11',NULL,1,1,'PST01',NULL,NULL),(5,'联系周云龙！','',NULL,'2019-09-12',NULL,1,1,'PST01','',NULL),(6,'联系周云龙！','',NULL,'2019-09-12',NULL,1,1,'PST01','',NULL),(7,NULL,NULL,NULL,'2019-09-12',NULL,1,1,NULL,'',NULL);
+INSERT INTO `contact_plan` VALUES (1,'这个客户优质，要联系！',NULL,'2019-06-05 18:54:38','2019-09-11',NULL,2,1,'PST02',NULL,NULL),(2,'改333',NULL,'2019-06-05 19:00:40','2019-09-01',NULL,2,1,'PST01',NULL,NULL),(3,'联系周云龙！',NULL,'2019-06-05 19:38:50','2019-09-11',NULL,2,1,'PST01',NULL,NULL),(4,'联系周云龙！',NULL,'2019-06-05 19:52:58','2019-09-11',NULL,2,1,'PST01',NULL,NULL),(5,'联系周云龙！','',NULL,'2019-09-12',NULL,1,1,'PST01','',NULL),(6,'联系周云龙！','',NULL,'2019-09-12',NULL,1,1,'PST01','',NULL),(7,NULL,NULL,NULL,'2019-09-12',NULL,1,1,NULL,'',NULL),(8,'联系测试A1',NULL,'2019-06-07 14:10:27','2019-06-10',NULL,1,1,'PST01','审核一下！',2),(9,'联系测试A2',NULL,'2019-06-07 14:20:29','2019-06-15',NULL,1,1,'PST02','审核一下！',2),(10,'联系测试A3','完成了！','2019-06-07 14:22:12','2019-06-05','2019-06-07',1,1,'PST02',NULL,NULL),(11,'联系测试A11',NULL,'2019-06-07 16:14:34','2019-09-01',NULL,1,1,'PST03',NULL,NULL);
 /*!40000 ALTER TABLE `contact_plan` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `course_schedule`
+--
+
+DROP TABLE IF EXISTS `course_schedule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `course_schedule` (
+  `pkid` int(11) NOT NULL AUTO_INCREMENT COMMENT '流水号',
+  `sid` int(11) NOT NULL COMMENT '学员编号',
+  `booking_date` date NOT NULL COMMENT '上课日期',
+  `course_type_id` int(11) DEFAULT NULL COMMENT '课程类型编号',
+  `teach_eid` int(11) DEFAULT NULL COMMENT '主教编号',
+  `notify_status` varchar(5) DEFAULT NULL COMMENT '通知状态',
+  `notify_note` varchar(45) DEFAULT NULL COMMENT '通知备注',
+  `sign_status` varchar(5) DEFAULT NULL COMMENT '学员签到状态',
+  `trace_status` varchar(5) DEFAULT NULL COMMENT '反馈状态',
+  `trace_note` varchar(45) DEFAULT NULL COMMENT '反馈备注',
+  `create_date` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`pkid`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='学员上课记录';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `course_schedule`
+--
+
+LOCK TABLES `course_schedule` WRITE;
+/*!40000 ALTER TABLE `course_schedule` DISABLE KEYS */;
+INSERT INTO `course_schedule` VALUES (1,24,'2019-06-08',1,1,'PST02','学员待上课','SIG01','PST02','旷课了','2019-06-06 22:34:24'),(2,24,'2019-09-02',1,1,'PST01',NULL,'SIG02','PST01',NULL,'2019-06-09 16:55:33');
+/*!40000 ALTER TABLE `course_schedule` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -88,7 +121,7 @@ CREATE TABLE `course_type` (
   `desc` varchar(45) DEFAULT NULL COMMENT '描述',
   `num` int(11) DEFAULT NULL COMMENT '课程次数',
   PRIMARY KEY (`pkid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='课程类型';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='课程类型';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,7 +130,7 @@ CREATE TABLE `course_type` (
 
 LOCK TABLES `course_type` WRITE;
 /*!40000 ALTER TABLE `course_type` DISABLE KEYS */;
-INSERT INTO `course_type` VALUES (1,'DEMO课','DEMO体验课',1),(2,'198小课包','198小课包',3);
+INSERT INTO `course_type` VALUES (1,'DEMO课','DEMO体验课',1),(2,'198小课包','198小课包',3),(3,'年卡正课','VIP',300);
 /*!40000 ALTER TABLE `course_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -116,7 +149,7 @@ CREATE TABLE `emp_info` (
   `role` varchar(45) DEFAULT NULL COMMENT '角色',
   `nid` int(11) DEFAULT NULL COMMENT '所属门店',
   PRIMARY KEY (`eid`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='员工信息表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='员工信息表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,8 +158,58 @@ CREATE TABLE `emp_info` (
 
 LOCK TABLES `emp_info` WRITE;
 /*!40000 ALTER TABLE `emp_info` DISABLE KEYS */;
-INSERT INTO `emp_info` VALUES (1,'小李','cc1','123','cc',1),(2,'小张','cc2','123','cc',1);
+INSERT INTO `emp_info` VALUES (1,'李老师','cc1','123',NULL,1),(2,'小张','cc2','123',NULL,1),(3,'张大','zhangda','123',NULL,1);
 /*!40000 ALTER TABLE `emp_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `emp_role_rel`
+--
+
+DROP TABLE IF EXISTS `emp_role_rel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `emp_role_rel` (
+  `eid` int(11) NOT NULL COMMENT '员工编号',
+  `role` varchar(15) NOT NULL COMMENT '角色',
+  PRIMARY KEY (`eid`,`role`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='员工角色关系';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `emp_role_rel`
+--
+
+LOCK TABLES `emp_role_rel` WRITE;
+/*!40000 ALTER TABLE `emp_role_rel` DISABLE KEYS */;
+INSERT INTO `emp_role_rel` VALUES (1,'cc'),(1,'ccm'),(2,'cc');
+/*!40000 ALTER TABLE `emp_role_rel` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `login_token`
+--
+
+DROP TABLE IF EXISTS `login_token`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `login_token` (
+  `eid` int(11) NOT NULL COMMENT '员工登陆id',
+  `token` varchar(64) NOT NULL COMMENT 'token',
+  `expired` datetime NOT NULL COMMENT '过期时间',
+  `status` int(11) NOT NULL COMMENT 'token状态1有效0失效',
+  PRIMARY KEY (`eid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='token验证表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `login_token`
+--
+
+LOCK TABLES `login_token` WRITE;
+/*!40000 ALTER TABLE `login_token` DISABLE KEYS */;
+INSERT INTO `login_token` VALUES (0,'fucktoken','2020-09-01 00:00:00',1),(1,'9f0fd05ddc1848e4baf7ae52ab06bc1b','2019-06-09 16:50:47',0),(3,'50118267830f41b08a37d1951907307d','2019-06-09 00:20:14',1);
+/*!40000 ALTER TABLE `login_token` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -152,6 +235,31 @@ LOCK TABLES `node_info` WRITE;
 /*!40000 ALTER TABLE `node_info` DISABLE KEYS */;
 INSERT INTO `node_info` VALUES (1,'1号店','2019-06-04 10:34:00');
 /*!40000 ALTER TABLE `node_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `roles` (
+  `role` varchar(15) NOT NULL COMMENT '角色',
+  `name` varchar(45) NOT NULL COMMENT '角色名称',
+  `desc` varchar(45) DEFAULT NULL COMMENT '角色描述',
+  PRIMARY KEY (`role`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='角色列表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `roles`
+--
+
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+INSERT INTO `roles` VALUES ('cc','销售精英','负责日常学员营销'),('ccm','销售主管','主管门店日常事项');
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -187,7 +295,7 @@ CREATE TABLE `stu` (
 
 LOCK TABLES `stu` WRITE;
 /*!40000 ALTER TABLE `stu` DISABLE KEYS */;
-INSERT INTO `stu` VALUES (1,'2019-06-04 10:35:44','杨杰1','杨杨','1988-09-18','SEX01','18583281859','SST01',NULL,'自助','自己拉的','STP01',NULL,1,1),(2,'2019-06-04 15:05:27','杨杰2',NULL,NULL,'SEX02',NULL,NULL,NULL,NULL,NULL,'STP01',NULL,NULL,NULL),(3,'2019-06-04 15:05:27','杨杰3',NULL,NULL,'SEX01',NULL,NULL,NULL,NULL,NULL,'STP01',NULL,NULL,NULL),(4,'2019-06-04 15:05:27','杨杰4',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'STP01',NULL,NULL,NULL),(5,'2019-06-04 15:05:27','杨杰5',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'STP01',NULL,NULL,NULL),(6,'2019-06-04 15:05:27','杨杰6',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'STP01',NULL,NULL,NULL),(7,'2019-06-04 15:05:27','龙龙1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(8,'2019-06-04 15:05:27','龙龙2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(9,'2019-06-04 15:17:45','qqq123',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(10,'2019-06-04 15:19:00','bbbb123?status=考虑中',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11,'2019-06-04 15:19:28','周周1',NULL,NULL,NULL,NULL,'SST01',NULL,NULL,NULL,'STP02',NULL,NULL,NULL),(12,'2019-06-04 16:24:24','柯基1',NULL,'1988-09-17',NULL,'18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(13,'2019-06-04 16:34:19','柯基2',NULL,'1988-09-17',NULL,'18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(14,'2019-06-04 16:34:41','柯基3',NULL,'1988-09-17',NULL,'18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(15,'2019-06-04 16:38:21','柯基4',NULL,'1988-09-17',NULL,'18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(16,'2019-06-04 16:44:44','柯基5',NULL,'1988-09-18',NULL,'18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(17,'2019-06-05 13:12:09','柯基6',NULL,'1988-09-18','SEX01','18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(18,'2019-06-05 16:07:53','阿铁1',NULL,'1988-09-18','SEX01','18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(19,'2019-06-05 17:04:13','魂牵梦萦',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(20,'2019-06-05 17:04:13','bb',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(21,'2019-06-05 16:54:51','晶晶1',NULL,'1988-09-17','SEX02','18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(22,'2019-06-05 19:48:30','qqfdsa1',NULL,'1988-09-17','SEX01','18583281859','SST01',NULL,NULL,NULL,'STP01',NULL,1,1),(23,'2019-06-05 20:32:24','李','小李子','1988-09-11',NULL,NULL,'SST01',NULL,NULL,NULL,'STP01',NULL,1,1),(24,'2019-06-05 20:41:28','李','小李子','1988-09-11','SEX01','16364726352','SST01',NULL,NULL,NULL,'STP01',NULL,1,1),(25,'2019-01-01 12:12:12','正测11',NULL,'1988-09-18','SEX02','18583281859','SST02',NULL,NULL,NULL,'STP01',NULL,1,1);
+INSERT INTO `stu` VALUES (1,'2019-06-04 10:35:44','杨杰1','杨杨','1988-09-18','SEX01','18583281859','SST09',NULL,'自助','自己拉的','STP04',NULL,1,1),(2,'2019-06-04 15:05:27','杨杰2',NULL,NULL,'SEX02',NULL,NULL,NULL,NULL,NULL,'STP01',NULL,NULL,NULL),(3,'2019-06-04 15:05:27','杨杰3',NULL,NULL,'SEX01',NULL,NULL,NULL,NULL,NULL,'STP01',NULL,NULL,NULL),(4,'2019-06-04 15:05:27','杨杰4',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'STP01',NULL,NULL,NULL),(5,'2019-06-04 15:05:27','杨杰5',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'STP01',NULL,NULL,NULL),(6,'2019-06-04 15:05:27','杨杰6',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'STP01',NULL,NULL,NULL),(7,'2019-06-04 15:05:27','龙龙1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(8,'2019-06-04 15:05:27','龙龙2',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(9,'2019-06-04 15:17:45','qqq123',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(10,'2019-06-04 15:19:00','bbbb123?status=考虑中',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(11,'2019-06-04 15:19:28','周周1',NULL,NULL,NULL,NULL,'SST01',NULL,NULL,NULL,'STP02',NULL,NULL,NULL),(12,'2019-06-04 16:24:24','柯基1',NULL,'1988-09-17',NULL,'18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(13,'2019-06-04 16:34:19','柯基2',NULL,'1988-09-17',NULL,'18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(14,'2019-06-04 16:34:41','柯基3',NULL,'1988-09-17',NULL,'18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(15,'2019-06-04 16:38:21','柯基4',NULL,'1988-09-17',NULL,'18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(16,'2019-06-04 16:44:44','柯基5',NULL,'1988-09-18',NULL,'18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(17,'2019-06-05 13:12:09','柯基6',NULL,'1988-09-18','SEX01','18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(18,'2019-06-05 16:07:53','阿铁1',NULL,'1988-09-18','SEX01','18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(19,'2019-06-05 17:04:13','魂牵梦萦',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(20,'2019-06-05 17:04:13','bb',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(21,'2019-06-05 16:54:51','晶晶1',NULL,'1988-09-17','SEX02','18583281859',NULL,NULL,NULL,NULL,NULL,NULL,1,1),(22,'2019-06-05 19:48:30','qqfdsa1',NULL,'1988-09-17','SEX01','18583281859','SST01',NULL,NULL,NULL,'STP01',NULL,1,1),(23,'2019-06-05 20:32:24','李','小李子','1988-09-11',NULL,NULL,'SST01',NULL,NULL,NULL,'STP01',NULL,1,1),(24,'2019-06-05 20:41:28','李','小李子','1988-09-11','SEX01','16364726352','SST02',NULL,NULL,NULL,'STP01',NULL,1,1),(25,'2019-01-01 12:12:12','正测11',NULL,'1988-09-18','SEX02','18583281859','SST02',NULL,NULL,NULL,'STP03',NULL,1,1);
 /*!40000 ALTER TABLE `stu` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -201,13 +309,14 @@ DROP TABLE IF EXISTS `stu_course`;
 CREATE TABLE `stu_course` (
   `pkid` int(11) NOT NULL AUTO_INCREMENT COMMENT '买课流水号',
   `sid` int(11) NOT NULL COMMENT '学员编号',
+  `eid` int(11) DEFAULT NULL COMMENT '关单员工ID',
   `course_type_id` int(11) NOT NULL COMMENT '课程类型',
   `num` int(11) DEFAULT NULL COMMENT '课时',
   `fee` int(11) DEFAULT NULL COMMENT '费用',
   `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   `end_date` datetime DEFAULT NULL COMMENT '截止时间',
   PRIMARY KEY (`pkid`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COMMENT='学员买课情况表';
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COMMENT='学员买课情况表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -216,7 +325,7 @@ CREATE TABLE `stu_course` (
 
 LOCK TABLES `stu_course` WRITE;
 /*!40000 ALTER TABLE `stu_course` DISABLE KEYS */;
-INSERT INTO `stu_course` VALUES (1,21,1,1,0,'2019-06-05 16:54:51',NULL),(2,22,1,1,0,'2019-06-05 19:48:30',NULL),(3,23,1,1,0,'2019-06-05 20:32:24',NULL),(4,24,1,1,0,'2019-06-05 20:41:28',NULL),(5,25,1,1,0,'2019-06-06 11:07:50',NULL);
+INSERT INTO `stu_course` VALUES (1,21,NULL,1,1,0,'2019-06-05 16:54:51',NULL),(2,22,NULL,1,1,0,'2019-06-05 19:48:30',NULL),(3,23,NULL,1,1,0,'2019-06-05 20:32:24',NULL),(4,24,NULL,1,98,0,'2019-06-05 20:41:28',NULL),(5,25,NULL,1,1,0,'2019-06-06 11:07:50',NULL),(6,25,NULL,2,3,198,'2019-06-07 10:12:33',NULL),(7,25,NULL,3,3,198,'2019-06-07 10:16:42',NULL);
 /*!40000 ALTER TABLE `stu_course` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -234,7 +343,7 @@ CREATE TABLE `stu_status` (
   `status` varchar(5) DEFAULT NULL COMMENT '状态',
   `note` varchar(45) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`pkid`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='学员状态变更流水表';
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COMMENT='学员状态变更流水表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -243,7 +352,7 @@ CREATE TABLE `stu_status` (
 
 LOCK TABLES `stu_status` WRITE;
 /*!40000 ALTER TABLE `stu_status` DISABLE KEYS */;
-INSERT INTO `stu_status` VALUES (2,21,'2019-06-05 16:54:51','STP01','潜力客户来咯！努力与他建立良好关系吧！'),(3,22,'2019-06-05 19:48:30','STP01','潜力客户来咯！努力与他建立良好关系吧！'),(4,23,'2019-06-05 20:32:24','STP01','潜力客户来咯！努力与他建立良好关系吧！'),(5,24,'2019-06-05 20:41:28','STP01','潜力客户来咯！努力与他建立良好关系吧！'),(6,25,'2019-06-06 11:07:50','SST01','新添一枚客户！即时维护加油鸭！');
+INSERT INTO `stu_status` VALUES (2,21,'2019-06-05 16:54:51','STP01','潜力客户来咯！努力与他建立良好关系吧！'),(3,22,'2019-06-05 19:48:30','STP01','潜力客户来咯！努力与他建立良好关系吧！'),(4,23,'2019-06-05 20:32:24','STP01','潜力客户来咯！努力与他建立良好关系吧！'),(5,24,'2019-06-05 20:41:28','STP01','潜力客户来咯！努力与他建立良好关系吧！'),(6,25,'2019-06-06 11:07:50','SST01','新添一枚客户！即时维护加油鸭！'),(7,24,'2019-06-06 22:34:24','SST02',''),(8,25,'2019-06-07 10:12:33','SST07','成为小课包学员！再接再厉！'),(9,25,'2019-06-07 10:16:42','SST08','成就达成！成为正式年卡会员!'),(10,1,'2019-06-07 14:50:24','SST09','主管同意放弃客户，以后再维护吧'),(11,24,'2019-06-08 20:41:59','SST05','因个人原因，课程改期'),(12,24,'2019-06-08 20:42:57','SST05','因个人原因，课程改期'),(13,24,'2019-06-08 21:36:14','SST03','课程完成！及时跟进营销！'),(14,24,'2019-06-08 23:42:08','SST06','爽约未上课，及时跟进'),(15,24,'2019-06-09 16:43:08','SST04','正常上课中'),(16,24,'2019-06-09 16:55:33','SST02','');
 /*!40000 ALTER TABLE `stu_status` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -256,4 +365,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-06-06 17:46:38
+-- Dump completed on 2019-06-09 16:58:58
