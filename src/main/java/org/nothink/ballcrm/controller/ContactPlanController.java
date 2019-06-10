@@ -22,12 +22,13 @@ public class ContactPlanController {
 
     /**
      * 添加联系计划
+     *
      * @param plan
      * @return
      */
     @PostMapping("/plan")
     @ResponseBody
-    public Map addPlan(ContactPlanEntity plan){
+    public Map addPlan(ContactPlanEntity plan) {
         return planService.addNewPlan(plan);
     }
 
@@ -50,59 +51,51 @@ public class ContactPlanController {
 
     /**
      * 完成联系计划
+     *
      * @param plan
      * @return
      */
     @PutMapping("/finishplan")
     @ResponseBody
-    public Map finishPlan(ContactPlanEntity plan){
+    public Map finishPlan(ContactPlanEntity plan) {
         return planService.finishPlan(plan);
     }
 
     /**
      * 审核联系计划
+     *
      * @param plan
      * @return
      */
     @PutMapping("/verifyplan")
     @ResponseBody
-    public ResponseMsg verifyPlan(ContactPlanEntity plan){
-        ResponseMsg out=new ResponseMsg("ok");
-        int r=planService.verifyPlan(plan);
-        if (r==0){
-            out.setMsg("审核出错");
-            out.setCode(30001);
-        }
-        return out;
+    public Map verifyPlan(ContactPlanEntity plan) {
+        return planService.verifyPlan(plan);
     }
 
     /**
      * 查询联系计划列表 默认查当天
+     *
      * @param c
      * @return
      */
     @GetMapping("plan")
     @ResponseBody
-    public ResponseMsg getPlanList(ContactPlanEntity c){
-        ResponseMsg out=new ResponseMsg("ok");
-        logger.info("查询联系计划，页数："+c.getCurrentPage()+" 每页条数："+c.getPageSize());
-        PagedResult<ContactPlanEntity> pagelist=planService.getPlanList(c);
-        out.setData(pagelist);
-        return out;
+    public Map getPlanList(ContactPlanEntity c) {
+        logger.info("查询联系计划，页数：" + c.getCurrentPage() + " 每页条数：" + c.getPageSize());
+        return planService.getPlanList(c);
     }
 
     /**
      * 查询待审核的联系计划列表
+     *
      * @param c
      * @return
      */
     @GetMapping("verifyplan")
     @ResponseBody
-    public ResponseMsg getVerifyPlanByEid(ContactPlanEntity c){
-        ResponseMsg out=new ResponseMsg("ok");
-        PagedResult<ContactPlanEntity> pagelist=planService.getVerifyPlanByEid(c);
-        out.setData(pagelist);
-        return out;
+    public Map getVerifyPlanByEid(ContactPlanEntity c) {
+        return planService.getVerifyPlanByEid(c);
     }
 
 }

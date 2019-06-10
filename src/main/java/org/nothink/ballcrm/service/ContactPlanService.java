@@ -67,14 +67,13 @@ public class ContactPlanService {
      * @param c
      * @return
      */
-    public PagedResult<ContactPlanEntity> getPlanList(ContactPlanEntity c){
+    public Map getPlanList(ContactPlanEntity c){
         Page p= PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
         //执行查询
         if (c.getPlanDate()==null && c.getStartDate()==null && c.getEndDate()==null) {
             //默认查当天
             c.setPlanDate(DateUtils.getToday());
         }
-        System.out.println(c);
         List<ContactPlanEntity> list = planMapper.getPlanList(c);
         PagedResult<ContactPlanEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());
         //翻译代码值
@@ -82,7 +81,7 @@ public class ContactPlanService {
             for (ContactPlanEntity plan:list)
                 CodeTrans(plan);
         result.setItems(list);
-        return result;
+        return ComUtils.getResp(20000,"查询成功",result);
     }
 
     /**
@@ -90,7 +89,7 @@ public class ContactPlanService {
      * @param c
      * @return
      */
-    public PagedResult<ContactPlanEntity> getVerifyPlanByEid(ContactPlanEntity c){
+    public Map getVerifyPlanByEid(ContactPlanEntity c){
         Page p= PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
         List<ContactPlanEntity> list = planMapper.getVerifyPlanByEid(c);
         PagedResult<ContactPlanEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());
@@ -99,7 +98,7 @@ public class ContactPlanService {
             for (ContactPlanEntity plan:list)
                 CodeTrans(plan);
         result.setItems(list);
-        return result;
+        return ComUtils.getResp(20000,"查询成功",result);
     }
 
     /**
@@ -157,11 +156,11 @@ public class ContactPlanService {
      * @param plan
      */
     @Transactional
-    public int verifyPlan(ContactPlanEntity plan){
+    public Map verifyPlan(ContactPlanEntity plan){
         Date now=new Date();
         ContactPlanEntity rel=planMapper.selectByPrimaryKey(plan.getPkid());
         if (rel==null){
-            return 0;
+            return ComUtils.getResp(40008,"无联系计划信息",null);
         }
         // 审核联系计划
         rel.setStatus(plan.getStatus());
@@ -177,7 +176,10 @@ public class ContactPlanService {
         }
         // 更新本联系计划
         int r=planMapper.updateByPrimaryKeySelective(rel);
-        return r;
+        if (r>0)
+            return ComUtils.getResp(20000,"审核成功",null);
+        else
+            return ComUtils.getResp(40008,"审核出错",null);
     }
 
     private void CodeTrans(ContactPlanEntity p){

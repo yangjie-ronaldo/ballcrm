@@ -19,9 +19,6 @@ public class NodeController {
     @GetMapping("/node")
     @ResponseBody
     public Map getNodeList(){
-        Map map=ComUtils.getResp(20000,"操作成功",null);
-        List nodelist=nService.getNodeList();
-        map.put("data",nodelist);
-        return map;
+        return nService.getNodeList();
     }
 }

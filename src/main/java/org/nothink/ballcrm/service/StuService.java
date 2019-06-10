@@ -7,13 +7,16 @@ import org.nothink.ballcrm.mapper.StuCourseMapper;
 import org.nothink.ballcrm.mapper.StuMapper;
 import org.nothink.ballcrm.mapper.StuStatusMapper;
 import org.nothink.ballcrm.util.CodeDef;
+import org.nothink.ballcrm.util.ComUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StuService {
@@ -48,7 +51,7 @@ public class StuService {
      * @param c
      * @return
      */
-    public PagedResult<StuEntity> getAllByCriteria(StuEntity c) {
+    public Map getAllByCriteria(StuEntity c) {
         Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
         //执行查询
         List<StuEntity> list = stuMapper.getStuList(c);
@@ -58,7 +61,7 @@ public class StuService {
             for (StuEntity stu : list)
                 stuCodeTrans(stu);
         result.setItems(list);
-        return result;
+        return ComUtils.getResp(20000, "查询成功", result);
     }
 
     /**
@@ -68,8 +71,7 @@ public class StuService {
      * @return
      */
     @Transactional
-    public int addOne(StuEntity c) {
-        logger.info("插入前的学员信息：" + c.toString());
+    public Map addOne(StuEntity c) {
         //1.新增学员基本信息到学员表
         c.setType(CodeDef.STU_NEW);
         c.setCreateDate(new Date());
@@ -88,16 +90,23 @@ public class StuService {
         stc.setSid(sid);
         stc.setCreateDate(new Date());
         stuCourseMapper.insert(stc);
-        return i;
+        if (i > 0)
+            return ComUtils.getResp(20000, "新增成功", null);
+        else
+            return ComUtils.getResp(40008, "新增失败", null);
     }
 
     /**
      * 更新学员基本信息 id
      */
     @Transactional
-    public int updateStuBySid(StuEntity c) {
+    public Map updateStuBySid(StuEntity c) {
         logger.info("更新学员基本信息" + c.getSid());
-        return stuMapper.updateByPrimaryKeySelective(c);
+        int i = stuMapper.updateByPrimaryKeySelective(c);
+        if (i > 0)
+            return ComUtils.getResp(20000, "更新成功", null);
+        else
+            return ComUtils.getResp(40008, "更新失败", null);
     }
 
     /**
@@ -106,7 +115,7 @@ public class StuService {
      * @param c
      * @return
      */
-    public PagedResult<StuStatusEntity> getStuStatusList(StuEntity c) {
+    public Map getStuStatusList(StuEntity c) {
         Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
 
         //执行查询
@@ -117,7 +126,7 @@ public class StuService {
             for (StuStatusEntity s : list)
                 s.setStatusDef(cache.CodeDefCache().get(s.getStatus()));
         result.setItems(list);
-        return result;
+        return ComUtils.getResp(20000, "查询成功", result);
     }
 
     /**
@@ -125,8 +134,8 @@ public class StuService {
      *
      * @param c
      */
-    public List<StuCourseEntity> getStuCourseList(StuEntity c) {
-        return stuCourseMapper.getStuCourseListBySid(c.getSid());
+    public Map getStuCourseList(StuEntity c) {
+        return ComUtils.getResp(20000, "查询成功", stuCourseMapper.getStuCourseListBySid(c.getSid()));
     }
 
     /**
@@ -136,13 +145,13 @@ public class StuService {
      * @return
      */
     @Transactional
-    public int buyCourse(StuCourseEntity sc) {
+    public Map buyCourse(StuCourseEntity sc) {
         sc.setCreateDate(new Date());
         StuEntity stu = this.findById(sc.getSid());
         if (stu == null)
-            return 0;
+            return ComUtils.getResp(40008, "无此学员", null);
         // 1.新增买课记录
-        int r=stuCourseMapper.insertSelective(sc);
+        int r = stuCourseMapper.insertSelective(sc);
 
         // 2.修改学员状态
         String status = null, note = null;
@@ -158,22 +167,25 @@ public class StuService {
             stu.setType(CodeDef.TYPE_YEARVIP);
         }
         this.updateStuStatus(stu, status, note);
-        return r;
+        if (r > 0)
+            return ComUtils.getResp(20000, "操作成功", null);
+        else
+            return ComUtils.getResp(40008, "操作失败", null);
     }
 
     //放弃客户处理
-    public int abandonStu(Integer sid){
-        StuEntity stu=stuMapper.selectByPrimaryKey(sid);
-        if (stu==null)
+    public int abandonStu(Integer sid) {
+        StuEntity stu = stuMapper.selectByPrimaryKey(sid);
+        if (stu == null)
             return 0;
         stu.setType(CodeDef.TYPE_HOUXUAN);
-        this.updateStuStatus(stu,CodeDef.STU_HOUXUAN,"主管同意放弃客户，以后再维护吧");
+        this.updateStuStatus(stu, CodeDef.STU_HOUXUAN, "主管同意放弃客户，以后再维护吧");
         return 1;
     }
 
     private void stuCodeTrans(StuEntity stu) {
         //代码翻译
-        if (stu!=null){
+        if (stu != null) {
             stu.setSexDef(cache.CodeDefCache().get(stu.getSex()));
             stu.setTypeDef(cache.CodeDefCache().get(stu.getType()));
             stu.setStatusDef(cache.CodeDefCache().get(stu.getStatus()));

@@ -33,11 +33,8 @@ public class CourseScheduleController {
      */
     @GetMapping("/courseschedule")
     @ResponseBody
-    public ResponseMsg getCourseSchedule(CourseScheduleEntity c) {
-        ResponseMsg out = new ResponseMsg("ok");
-        PagedResult<CourseScheduleEntity> pagelist = csService.CourseScheduleList(c);
-        out.setData(pagelist);
-        return out;
+    public Map getCourseSchedule(CourseScheduleEntity c) {
+        return csService.CourseScheduleList(c);
     }
 
     /**
@@ -46,10 +43,7 @@ public class CourseScheduleController {
     @GetMapping("/notifylist")
     @ResponseBody
     public Map notifyScheduleList(CourseScheduleEntity cs){
-        Map resp=ComUtils.getResp(20000,"查询成功",null);
-        PagedResult list=csService.notifyScheduleList(cs);
-        resp.put("data",list);
-        return resp;
+        return csService.notifyScheduleList(cs);
     }
 
     /**
@@ -58,10 +52,7 @@ public class CourseScheduleController {
     @GetMapping("/coursetoday")
     @ResponseBody
     public Map scheduleListToday(CourseScheduleEntity cs){
-        Map resp=ComUtils.getResp(20000,"查询成功",null);
-        PagedResult list=csService.scheduleListToday(cs);
-        resp.put("data",list);
-        return resp;
+        return csService.scheduleListToday(cs);
     }
 
     /**
@@ -70,9 +61,7 @@ public class CourseScheduleController {
     @PutMapping("/handlenotify")
     @ResponseBody
     public Map handleNotifySchedule(CourseScheduleEntity cs){
-        Map resp=ComUtils.getResp(20000,"查询成功",null);
-        int i=csService.handleScheduleNotify(cs);
-        return resp;
+        return csService.handleScheduleNotify(cs);
     }
 
     /**
@@ -81,9 +70,7 @@ public class CourseScheduleController {
     @PutMapping("/handletrace")
     @ResponseBody
     public Map handleTrace(CourseScheduleEntity cs){
-        Map resp=ComUtils.getResp(20000,"查询成功",null);
-        int i=csService.handleScheduleToday(cs);
-        return resp;
+        return csService.handleScheduleToday(cs);
     }
 
     /**

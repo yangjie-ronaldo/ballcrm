@@ -66,7 +66,7 @@ public class CourseScheduleService {
     /**
      * 学员上课流水列表
      */
-    public PagedResult<CourseScheduleEntity> CourseScheduleList(CourseScheduleEntity cs) {
+    public Map CourseScheduleList(CourseScheduleEntity cs) {
         Page p = PageHelper.startPage(cs.getCurrentPage(), cs.getPageSize());
 
         //执行查询
@@ -77,13 +77,13 @@ public class CourseScheduleService {
             for (CourseScheduleEntity item : list)
                 transCode(item);
         result.setItems(list);
-        return result;
+        return ComUtils.getResp(20000,"查询成功",result);
     }
 
     /**
      * 明日上课提醒列表
      */
-    public PagedResult notifyScheduleList(CourseScheduleEntity cs) {
+    public Map notifyScheduleList(CourseScheduleEntity cs) {
         Page p = PageHelper.startPage(cs.getCurrentPage(), cs.getPageSize());
         List<CourseScheduleEntity> list = csMapper.getNotifyScheduleList(cs);
         PagedResult<CourseScheduleEntity> result = new PagedResult<>(cs.getCurrentPage(), cs.getPageSize(), (int) p.getTotal());
@@ -92,14 +92,14 @@ public class CourseScheduleService {
             for (CourseScheduleEntity item : list)
                 transCode(item);
         result.setItems(list);
-        return result;
+        return ComUtils.getResp(20000,"查询成功",result);
 
     }
 
     /**
      * 本日上课课程列表
      */
-    public PagedResult scheduleListToday(CourseScheduleEntity cs) {
+    public Map scheduleListToday(CourseScheduleEntity cs) {
         Page p = PageHelper.startPage(cs.getCurrentPage(), cs.getPageSize());
         //设为查当日
         cs.setBookingDate(DateUtils.getToday());
@@ -110,7 +110,7 @@ public class CourseScheduleService {
             for (CourseScheduleEntity item : list)
                 transCode(item);
         result.setItems(list);
-        return result;
+        return ComUtils.getResp(20000,"查询成功",result);
 
     }
 
@@ -120,10 +120,10 @@ public class CourseScheduleService {
      * @param cs
      */
     @Transactional
-    public int handleScheduleNotify(CourseScheduleEntity cs) {
+    public Map handleScheduleNotify(CourseScheduleEntity cs) {
         CourseScheduleEntity relCs = csMapper.selectByPrimaryKey(cs.getPkid());
         if (relCs == null)
-            return 0;
+            return ComUtils.getResp(40008,"无上课信息",null);
         relCs.setNotifyStatus(CodeDef.HANDLED);
         relCs.setNotifyNote(cs.getNotifyNote());
         //学生情况，只能处理成 待上课 和 改期
@@ -137,7 +137,10 @@ public class CourseScheduleService {
             relCs.setTraceNote("改期");
         }
         int r = csMapper.updateByPrimaryKeySelective(relCs);
-        return r;
+        if (r>0)
+            return ComUtils.getResp(20000,"处理成功",null);
+        else
+            return ComUtils.getResp(40008,"处理出错",null);
     }
 
     /**
@@ -146,10 +149,10 @@ public class CourseScheduleService {
      * @param cs
      */
     @Transactional
-    public int handleScheduleToday(CourseScheduleEntity cs) {
+    public Map handleScheduleToday(CourseScheduleEntity cs) {
         CourseScheduleEntity relCs = csMapper.selectByPrimaryKey(cs.getPkid());
         if (relCs == null)
-            return 0;
+            return ComUtils.getResp(40008,"无上课信息",null);
         relCs.setTraceStatus(CodeDef.HANDLED);
         relCs.setTraceNote(cs.getTraceNote());
 
@@ -160,7 +163,10 @@ public class CourseScheduleService {
             stuService.updateStuStatus(stu,CodeDef.STU_TRUANCY,"爽约未上课，及时跟进");
         }
         int r = csMapper.updateByPrimaryKeySelective(relCs);
-        return r;
+        if (r>0)
+            return ComUtils.getResp(20000,"处理成功",null);
+        else
+            return ComUtils.getResp(40008,"处理失败",null);
     }
 
     /**
