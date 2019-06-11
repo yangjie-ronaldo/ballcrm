@@ -1,6 +1,5 @@
 package org.nothink.ballcrm.service;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.nothink.ballcrm.entity.ContactPlanEntity;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

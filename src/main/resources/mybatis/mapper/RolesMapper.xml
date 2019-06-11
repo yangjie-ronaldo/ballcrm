@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.nothink.ballcrm.mapper.RolesMapper" >
+
+  <select id="getAllRoles" resultType="org.nothink.ballcrm.entity.RolesEntity">
+    select * from roles
+  </select>
+
+  <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.RolesEntity" parameterType="java.lang.String" >
+    select 
+    *
+    from roles
+    where role = #{role,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from roles
+    where role = #{role,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="org.nothink.ballcrm.entity.RolesEntity" >
+    insert into roles (role, name, desc
+      )
+    values (#{role,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{desc,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.nothink.ballcrm.entity.RolesEntity" >
+    insert into roles
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="role != null" >
+        role,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="desc != null" >
+        desc,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="role != null" >
+        #{role,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null" >
+        #{desc,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.nothink.ballcrm.entity.RolesEntity" >
+    update roles
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="desc != null" >
+        desc = #{desc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where role = #{role,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.nothink.ballcrm.entity.RolesEntity" >
+    update roles
+    set name = #{name,jdbcType=VARCHAR},
+      desc = #{desc,jdbcType=VARCHAR}
+    where role = #{role,jdbcType=VARCHAR}
+  </update>
+</mapper>

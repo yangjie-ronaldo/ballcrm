@@ -3,6 +3,7 @@ package org.nothink.ballcrm.service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.nothink.ballcrm.entity.*;
+import org.nothink.ballcrm.mapper.CourseTypeMapper;
 import org.nothink.ballcrm.mapper.StuCourseMapper;
 import org.nothink.ballcrm.mapper.StuMapper;
 import org.nothink.ballcrm.mapper.StuStatusMapper;
@@ -30,6 +31,8 @@ public class StuService {
     StuCourseMapper stuCourseMapper;
     @Autowired
     CacheService cache;
+    @Autowired
+    CourseTypeMapper courseMapper;
 
     /**
      * 根据id查询学员
@@ -73,7 +76,7 @@ public class StuService {
     @Transactional
     public Map addOne(StuEntity c) {
         //1.新增学员基本信息到学员表
-        c.setType(CodeDef.STU_NEW);
+        c.setType(CodeDef.TYPE_PROTENTIAL);
         c.setCreateDate(new Date());
         int i = stuMapper.insertSelectiveAndGetKey(c);
         int sid = c.getSid();
@@ -171,6 +174,11 @@ public class StuService {
             return ComUtils.getResp(20000, "操作成功", null);
         else
             return ComUtils.getResp(40008, "操作失败", null);
+    }
+
+    //能买的课程
+    public Map courseBuyList(){
+        return ComUtils.getResp(20000,"查询成功",courseMapper.getCourse());
     }
 
     //放弃客户处理

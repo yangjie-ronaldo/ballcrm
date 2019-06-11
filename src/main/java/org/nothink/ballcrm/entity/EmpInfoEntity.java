@@ -11,20 +11,19 @@ public class EmpInfoEntity extends PagedCriteria {
 
     private String loginid;
 
-    @JsonIgnore
     private String pass;
     @JsonIgnore
     private String role;
 
-    private List roles;
+    private List<EmpRoleRelEntity> roles;
 
     private Integer nid;
 
-    public List getRoles() {
+    public List<EmpRoleRelEntity> getRoles() {
         return roles;
     }
 
-    public void setRoles(List roles) {
+    public void setRoles(List<EmpRoleRelEntity> roles) {
         this.roles = roles;
     }
 
@@ -74,5 +73,18 @@ public class EmpInfoEntity extends PagedCriteria {
 
     public void setRole(String role) {
         this.role = role == null ? null : role.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "EmpInfoEntity{" +
+                "eid=" + eid +
+                ", name='" + name + '\'' +
+                ", loginid='" + loginid + '\'' +
+                ", pass='" + pass + '\'' +
+                ", role='" + role + '\'' +
+                ", roles=" + roles +
+                ", nid=" + nid +
+                '}';
     }
 }

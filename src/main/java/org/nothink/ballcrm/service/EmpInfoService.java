@@ -9,6 +9,7 @@ import org.nothink.ballcrm.entity.PagedResult;
 import org.nothink.ballcrm.mapper.EmpInfoMapper;
 import org.nothink.ballcrm.mapper.EmpRoleRelMapper;
 import org.nothink.ballcrm.mapper.LoginTokenMapper;
+import org.nothink.ballcrm.mapper.RolesMapper;
 import org.nothink.ballcrm.util.ComUtils;
 import org.nothink.ballcrm.util.DateUtils;
 import org.slf4j.Logger;
@@ -30,6 +31,8 @@ public class EmpInfoService {
     LoginTokenMapper ltMapper;
     @Autowired
     EmpRoleRelMapper empRoleRelMapper;
+    @Autowired
+    RolesMapper rMapper;
 
     @Autowired
     EmpInfoService eService;
@@ -37,20 +40,51 @@ public class EmpInfoService {
     // 查询本店的员工列表
     public Map getEmpList(EmpInfoEntity c) {
         if (c.getNid() == 0) {
-            return ComUtils.getResp(40008,"无门店编号",null);
+            return ComUtils.getResp(40008, "无门店编号", null);
         }
         Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
         //执行查询
         List<EmpInfoEntity> list = eMapper.getEmpList(c);
         PagedResult<EmpInfoEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());
+        if (list != null) {
+            for (EmpInfoEntity e : list) {
+                // 查询员工的角色列表
+                List roles = empRoleRelMapper.selectByEid(e.getEid());
+                e.setRoles(roles);
+            }
+        }
         result.setItems(list);
-        return ComUtils.getResp(20000,"查询成功",result);
+        return ComUtils.getResp(20000, "查询成功", result);
+    }
+
+    // 更新员工信息（基本信息、角色）
+    @Transactional
+    public Map editEmp(EmpInfoEntity e){
+        logger.info("待修改员工信息："+e);
+        //修改员工基本信息
+        eMapper.updateByPrimaryKeySelective(e);
+
+        Integer eid = e.getEid();
+        if (e.getRoles()!=null){
+            //修改员工角色信息
+            empRoleRelMapper.deleteByEid(eid);
+            for (EmpRoleRelEntity rel:e.getRoles()){
+                rel.setEid(eid);
+                empRoleRelMapper.insert(rel);
+            }
+        }
+        return ComUtils.getResp(20000,"修改成功",null);
+    }
+
+    // 查询所有角色列表
+    public Map getAllRoles(){
+        return ComUtils.getResp(20000,"查询成功",rMapper.getAllRoles());
     }
 
     // 新增员工 废弃
     @Transactional
     public Map addEmp(EmpInfoEntity e) {
-        return ComUtils.getResp(40008,"暂无用交易",null);
+        return ComUtils.getResp(40008, "暂无用交易", null);
     }
 
 
@@ -119,7 +153,7 @@ public class EmpInfoService {
         // 查询员工的角色列表
         List roles = empRoleRelMapper.selectByEid(emp.getEid());
         emp.setRoles(roles);
-        return ComUtils.getResp(20000,"查询成功",emp);
+        return ComUtils.getResp(20000, "查询成功", emp);
     }
 
     //注销
@@ -149,10 +183,10 @@ public class EmpInfoService {
         lt.setEid(eid);
         lt.setStatus(1);
         lt.setToken(UUID.randomUUID().toString().replaceAll("-", ""));
-        Date now15 = new Date();
-        now15 = DateUtils.addDate(now15, 0, 0, 0, 0, 15, 0, 0);
-        // 15分钟后超时
-        lt.setExpired(now15);
+        Date now24 = new Date();
+        now24 = DateUtils.addDate(now24, 0, 0, 0, 24, 0, 0, 0);
+        // 24小时后超时
+        lt.setExpired(now24);
 
         if (exsist) {
             ltMapper.updateByPrimaryKeySelective(lt);

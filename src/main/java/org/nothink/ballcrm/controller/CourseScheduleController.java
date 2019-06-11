@@ -2,7 +2,6 @@ package org.nothink.ballcrm.controller;
 
 import org.nothink.ballcrm.entity.*;
 import org.nothink.ballcrm.service.CourseScheduleService;
-import org.nothink.ballcrm.util.ComUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,4 +80,8 @@ public class CourseScheduleController {
     public Map signIn(CourseScheduleEntity cs){
         return csService.signIn(cs);
     }
+
+    /*
+
+     */
 }

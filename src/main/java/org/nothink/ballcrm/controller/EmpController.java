@@ -8,9 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -55,6 +53,24 @@ public class EmpController {
     @ResponseBody
     public Map loginEmp(EmpInfoEntity e){
         return eService.loginin(e);
+    }
+
+    /**
+     * 修改用户信息
+     */
+    @PostMapping("/editemp")
+    @ResponseBody
+    public Map editEmp(@RequestBody EmpInfoEntity e){
+        return eService.editEmp(e);
+    }
+
+    /**
+     * 查询所有角色列表
+     */
+    @GetMapping("roles")
+    @ResponseBody
+    public Map getRoles(){
+        return eService.getAllRoles();
     }
 
     /**

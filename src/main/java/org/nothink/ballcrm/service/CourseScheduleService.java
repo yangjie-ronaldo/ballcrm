@@ -15,11 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;;
-
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 @Service
 public class CourseScheduleService {
@@ -121,6 +119,7 @@ public class CourseScheduleService {
      */
     @Transactional
     public Map handleScheduleNotify(CourseScheduleEntity cs) {
+        System.out.println(cs);
         CourseScheduleEntity relCs = csMapper.selectByPrimaryKey(cs.getPkid());
         if (relCs == null)
             return ComUtils.getResp(40008,"无上课信息",null);
@@ -133,6 +132,7 @@ public class CourseScheduleService {
             StuEntity stu = stuService.findById(cs.getSid());
             stuService.updateStuStatus(stu, CodeDef.STU_WAITING, "因个人原因，课程改期");
             //本条课程也不再追踪
+            relCs.setSignStatus(CodeDef.SIGN_CHANGE);
             relCs.setTraceStatus(CodeDef.HANDLED);
             relCs.setTraceNote("改期");
         }

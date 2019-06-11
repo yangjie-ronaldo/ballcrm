@@ -14,6 +14,12 @@
     where eid = #{eid,jdbcType=INTEGER}
       and role = #{role,jdbcType=VARCHAR}
   </delete>
+
+  <delete id="deleteByEid" parameterType="java.lang.Integer">
+    delete from emp_role_rel
+    where eid=#{eid}
+  </delete>
+
   <insert id="insert" parameterType="org.nothink.ballcrm.entity.EmpRoleRelEntity" >
     insert into emp_role_rel (eid, role)
     values (#{eid,jdbcType=INTEGER}, #{role,jdbcType=VARCHAR})

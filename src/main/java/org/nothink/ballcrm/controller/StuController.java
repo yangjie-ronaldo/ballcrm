@@ -100,10 +100,20 @@ public class StuController {
      *
      * @return
      */
-    @PostMapping("stucourse")
+    @PostMapping("/stucourse")
     @ResponseBody
     public Map buyCourse(StuCourseEntity sc) {
         return stuService.buyCourse(sc);
+    }
+
+    /**
+     * 查询能买的课程列表
+     * @return
+     */
+    @GetMapping("/courseforbuy")
+    @ResponseBody
+    public Map courseBuyList(){
+        return stuService.courseBuyList();
     }
 
 

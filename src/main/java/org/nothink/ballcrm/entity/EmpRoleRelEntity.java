@@ -29,4 +29,13 @@ public class EmpRoleRelEntity {
     public void setRole(String role) {
         this.role = role == null ? null : role.trim();
     }
+
+    @Override
+    public String toString() {
+        return "EmpRoleRelEntity{" +
+                "eid=" + eid +
+                ", role='" + role + '\'' +
+                ", roleName='" + roleName + '\'' +
+                '}';
+    }
 }

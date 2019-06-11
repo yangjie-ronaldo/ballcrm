@@ -2,7 +2,11 @@ package org.nothink.ballcrm.mapper;
 
 import org.nothink.ballcrm.entity.CourseTypeEntity;
 
+import java.util.List;
+
 public interface CourseTypeMapper {
+    List<CourseTypeEntity> getCourse();
+
     int deleteByPrimaryKey(Integer pkid);
 
     int insert(CourseTypeEntity record);

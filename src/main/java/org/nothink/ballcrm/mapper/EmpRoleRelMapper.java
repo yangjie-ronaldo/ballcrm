@@ -6,10 +6,11 @@ import java.util.List;
 
 public interface EmpRoleRelMapper {
 
-
     List<EmpRoleRelEntity> selectByEid(Integer eid);
 
     int deleteByPrimaryKey(EmpRoleRelEntity key);
+
+    int deleteByEid(Integer eid);
 
     int insert(EmpRoleRelEntity record);
 
