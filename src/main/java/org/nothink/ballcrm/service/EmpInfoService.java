@@ -33,7 +33,8 @@ public class EmpInfoService {
     EmpRoleRelMapper empRoleRelMapper;
     @Autowired
     RolesMapper rMapper;
-
+    @Autowired
+    CacheService cacheService;
     @Autowired
     EmpInfoService eService;
 
@@ -73,6 +74,7 @@ public class EmpInfoService {
                 empRoleRelMapper.insert(rel);
             }
         }
+        cacheService.freshEmpCache();
         return ComUtils.getResp(20000,"修改成功",null);
     }
 
@@ -108,6 +110,8 @@ public class EmpInfoService {
         //TODO 先直接注册 不加密
         eMapper.insertSelectiveAndGetKey(e);
         logger.info("注册后的编号为：" + e.getEid());
+        // 刷新员工缓存
+        cacheService.freshEmpCache();
         return ComUtils.getResp(20000, "注册成功", null);
     }
 

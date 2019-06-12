@@ -198,8 +198,10 @@ public class StuService {
             stu.setTypeDef(cache.CodeDefCache().get(stu.getType()));
             stu.setStatusDef(cache.CodeDefCache().get(stu.getStatus()));
             stu.setVerifyStatusDef(cache.CodeDefCache().get(stu.getVerifyStatusDef()));
-            //所属cc翻译
+            // 所属cc翻译
             stu.setCcName(cache.EmpCache().get(stu.getCc()));
+            // 所属门店翻译
+            stu.setNodeName(cache.NodeCache().get(stu.getNode()));
         }
     }
 
