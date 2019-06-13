@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.StuStatusMapper" >
+  <!-- 学员状态变化历史 -->
   <select id="getStuStatusListBySid" resultType="org.nothink.ballcrm.entity.StuStatusEntity">
     select * from stu_status where sid=#{sid} order by create_date desc
   </select>

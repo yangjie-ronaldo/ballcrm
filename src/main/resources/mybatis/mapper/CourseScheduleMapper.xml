@@ -2,14 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.CourseScheduleMapper" >
 
-  <!--学员课程表-->
+  <!-- 学员课程表 -->
   <select id="getCourseScheduleList" resultType="org.nothink.ballcrm.entity.CourseScheduleEntity" parameterType="org.nothink.ballcrm.entity.CourseScheduleEntity">
     select * from course_schedule
     where 1=1
     <if test="sid!=null and sid!=''"> and sid = #{sid} </if>
+    order by booking_date desc
   </select>
 
-  <!--明日上课提醒表 -->
+  <!-- 明日上课提醒表 销售看 -->
   <select id="getNotifyScheduleList" resultType="org.nothink.ballcrm.entity.CourseScheduleEntity" parameterType="org.nothink.ballcrm.entity.CourseScheduleEntity">
     select
     c.*,
@@ -24,7 +25,7 @@
     <if test="notifyStatus!=null and notifyStatus!='' "> and c.notify_stauts = #{notifyStatus} </if>
   </select>
 
-  <!--当日约课表-->
+  <!-- 当日约课表 销售 和 ccm 都可用 -->
   <select id="getScheduleToday" resultType="org.nothink.ballcrm.entity.CourseScheduleEntity" parameterType="org.nothink.ballcrm.entity.CourseScheduleEntity">
     select
     c.*,

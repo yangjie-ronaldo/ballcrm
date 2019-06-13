@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.StuCourseMapper" >
 
-
+  <!-- 选取学员可约的课程 -->
   <select id="getStuCourseAvailable" resultType="org.nothink.ballcrm.entity.StuCourseEntity" parameterType="java.lang.Integer">
     select
       buy.*,

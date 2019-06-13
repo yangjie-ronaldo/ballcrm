@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.StuMapper" >
 
+  <!-- 根据销售名下 或 机构获取学员列表 -->
   <select id="getStuList" resultType="org.nothink.ballcrm.entity.StuEntity" parameterType="org.nothink.ballcrm.entity.StuEntity">
     select * from stu where 1=1
     <if test="name != null and name!='' "> and name like CONCAT('%',#{name},'%') or niki_name like CONCAT('%',#{name},'%') </if>

@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.RolesMapper" >
 
+  <!-- 获取所有角色列表 -->
   <select id="getAllRoles" resultType="org.nothink.ballcrm.entity.RolesEntity">
     select * from roles
   </select>

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.ContactPlanMapper" >
-
-
+    <!-- 查询联系计划列表 -->
   <select id="getPlanList" resultType="org.nothink.ballcrm.entity.ContactPlanEntity" parameterType="org.nothink.ballcrm.entity.ContactPlanEntity">
     select
     p.*,
@@ -21,6 +20,7 @@
     order by p.plan_date asc
   </select>
 
+  <!-- 查询机构下的待审核联系计划 通过 eid -->
   <select id="getVerifyPlanByEid" resultType="org.nothink.ballcrm.entity.ContactPlanEntity" parameterType="org.nothink.ballcrm.entity.ContactPlanEntity">
     select
     p.*,
