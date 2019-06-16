@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.nothink.ballcrm.mapper.StuFamilyMapper" >
+
+
+  <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.StuFamilyEntity" parameterType="java.lang.Integer" >
+    select 
+    *
+    from stu_family
+    where sid = #{sid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stu_family
+    where sid = #{sid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.nothink.ballcrm.entity.StuFamilyEntity" >
+    insert into stu_family (sid, pay_ability, pay_will, 
+      order_date, education_idea, pickup, 
+      decision)
+    values (#{sid,jdbcType=INTEGER}, #{payAbility,jdbcType=VARCHAR}, #{payWill,jdbcType=VARCHAR}, 
+      #{orderDate,jdbcType=DATE}, #{educationIdea,jdbcType=VARCHAR}, #{pickup,jdbcType=VARCHAR}, 
+      #{decision,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.nothink.ballcrm.entity.StuFamilyEntity" >
+    insert into stu_family
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="sid != null" >
+        sid,
+      </if>
+      <if test="payAbility != null" >
+        pay_ability,
+      </if>
+      <if test="payWill != null" >
+        pay_will,
+      </if>
+      <if test="orderDate != null" >
+        order_date,
+      </if>
+      <if test="educationIdea != null" >
+        education_idea,
+      </if>
+      <if test="pickup != null" >
+        pickup,
+      </if>
+      <if test="decision != null" >
+        decision,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="sid != null" >
+        #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="payAbility != null" >
+        #{payAbility,jdbcType=VARCHAR},
+      </if>
+      <if test="payWill != null" >
+        #{payWill,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDate != null" >
+        #{orderDate,jdbcType=DATE},
+      </if>
+      <if test="educationIdea != null" >
+        #{educationIdea,jdbcType=VARCHAR},
+      </if>
+      <if test="pickup != null" >
+        #{pickup,jdbcType=VARCHAR},
+      </if>
+      <if test="decision != null" >
+        #{decision,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.nothink.ballcrm.entity.StuFamilyEntity" >
+    update stu_family
+    <set >
+      <if test="payAbility != null" >
+        pay_ability = #{payAbility,jdbcType=VARCHAR},
+      </if>
+      <if test="payWill != null" >
+        pay_will = #{payWill,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDate != null" >
+        order_date = #{orderDate,jdbcType=DATE},
+      </if>
+      <if test="educationIdea != null" >
+        education_idea = #{educationIdea,jdbcType=VARCHAR},
+      </if>
+      <if test="pickup != null" >
+        pickup = #{pickup,jdbcType=VARCHAR},
+      </if>
+      <if test="decision != null" >
+        decision = #{decision,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sid = #{sid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.nothink.ballcrm.entity.StuFamilyEntity" >
+    update stu_family
+    set pay_ability = #{payAbility,jdbcType=VARCHAR},
+      pay_will = #{payWill,jdbcType=VARCHAR},
+      order_date = #{orderDate,jdbcType=DATE},
+      education_idea = #{educationIdea,jdbcType=VARCHAR},
+      pickup = #{pickup,jdbcType=VARCHAR},
+      decision = #{decision,jdbcType=VARCHAR}
+    where sid = #{sid,jdbcType=INTEGER}
+  </update>
+</mapper>

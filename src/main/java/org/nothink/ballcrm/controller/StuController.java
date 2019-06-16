@@ -116,6 +116,26 @@ public class StuController {
         return stuService.courseBuyList();
     }
 
+    /**
+     * 查询学员家庭信息
+     * @return
+     */
+    @GetMapping("/stufamily")
+    @ResponseBody
+    public Map getStuFamily(StuFamilyEntity c){
+        return stuService.getStuFamily(c);
+    }
+
+    /**
+     * 修改学员家庭信息
+     * @return
+     */
+    @PutMapping("/stufamily")
+    @ResponseBody
+    public Map saveStuFamily(StuFamilyEntity c){
+        return stuService.saveStuFamily(c);
+    }
+
 
 //下面是演示用登录------------------------------------------------------
 

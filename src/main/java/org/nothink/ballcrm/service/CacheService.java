@@ -1,9 +1,11 @@
 package org.nothink.ballcrm.service;
 
 import org.nothink.ballcrm.entity.CodeDefEntity;
+import org.nothink.ballcrm.entity.CourseTypeEntity;
 import org.nothink.ballcrm.entity.EmpInfoEntity;
 import org.nothink.ballcrm.entity.NodeInfoEntity;
 import org.nothink.ballcrm.mapper.CommonMapper;
+import org.nothink.ballcrm.mapper.CourseTypeMapper;
 import org.nothink.ballcrm.mapper.EmpInfoMapper;
 import org.nothink.ballcrm.mapper.NodeInfoMapper;
 import org.slf4j.Logger;
@@ -26,6 +28,8 @@ public class CacheService {
     EmpInfoMapper eMapper;
     @Autowired
     NodeInfoMapper nMapper;
+    @Autowired
+    CourseTypeMapper courseMapper;
 
     @Cacheable(cacheNames="mainCache",key="'CodeCache'")
     public Map<String, String> CodeDefCache() {
@@ -42,6 +46,23 @@ public class CacheService {
     @CachePut(cacheNames="mainCache",key="'CodeCache'")
     public Map<String, String> freshCodeDefCache() {
         return this.CodeDefCache();
+    }
+
+    @Cacheable(cacheNames="mainCache",key="'CourseCache'")
+    public Map<Integer, String> CourseCache() {
+        logger.info("刷新课程翻译缓存...");
+        HashMap<Integer, String> map = new HashMap<>();
+        List<CourseTypeEntity> list = courseMapper.getCourse();
+        if (list != null) {
+            for (CourseTypeEntity c : list) {
+                map.put(c.getPkid(),c.getTypeName());
+            }
+        }
+        return map;
+    }
+    @CachePut(cacheNames="mainCache",key="'CourseCache'")
+    public Map<Integer, String> freshCourseCache() {
+        return this.CourseCache();
     }
 
     @Cacheable(cacheNames="mainCache",key="'EmpCache'")

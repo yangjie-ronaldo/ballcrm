@@ -214,6 +214,8 @@ public class CourseScheduleService {
             cs.setTraceStatusDef(cache.CodeDefCache().get(cs.getTraceStatus()));
             // 上课老师
             cs.setTeacheName(cache.EmpCache().get(cs.getTeachEid()));
+            // 课程名
+            cs.setCourseTypeName(cache.CourseCache().get(cs.getCourseTypeId()));
         }
     }
 

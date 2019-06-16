@@ -3,10 +3,7 @@ package org.nothink.ballcrm.service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.nothink.ballcrm.entity.*;
-import org.nothink.ballcrm.mapper.CourseTypeMapper;
-import org.nothink.ballcrm.mapper.StuCourseMapper;
-import org.nothink.ballcrm.mapper.StuMapper;
-import org.nothink.ballcrm.mapper.StuStatusMapper;
+import org.nothink.ballcrm.mapper.*;
 import org.nothink.ballcrm.util.CodeDef;
 import org.nothink.ballcrm.util.ComUtils;
 import org.slf4j.Logger;
@@ -33,6 +30,8 @@ public class StuService {
     CacheService cache;
     @Autowired
     CourseTypeMapper courseMapper;
+    @Autowired
+    StuFamilyMapper stuFamilyMapper;
 
     /**
      * 根据id查询学员
@@ -181,7 +180,43 @@ public class StuService {
         return ComUtils.getResp(20000,"查询成功",courseMapper.getCourse());
     }
 
+    /**
+     * 查询学员家庭信息
+     * @param c
+     * @return
+     */
+    public Map getStuFamily(StuFamilyEntity c){
+        if (c.getSid()==null){
+            return ComUtils.getResp(40008,"无此学员",null);
+        }
+        StuFamilyEntity f=stuFamilyMapper.selectByPrimaryKey(c.getSid());
+        return ComUtils.getResp(20000,"查询成功",f);
+    }
+
+    /**
+     * 修改并保存家庭信息
+     * @param c
+     * @return
+     */
+    public Map saveStuFamily(StuFamilyEntity c){
+        if (c.getSid()==null){
+            return ComUtils.getResp(40008,"无此学员",null);
+        }
+        StuFamilyEntity f=stuFamilyMapper.selectByPrimaryKey(c.getSid());
+        int r=0;
+        if (f==null){
+            r=stuFamilyMapper.insertSelective(c);
+        } else {
+            r=stuFamilyMapper.updateByPrimaryKeySelective(c);
+        }
+        if (r==0)
+            return ComUtils.getResp(40008,"修改失败",null);
+        else
+            return ComUtils.getResp(20000,"修改成功",c);
+    }
+
     //放弃客户处理
+    @Transactional
     public int abandonStu(Integer sid) {
         StuEntity stu = stuMapper.selectByPrimaryKey(sid);
         if (stu == null)
@@ -191,6 +226,8 @@ public class StuService {
         return 1;
     }
 
+
+    //客户代码值翻译
     private void stuCodeTrans(StuEntity stu) {
         //代码翻译
         if (stu != null) {
