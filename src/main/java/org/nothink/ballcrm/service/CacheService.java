@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class CacheService {
 
     @Cacheable(cacheNames="mainCache",key="'CodeCache'")
     public Map<String, String> CodeDefCache() {
-        logger.info("刷新代码缓存...");
+        logger.info("刷新代码翻译缓存...");
         HashMap<String, String> map = new HashMap<>();
         List<CodeDefEntity> list = commonMapper.getCodeDef();
         if (list != null) {
@@ -76,5 +77,23 @@ public class CacheService {
     @CachePut(cacheNames = "mainCache",key="'NodeCache'")
     public Map<Integer,String> FreshNodeCache() {
         return this.NodeCache();
+    }
+
+    //所有标准代码的缓存
+    @Cacheable(cacheNames="mainCache",key="'StandardCode'")
+    public Map<String,List<CodeDefEntity>> StandardCode(){
+        logger.info("刷新标准代码缓存...");
+        Map<String,List<CodeDefEntity>> map=new HashMap<>();
+        List<CodeDefEntity> allCode = commonMapper.getCodeDef();
+        for (CodeDefEntity c:allCode){
+            if (map.containsKey(c.getCategory())){
+                map.get(c.getCategory()).add(c);
+            } else {
+                List<CodeDefEntity> list1=new ArrayList<>();
+                list1.add(c);
+                map.put(c.getCategory(),list1);
+            }
+        }
+        return map;
     }
 }

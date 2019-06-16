@@ -2,10 +2,7 @@ package org.nothink.ballcrm.service;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import org.nothink.ballcrm.entity.EmpInfoEntity;
-import org.nothink.ballcrm.entity.EmpRoleRelEntity;
-import org.nothink.ballcrm.entity.LoginTokenEntity;
-import org.nothink.ballcrm.entity.PagedResult;
+import org.nothink.ballcrm.entity.*;
 import org.nothink.ballcrm.mapper.EmpInfoMapper;
 import org.nothink.ballcrm.mapper.EmpRoleRelMapper;
 import org.nothink.ballcrm.mapper.LoginTokenMapper;
@@ -170,6 +167,34 @@ public class EmpInfoService {
         } else {
             return ComUtils.getResp(40008, "注销失败", null);
         }
+    }
+
+    // 查询员工的待办统计信息
+    public Map getTodoNums(Integer eid){
+        Map<String,Object> map=new HashMap();
+        Statistics statistcs = null;
+        //获取今日联系计划待办
+        statistcs=eMapper.getTodayTodoPlan(eid);
+        if (statistcs!=null && statistcs.getNum()!=0){
+            map.put("todayPlanTodo",statistcs.getNum());
+        } else {
+            map.put("todayPlanTodo",0);
+        }
+        // 获取课程待办
+        statistcs=eMapper.getTodoSchedule(eid);
+        if (statistcs!=null && statistcs.getNum()!=0){
+            map.put("courseScheduleTodo",statistcs.getNum());
+        } else {
+            map.put("courseScheduleTodo",0);
+        }
+        // 获取明日提醒待办
+        statistcs=eMapper.getTomorrowTodoNotify(eid);
+        if (statistcs!=null && statistcs.getNum()!=0){
+            map.put("tomorrowNotifyTodo",statistcs.getNum());
+        } else {
+            map.put("tomorrowNotifyTodo",0);
+        }
+        return ComUtils.getResp(20000,"查询成功",map);
     }
 
 

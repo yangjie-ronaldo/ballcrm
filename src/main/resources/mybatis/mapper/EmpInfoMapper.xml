@@ -10,13 +10,53 @@
     <if test="role!=null"> and role = #{role} </if>
   </select>
 
+  <!--查询员工今日联系计划待办数量 -->
+  <select id="getTodayTodoPlan" parameterType="java.lang.Integer" resultType="org.nothink.ballcrm.entity.Statistics">
+    select
+    eid,
+    count(*) as num
+    from contact_plan p
+    where 1=1
+    and eid=#{eid}
+    and p.status = 'PST01'
+    and p.plan_date &gt;= curdate()
+    and p.plan_date &lt; date(curdate()+1)
+    group by eid
+  </select>
+
+  <!--查询员工待处理课程数量-->
+  <select id="getTodoSchedule" parameterType="java.lang.Integer" resultType="org.nothink.ballcrm.entity.Statistics">
+    select
+    s.cc as eid,
+    count(*) as num
+    from course_schedule c inner join stu s on s.sid=c.sid
+    where
+    s.cc=#{eid}
+    and c.booking_date &lt; date(curdate()+1)
+    and c.trace_status = 'PST01'
+    group by s.cc
+  </select>
+  <!--查询员工明日提醒数量-->
+  <select id="getTomorrowTodoNotify" parameterType="java.lang.Integer" resultType="org.nothink.ballcrm.entity.Statistics">
+    select
+    s.cc as eid,
+    count(*) as num
+    from course_schedule c inner join stu s on s.sid=c.sid
+    where
+    s.cc=#{eid}
+    and c.booking_date &gt;= date(curdate()+1)
+    and c.booking_date &lt; date(curdate()+2)
+    and c.notify_status = 'PST01'
+    group by s.cc
+  </select>
+
+
   <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.EmpInfoEntity" parameterType="java.lang.Integer" >
     select
     *
     from emp_info
     where eid = #{eid,jdbcType=INTEGER}
   </select>
-
   <select id="getEmpByLoginid" resultType="org.nothink.ballcrm.entity.EmpInfoEntity" parameterType="java.lang.String" >
     select * from emp_info
     where loginid=#{loginid} limit 1

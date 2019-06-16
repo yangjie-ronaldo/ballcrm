@@ -24,7 +24,7 @@ public class CodeDef {
     public static String STU_TRUANCY = "SST06";  // 旷课中，待联系
     public static String STU_BUY198 = "SST07";  // 已买小课包
     public static String STU_BUYVIP = "SST08";  // 已购买年卡
-    public static String STU_HOUXUAN = "SST09";  // 放弃客户
+    public static String STU_HOUXUAN = "SST09";  // 客户被放弃
 
     //学员签到状态
     public static String SIGN_OK = "SIG01";  // 已签到

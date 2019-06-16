@@ -82,6 +82,12 @@ public class EmpController {
         return eService.logout(eid);
     }
 
+    @GetMapping("/emptodo")
+    @ResponseBody
+    public Map empTodoNum(Integer eid){
+        return eService.getTodoNums(eid);
+    }
+
     @GetMapping("/empinfo")
     @ResponseBody
     public Map getEmpInfo(EmpInfoEntity e){

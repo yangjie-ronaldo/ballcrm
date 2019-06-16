@@ -31,8 +31,8 @@ public class LoginInterceptor implements HandlerInterceptor {
         String token = request.getHeader("token");
         String eid = request.getHeader("eid");
         JSONObject res = new JSONObject();
-        System.out.println("拦截器拿到请求头的token：" + token);
-        System.out.println("拦截器拿到请求头的eid：" + eid);
+//        System.out.println("拦截器拿到请求头的token：" + token);
+//        System.out.println("拦截器拿到请求头的eid：" + eid);
 
         if (StringUtils.isEmpty(token) || StringUtils.isEmpty(eid)) {
             res.put("code", 50008);
