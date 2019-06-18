@@ -2,19 +2,18 @@ package org.nothink.ballcrm.service;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import org.nothink.ballcrm.entity.CourseScheduleEntity;
-import org.nothink.ballcrm.entity.PagedResult;
-import org.nothink.ballcrm.entity.StuCourseEntity;
-import org.nothink.ballcrm.entity.StuEntity;
+import org.nothink.ballcrm.entity.*;
 import org.nothink.ballcrm.mapper.CourseScheduleMapper;
 import org.nothink.ballcrm.mapper.StuCourseMapper;
+import org.nothink.ballcrm.mapper.StuFamilyMapper;
 import org.nothink.ballcrm.util.CodeDef;
 import org.nothink.ballcrm.util.ComUtils;
 import org.nothink.ballcrm.util.DateUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +30,8 @@ public class CourseScheduleService {
     StuCourseMapper stuCoureMapper;
     @Autowired
     CacheService cache;
+    @Autowired
+    StuFamilyMapper sfMapper;
 
     /**
      * 学员约课
@@ -153,6 +154,15 @@ public class CourseScheduleService {
         CourseScheduleEntity relCs = csMapper.selectByPrimaryKey(cs.getPkid());
         if (relCs == null)
             return ComUtils.getResp(40008,"无上课信息",null);
+
+        //如果是198课，查询有无维护家庭信息，没有则不能处理
+        if (relCs.getCourseTypeId()==2){
+            StuFamilyEntity sf=sfMapper.selectByPrimaryKey(relCs.getSid());
+            if (sf==null || StringUtils.isEmpty(sf.getPayWill())){
+                return ComUtils.getResp(40008,"未完成家庭信息填写，不能处理本课程追踪",null);
+            }
+        }
+
         relCs.setTraceStatus(CodeDef.HANDLED);
         relCs.setTraceNote(cs.getTraceNote());
 

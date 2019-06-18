@@ -155,13 +155,20 @@ public class StuService {
         // 1.新增买课记录
         int r = stuCourseMapper.insertSelective(sc);
 
-        // 2.修改学员状态
+        // 2.不同课程，不同的处理
         String status = null, note = null;
         if (sc.getCourseTypeId() == 2) {
             //买小课包
             status = CodeDef.STU_BUY198;
             note = "成为小课包学员！再接再厉！";
             stu.setType(CodeDef.TYPE_198);
+            // 把这个学员的demo课数量置为0
+            StuCourseEntity demo=new StuCourseEntity();
+            demo.setSid(sc.getSid());
+            demo.setCourseTypeId(1);
+            demo=stuCourseMapper.getStuCourseSelective(demo);
+            demo.setNum(0);
+            stuCourseMapper.updateByPrimaryKeySelective(demo);
         } else if (sc.getCourseTypeId() == 3) {
             //买了正课
             status = CodeDef.STU_BUYVIP;

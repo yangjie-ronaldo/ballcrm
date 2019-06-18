@@ -2,6 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.StuCourseMapper" >
 
+  <!-- 选取学员购买的课程，按条件-->
+  <select id="getStuCourseSelective" resultType="org.nothink.ballcrm.entity.StuCourseEntity" parameterType="org.nothink.ballcrm.entity.StuCourseEntity">
+    select
+      *
+    from
+      stu_course
+    where 1=1
+    <if test="sid!=null"> and sid=#{sid} </if>
+    <if test="courseTypeId!=null"> and course_type_id=#{courseTypeId} </if>
+    <if test="pkid!=null"> and pkid=#{pkid} </if>
+    limit 1
+  </select>
+
   <!-- 选取学员可约的课程 -->
   <select id="getStuCourseAvailable" resultType="org.nothink.ballcrm.entity.StuCourseEntity" parameterType="java.lang.Integer">
     select

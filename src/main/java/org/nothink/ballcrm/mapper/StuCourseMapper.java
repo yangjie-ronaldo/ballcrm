@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface StuCourseMapper {
 
+    StuCourseEntity getStuCourseSelective(StuCourseEntity sc);
+
     StuCourseEntity getStuCourseAvailable(StuCourseEntity sc);
 
     List<StuCourseEntity> getStuCourseListBySid(Integer sid);
