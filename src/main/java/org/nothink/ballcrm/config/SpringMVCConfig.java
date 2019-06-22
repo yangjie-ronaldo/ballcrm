@@ -30,13 +30,13 @@ public class SpringMVCConfig implements WebMvcConfigurer {
     //添加SpringMVC的拦截器
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(getMyLoginInterceptor())
-                // 拦截所有请求 /**
-                .addPathPatterns("/**")
-                // 排除拦截的请求 登录页面，注册api 登录api 登录处理
-                .excludePathPatterns("/", "/pages/login", "/reg","/login","/action/login",
-                        // 排除静态资源请求 这些目录下的静态资源可以直接访问
-                        "/css/**", "/js/**", "/img/**");
+//        registry.addInterceptor(getMyLoginInterceptor())
+//                // 拦截所有请求 /**
+//                .addPathPatterns("/**")
+//                // 排除拦截的请求 登录页面，注册api 登录api 登录处理
+//                .excludePathPatterns("/", "/pages/login", "/reg","/login","/action/login",
+//                        // 排除静态资源请求 这些目录下的静态资源可以直接访问
+//                        "/css/**", "/js/**", "/img/**");
         //super.addInterceptors(registry);
     }
 

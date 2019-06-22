@@ -14,5 +14,4 @@ public interface EmpRoleRelMapper {
 
     int insert(EmpRoleRelEntity record);
 
-    int insertSelective(EmpRoleRelEntity record);
 }
