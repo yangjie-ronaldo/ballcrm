@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -163,10 +164,10 @@ public class StuService {
             note = "成为小课包学员！再接再厉！";
             stu.setType(CodeDef.TYPE_198);
             // 把这个学员的demo课数量置为0
-            StuCourseEntity demo=new StuCourseEntity();
+            StuCourseEntity demo = new StuCourseEntity();
             demo.setSid(sc.getSid());
             demo.setCourseTypeId(1);
-            demo=stuCourseMapper.getStuCourseSelective(demo);
+            demo = stuCourseMapper.getStuCourseSelective(demo);
             demo.setNum(0);
             stuCourseMapper.updateByPrimaryKeySelective(demo);
         } else if (sc.getCourseTypeId() == 3) {
@@ -183,43 +184,98 @@ public class StuService {
     }
 
     //能买的课程
-    public Map courseBuyList(){
-        return ComUtils.getResp(20000,"查询成功",courseMapper.getCourse());
+    public Map courseBuyList() {
+        return ComUtils.getResp(20000, "查询成功", courseMapper.getCourse());
     }
 
     /**
      * 查询学员家庭信息
+     *
      * @param c
      * @return
      */
-    public Map getStuFamily(StuFamilyEntity c){
-        if (c.getSid()==null){
-            return ComUtils.getResp(40008,"无此学员",null);
+    public Map getStuFamily(StuFamilyEntity c) {
+        if (c.getSid() == null) {
+            return ComUtils.getResp(40008, "无此学员", null);
         }
-        StuFamilyEntity f=stuFamilyMapper.selectByPrimaryKey(c.getSid());
-        return ComUtils.getResp(20000,"查询成功",f);
+        StuFamilyEntity f = stuFamilyMapper.selectByPrimaryKey(c.getSid());
+        return ComUtils.getResp(20000, "查询成功", f);
     }
 
     /**
      * 修改并保存家庭信息
+     *
      * @param c
      * @return
      */
-    public Map saveStuFamily(StuFamilyEntity c){
-        if (c.getSid()==null){
-            return ComUtils.getResp(40008,"无此学员",null);
+    public Map saveStuFamily(StuFamilyEntity c) {
+        if (c.getSid() == null) {
+            return ComUtils.getResp(40008, "无此学员", null);
         }
-        StuFamilyEntity f=stuFamilyMapper.selectByPrimaryKey(c.getSid());
-        int r=0;
-        if (f==null){
-            r=stuFamilyMapper.insertSelective(c);
+        StuFamilyEntity f = stuFamilyMapper.selectByPrimaryKey(c.getSid());
+        int r = 0;
+        if (f == null) {
+            r = stuFamilyMapper.insertSelective(c);
         } else {
-            r=stuFamilyMapper.updateByPrimaryKeySelective(c);
+            r = stuFamilyMapper.updateByPrimaryKeySelective(c);
         }
-        if (r==0)
-            return ComUtils.getResp(40008,"修改失败",null);
+        if (r == 0)
+            return ComUtils.getResp(40008, "修改失败", null);
         else
-            return ComUtils.getResp(20000,"修改成功",c);
+            return ComUtils.getResp(20000, "修改成功", c);
+    }
+
+    /**
+     * 查询待转移学员列表
+     *
+     * @param c
+     * @return
+     */
+    public Map getTransStuList(StuTransCriteria c) {
+        if (c == null || StringUtils.isEmpty(c.getFromCc())) {
+            return ComUtils.getResp(40008, "未选择所属员工", null);
+        }
+        Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
+        //执行查询
+        List<StuEntity> list = stuMapper.getStuTransList(c);
+        PagedResult<StuEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());
+        //翻译代码值
+        if (list != null)
+            for (StuEntity s : list)
+                s.setStatusDef(cache.CodeDefCache().get(s.getStatus()));
+        result.setItems(list);
+        return ComUtils.getResp(20000, "查询成功", result);
+
+    }
+
+    /**
+     * 执行学员转移
+     * @param c
+     * @return
+     */
+    @Transactional
+    public Map doTrans(StuTransCriteria c) {
+        if (c == null || StringUtils.isEmpty(c.getFromCc())) {
+            return ComUtils.getResp(40008, "未选择所属员工", null);
+        }
+        if (StringUtils.isEmpty(c.getToCc())) {
+            return ComUtils.getResp(40008, "未选择转移后员工", null);
+        }
+
+        if (c.getStus() != null && c.getStus().length > 0) {
+            // 若选择了学员 则直接转移所选学员
+            for (Integer sid : c.getStus()) {
+                transStu(c.getFromCc(), c.getToCc(), sid);
+            }
+            return ComUtils.getResp(20000, "转移成功", null);
+        } else {
+            // 若未选择学员 按条件查询待转移
+            List<StuEntity> list = stuMapper.getStuTransList(c);
+            for (StuEntity stu : list) {
+                transStu(c.getFromCc(), c.getToCc(), stu.getSid());
+            }
+            return ComUtils.getResp(20000, "转移成功", null);
+        }
     }
 
     //放弃客户处理
@@ -233,6 +289,17 @@ public class StuService {
         return 1;
     }
 
+    // 单个学员转移
+    private boolean transStu(Integer from, Integer to, Integer sid) {
+        StuEntity stu = stuMapper.selectByPrimaryKey(sid);
+        if (stu == null) return false;
+        Integer preCc = stu.getCc();
+        if (preCc != from) return false;
+        stu.setPreCc(preCc);
+        stu.setCc(to);
+        stuMapper.updateByPrimaryKeySelective(stu);
+        return true;
+    }
 
     //客户代码值翻译
     private void stuCodeTrans(StuEntity stu) {
@@ -242,6 +309,8 @@ public class StuService {
             stu.setTypeDef(cache.CodeDefCache().get(stu.getType()));
             stu.setStatusDef(cache.CodeDefCache().get(stu.getStatus()));
             stu.setVerifyStatusDef(cache.CodeDefCache().get(stu.getVerifyStatusDef()));
+            stu.setChannelName(cache.CodeDefCache().get(stu.getChannel()));
+
             // 所属cc翻译
             stu.setCcName(cache.EmpCache().get(stu.getCc()));
             // 所属门店翻译

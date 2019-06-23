@@ -19,6 +19,32 @@
     from stu
     where sid = #{sid,jdbcType=INTEGER}
   </select>
+  <!--根据条件查询待转移学员列表-->
+  <select id="getStuTransList" resultType="org.nothink.ballcrm.entity.StuEntity">
+    select
+    *
+    from stu s
+    where s.cc=#{fromCc}
+    <if test=" preCc!=null ">
+      and s.pre_cc=#{preCc}
+    </if>
+    <trim prefix=" and (" suffix=")" prefixOverrides="and |or ">
+      <if test=" hasPlanTodo!=null ">
+        exists (
+          select * from contact_plan p where p.sid=s.sid and p.status='PST01'
+          <if test="startDate!=null">and p.plan_date &gt;= #{startDate}</if>
+          <if test="endDate!=null">and p.plan_date &lt;= #{endDate}</if>
+        )
+      </if>
+      <if test=" hasScheduleTodo!=null ">
+        or exists (
+          select * from course_schedule c where c.sid=s.sid and c.sign_status='SIG02'
+          <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
+          <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
+        )
+      </if>
+    </trim>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from stu
     where sid = #{sid,jdbcType=INTEGER}
@@ -28,12 +54,12 @@
       niki_name, birthday, sex,
       tel, status, verify_status,
       channel, channel_note, type,
-      wechat, cc, node)
+      wechat, pre_cc, cc, node)
     values (#{sid,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, #{name,jdbcType=VARCHAR},
       #{nikiName,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{sex,jdbcType=VARCHAR},
       #{tel,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{verifyStatus,jdbcType=VARCHAR},
       #{channel,jdbcType=VARCHAR}, #{channelNote,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
-      #{wechat,jdbcType=VARCHAR}, #{cc,jdbcType=INTEGER}, #{node,jdbcType=INTEGER})
+      #{wechat,jdbcType=VARCHAR}, #{preCc,jdbcType=INTEGER}, #{cc,jdbcType=INTEGER}, #{node,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelectiveAndGetKey" useGeneratedKeys="true" keyProperty="sid"  parameterType="org.nothink.ballcrm.entity.StuEntity" >
     insert into stu
@@ -76,6 +102,9 @@
       </if>
       <if test="wechat != null" >
         wechat,
+      </if>
+      <if test="preCc != null" >
+        pre_cc,
       </if>
       <if test="cc != null" >
         cc,
@@ -124,6 +153,9 @@
       <if test="wechat != null" >
         #{wechat,jdbcType=VARCHAR},
       </if>
+      <if test="preCc != null" >
+        #{preCc,jdbcType=INTEGER},
+      </if>
       <if test="cc != null" >
         #{cc,jdbcType=INTEGER},
       </if>
@@ -171,6 +203,9 @@
       <if test="wechat != null" >
         wechat = #{wechat,jdbcType=VARCHAR},
       </if>
+      <if test="preCc != null" >
+        pre_cc = #{preCc,jdbcType=INTEGER},
+      </if>
       <if test="cc != null" >
         cc = #{cc,jdbcType=INTEGER},
       </if>
@@ -194,6 +229,7 @@
       channel_note = #{channelNote,jdbcType=VARCHAR},
       type = #{type,jdbcType=VARCHAR},
       wechat = #{wechat,jdbcType=VARCHAR},
+      pre_cc = #{preCc,jdbcType=INTEGER},
       cc = #{cc,jdbcType=INTEGER},
       node = #{node,jdbcType=INTEGER}
     where sid = #{sid,jdbcType=INTEGER}

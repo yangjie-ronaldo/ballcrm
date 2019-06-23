@@ -29,6 +29,7 @@ public class StuEntity extends PagedCriteria {
     private String verifyStatusDef;
 
     private String channel;
+    private String channelName;
 
     private String channelNote;
 
@@ -37,6 +38,7 @@ public class StuEntity extends PagedCriteria {
 
     private String wechat;
 
+    private Integer preCc;
     private Integer cc;
     private String ccName;
 
@@ -44,6 +46,51 @@ public class StuEntity extends PagedCriteria {
     private Integer node;
     private String nodeName;
 
+
+    @Override
+    public String toString() {
+        return "StuEntity{" +
+                "sid=" + sid +
+                ", createDate=" + createDate +
+                ", name='" + name + '\'' +
+                ", nikiName='" + nikiName + '\'' +
+                ", birthday=" + birthday +
+                ", sex='" + sex + '\'' +
+                ", sexDef='" + sexDef + '\'' +
+                ", tel='" + tel + '\'' +
+                ", status='" + status + '\'' +
+                ", statusDef='" + statusDef + '\'' +
+                ", verifyStatus='" + verifyStatus + '\'' +
+                ", verifyStatusDef='" + verifyStatusDef + '\'' +
+                ", channel='" + channel + '\'' +
+                ", channelName='" + channelName + '\'' +
+                ", channelNote='" + channelNote + '\'' +
+                ", type='" + type + '\'' +
+                ", typeDef='" + typeDef + '\'' +
+                ", wechat='" + wechat + '\'' +
+                ", preCc=" + preCc +
+                ", cc=" + cc +
+                ", ccName='" + ccName + '\'' +
+                ", node=" + node +
+                ", nodeName='" + nodeName + '\'' +
+                '}';
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
+
+    public Integer getPreCc() {
+        return preCc;
+    }
+
+    public void setPreCc(Integer preCc) {
+        this.preCc = preCc;
+    }
 
     public Integer getSid() {
         return sid;
@@ -213,31 +260,4 @@ public class StuEntity extends PagedCriteria {
         this.nodeName = nodeName;
     }
 
-    @Override
-    public String toString() {
-        return "StuEntity{" +
-                "sid=" + sid +
-                ", createDate=" + createDate +
-                ", name='" + name + '\'' +
-
-                ", nikiName='" + nikiName + '\'' +
-                ", birthday=" + birthday +
-                ", sex='" + sex + '\'' +
-                ", sexDef='" + sexDef + '\'' +
-                ", tel='" + tel + '\'' +
-                ", status='" + status + '\'' +
-                ", statusDef='" + statusDef + '\'' +
-                ", verifyStatus='" + verifyStatus + '\'' +
-                ", verifyStatusDef='" + verifyStatusDef + '\'' +
-                ", channel='" + channel + '\'' +
-                ", channelNote='" + channelNote + '\'' +
-                ", type='" + type + '\'' +
-                ", typeDef='" + typeDef + '\'' +
-                ", wechat='" + wechat + '\'' +
-                ", cc=" + cc +
-                ", ccName=" + ccName +
-                ", node=" + node +
-                ", nodeName=" + nodeName +
-                '}';
-    }
 }

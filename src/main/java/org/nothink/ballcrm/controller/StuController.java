@@ -34,7 +34,7 @@ public class StuController {
     @GetMapping("/stu/{sid}")
     @ResponseBody
     public Map getStuById(@PathVariable(value = "sid") int sid) {
-        return ComUtils.getResp(20000,"查询成功",stuService.findById(sid));
+        return ComUtils.getResp(20000, "查询成功", stuService.findById(sid));
     }
 
     /**
@@ -108,32 +108,58 @@ public class StuController {
 
     /**
      * 查询能买的课程列表
+     *
      * @return
      */
     @GetMapping("/courseforbuy")
     @ResponseBody
-    public Map courseBuyList(){
+    public Map courseBuyList() {
         return stuService.courseBuyList();
     }
 
     /**
      * 查询学员家庭信息
+     *
      * @return
      */
     @GetMapping("/stufamily")
     @ResponseBody
-    public Map getStuFamily(StuFamilyEntity c){
+    public Map getStuFamily(StuFamilyEntity c) {
         return stuService.getStuFamily(c);
     }
 
     /**
      * 修改学员家庭信息
+     *
      * @return
      */
     @PutMapping("/stufamily")
     @ResponseBody
-    public Map saveStuFamily(StuFamilyEntity c){
+    public Map saveStuFamily(StuFamilyEntity c) {
         return stuService.saveStuFamily(c);
+    }
+
+    /**
+     * 查询待转移学员列表
+     *
+     * @param c
+     * @return
+     */
+    @GetMapping("/stutrans")
+    @ResponseBody
+    public Map getTransStuList(StuTransCriteria c) {
+        return stuService.getTransStuList(c);
+    }
+
+    /**
+     * 执行学员转移
+     * @param c
+     * @return
+     */
+    @PutMapping("/dotrans")
+    @ResponseBody
+    public Map doTrans(@RequestBody StuTransCriteria c) {
+        return stuService.doTrans(c);
     }
 
 
