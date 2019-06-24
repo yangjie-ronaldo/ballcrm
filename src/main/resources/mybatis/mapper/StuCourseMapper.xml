@@ -15,7 +15,7 @@
     limit 1
   </select>
 
-  <!-- 选取学员可约的课程 -->
+  <!-- 选取学员可约的课程  废弃  暂时不用-->
   <select id="getStuCourseAvailable" resultType="org.nothink.ballcrm.entity.StuCourseEntity" parameterType="java.lang.Integer">
     select
       buy.*,

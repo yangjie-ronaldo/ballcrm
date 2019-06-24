@@ -185,6 +185,15 @@ public class CourseScheduleService {
      */
     @Transactional
     public Map signIn(CourseScheduleEntity cs) {
+        if (cs.getSid()==null){
+            return ComUtils.getResp(40008,"无学员编号",null);
+        }
+        if (cs.getCourseTypeId()==null){
+            return ComUtils.getResp(40008,"无课程编号",null);
+        }
+        if (cs.getPkid()==null){
+            return ComUtils.getResp(40008,"无约课信息",null);
+        }
         // 本次课签到
         CourseScheduleEntity course = csMapper.selectByPrimaryKey(cs.getPkid());
         if (course == null)
@@ -193,11 +202,30 @@ public class CourseScheduleService {
         course.setSignStatus(CodeDef.SIGN_OK);
         csMapper.updateByPrimaryKeySelective(course);
 
-        // 减此学员的课时信息
+        // 加入流程：如果签的是198小课包，则查询有无ishow课激活，若无，则插入ishow课
+        if (course.getCourseTypeId()==2){
+            StuCourseEntity sc=new StuCourseEntity();
+            sc.setSid(course.getSid());
+            sc.setCourseTypeId(4);  //ishow课
+            StuCourseEntity choose = stuCoureMapper.getStuCourseSelective(sc);
+            if (choose==null || choose.getSid()==null){
+                //无ishow课，新增ishow课购买纪录
+                sc.setSid(course.getSid());
+                sc.setNum(30);
+                sc.setCourseTypeId(4);
+                sc.setCreateDate(new Date());
+                //结束时间为30天后
+                sc.setEndDate(DateUtils.addDate(new Date(),0,0,30,0,0,0,0));
+                sc.setEid(course.getEid());  //订课的人
+                stuCoureMapper.insertSelective(sc);
+            }
+        }
+
+        // 减此学员签到课的课时信息
         StuCourseEntity c = new StuCourseEntity();
         c.setSid(cs.getSid());
         c.setCourseTypeId(cs.getCourseTypeId());
-        StuCourseEntity sc = stuCoureMapper.getStuCourseAvailable(c);
+        StuCourseEntity sc = stuCoureMapper.getStuCourseSelective(c);
         System.out.println("买的课："+sc);
         if (sc == null){
             return ComUtils.getResp(40008,"学员已无课时信息！",null);
@@ -216,6 +244,60 @@ public class CourseScheduleService {
         return ComUtils.getResp(20000,"成功签到",null);
     }
 
+    /**
+     * 撤销签到
+     * @param cs
+     * @return
+     */
+    @Transactional
+    public Map SignInReverse(CourseScheduleEntity cs){
+        if (cs.getSid()==null){
+            return ComUtils.getResp(40008,"无学员编号",null);
+        }
+        if (cs.getCourseTypeId()==null){
+            return ComUtils.getResp(40008,"无课程编号",null);
+        }
+        if (cs.getPkid()==null){
+            return ComUtils.getResp(40008,"无约课信息",null);
+        }
+
+        // 本次约课签到撤销
+        CourseScheduleEntity course = csMapper.selectByPrimaryKey(cs.getPkid());
+        if (course == null)
+            return ComUtils.getResp(40008,"未找到上课信息",null);
+        // 更新此次上课签到状态
+        course.setSignStatus(CodeDef.SIGN_WAITING); //改为等待上课
+        csMapper.updateByPrimaryKeySelective(course);
+
+        // 恢复学员签到课的课时信息
+        StuCourseEntity c = new StuCourseEntity();
+        c.setSid(cs.getSid());
+        c.setCourseTypeId(cs.getCourseTypeId());
+        StuCourseEntity sc = stuCoureMapper.getStuCourseSelective(c);
+        if (sc == null){
+            return ComUtils.getResp(40008,"学员无此购买课程信息",null);
+        }
+        //看课程类型与数量信息，分别处理
+        if (sc.getNum()==2 && sc.getCourseTypeId()==2){
+            //是198课且签到的是第一节，则反删除加的ishow课
+            StuCourseEntity ishow=new StuCourseEntity();
+            ishow.setSid(cs.getSid());
+            ishow.setCourseTypeId(4);
+            ishow=stuCoureMapper.getStuCourseSelective(ishow);
+            if (ishow!=null && ishow.getPkid()!=null){
+                stuCoureMapper.deleteByPrimaryKey(ishow.getPkid());
+            }
+        }
+        //恢复此课程的一节课程
+        sc.setNum(sc.getNum() + 1);
+        stuCoureMapper.updateByPrimaryKeySelective(sc);
+
+        //更新学员状态 更新为待上课
+        StuEntity stu = stuService.findById(cs.getSid());
+        stuService.updateStuStatus(stu, CodeDef.STU_BOOKED, "撤销签到，等待签到上课");
+        return ComUtils.getResp(20000,"撤销签到成功",null);
+    }
+
 
     private void transCode(CourseScheduleEntity cs) {
         if (cs != null) {
@@ -228,5 +310,4 @@ public class CourseScheduleService {
             cs.setCourseTypeName(cache.CourseCache().get(cs.getCourseTypeId()));
         }
     }
-
 }

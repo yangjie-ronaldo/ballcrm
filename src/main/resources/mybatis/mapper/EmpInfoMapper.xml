@@ -13,15 +13,15 @@
   <!--查询员工今日联系计划待办数量 -->
   <select id="getTodayTodoPlan" parameterType="java.lang.Integer" resultType="org.nothink.ballcrm.entity.Statistics">
     select
-    eid,
+    s.cc as eid,
     count(*) as num
-    from contact_plan p
-    where 1=1
-    and eid=#{eid}
+    from contact_plan p inner join stu s on s.sid=p.sid
+    where
+    s.cc=#{eid}
     and p.status = 'PST01'
     and p.plan_date &gt;= curdate()
     and p.plan_date &lt; date(curdate()+1)
-    group by eid
+    group by s.cc
   </select>
 
   <!--查询员工待处理课程数量-->

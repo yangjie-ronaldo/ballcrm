@@ -7,6 +7,7 @@
     select * from course_schedule
     where 1=1
     <if test="sid!=null and sid!=''"> and sid = #{sid} </if>
+    <if test="sid!=null and sid!=''"> and sid = #{sid} </if>
     order by booking_date desc
   </select>
 

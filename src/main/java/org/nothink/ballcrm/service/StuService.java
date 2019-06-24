@@ -249,7 +249,7 @@ public class StuService {
     }
 
     /**
-     * 执行学员转移
+     * 执行转移
      * @param c
      * @return
      */
