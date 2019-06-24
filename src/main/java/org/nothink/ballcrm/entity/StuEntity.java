@@ -42,6 +42,9 @@ public class StuEntity extends PagedCriteria {
     private Integer cc;
     private String ccName;
 
+    private Integer teacherId;
+    private String teacherIdName;
+
 
     private Integer node;
     private String nodeName;
@@ -71,9 +74,27 @@ public class StuEntity extends PagedCriteria {
                 ", preCc=" + preCc +
                 ", cc=" + cc +
                 ", ccName='" + ccName + '\'' +
+                ", teacherId=" + teacherId +
+                ", teacherIdName='" + teacherIdName + '\'' +
                 ", node=" + node +
                 ", nodeName='" + nodeName + '\'' +
                 '}';
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public String getTeacherIdName() {
+        return teacherIdName;
+    }
+
+    public void setTeacherIdName(String teacherIdName) {
+        this.teacherIdName = teacherIdName;
     }
 
     public String getChannelName() {

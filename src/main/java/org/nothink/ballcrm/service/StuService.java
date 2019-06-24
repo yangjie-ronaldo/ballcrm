@@ -315,6 +315,8 @@ public class StuService {
             stu.setCcName(cache.EmpCache().get(stu.getCc()));
             // 所属门店翻译
             stu.setNodeName(cache.NodeCache().get(stu.getNode()));
+            // 新增关联的老师翻译
+            stu.setTeacherIdName(cache.EmpCache().get(stu.getTeacherId()));
         }
     }
 

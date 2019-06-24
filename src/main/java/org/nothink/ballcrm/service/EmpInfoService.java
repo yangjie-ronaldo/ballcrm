@@ -40,7 +40,8 @@ public class EmpInfoService {
         if (c.getNid() == 0) {
             return ComUtils.getResp(40008, "无门店编号", null);
         }
-        Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
+        // 先写死查第一页 1000条 查员工不分页
+        Page p = PageHelper.startPage(1, 1000);
         //执行查询
         List<EmpInfoEntity> list = eMapper.getEmpList(c);
         PagedResult<EmpInfoEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());
