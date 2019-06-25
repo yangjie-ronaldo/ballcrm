@@ -1,7 +1,9 @@
 package org.nothink.ballcrm.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
+@Data
 public abstract class PagedCriteria {
     // 当前页
     @JsonIgnore
@@ -9,20 +11,4 @@ public abstract class PagedCriteria {
     // 每页显示的总条数
     @JsonIgnore
     int pageSize = 10;
-
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
-    }
-
-    public int getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(int pageSize) {
-        this.pageSize = pageSize;
-    }
 }

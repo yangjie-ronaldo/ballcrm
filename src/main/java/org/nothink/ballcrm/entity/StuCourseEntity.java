@@ -1,102 +1,19 @@
 package org.nothink.ballcrm.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 
+@Data
 public class StuCourseEntity {
     private Integer pkid;
-
     private Integer sid;
     private Integer eid;
     private String eName;
-
     private Integer courseTypeId;
     private String courseName;
-
     private Integer num;
-
     private Integer fee;
-
     private Date createDate;
-
     private Date endDate;
-
-    public Integer getEid() {
-        return eid;
-    }
-
-    public void setEid(Integer eid) {
-        this.eid = eid;
-    }
-
-    public String geteName() {
-        return eName;
-    }
-
-    public void seteName(String eName) {
-        this.eName = eName;
-    }
-
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
-
-    public Integer getPkid() {
-        return pkid;
-    }
-
-    public void setPkid(Integer pkid) {
-        this.pkid = pkid;
-    }
-
-    public Integer getSid() {
-        return sid;
-    }
-
-    public void setSid(Integer sid) {
-        this.sid = sid;
-    }
-
-    public Integer getCourseTypeId() {
-        return courseTypeId;
-    }
-
-    public void setCourseTypeId(Integer courseTypeId) {
-        this.courseTypeId = courseTypeId;
-    }
-
-    public Integer getNum() {
-        return num;
-    }
-
-    public void setNum(Integer num) {
-        this.num = num;
-    }
-
-    public Integer getFee() {
-        return fee;
-    }
-
-    public void setFee(Integer fee) {
-        this.fee = fee;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
 }

@@ -1,8 +1,6 @@
 package org.nothink.ballcrm.controller;
 
 import org.nothink.ballcrm.entity.EmpInfoEntity;
-import org.nothink.ballcrm.entity.PagedResult;
-import org.nothink.ballcrm.entity.ResponseMsg;
 import org.nothink.ballcrm.service.EmpInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +29,11 @@ public class EmpController {
     }
 
     //添加员工 暂时不用
-    @PostMapping("/emp")
-    @ResponseBody
-    public Map addEmp(EmpInfoEntity e){
-        return eService.addEmp(e);
-    }
+//    @PostMapping("/emp")
+//    @ResponseBody
+//    public Map addEmp(EmpInfoEntity e){
+//        return eService.addEmp(e);
+//    }
 
     /**
      * 注册用户

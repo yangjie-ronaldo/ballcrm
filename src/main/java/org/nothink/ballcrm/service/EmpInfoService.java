@@ -36,7 +36,7 @@ public class EmpInfoService {
     EmpInfoService eService;
 
     // 查询本店的员工列表
-    public Map getEmpList(EmpInfoEntity c) {
+    public Map<String, Object> getEmpList(EmpInfoEntity c) {
         if (c.getNid() == 0) {
             return ComUtils.getResp(40008, "无门店编号", null);
         }
@@ -48,7 +48,7 @@ public class EmpInfoService {
         if (list != null) {
             for (EmpInfoEntity e : list) {
                 // 查询员工的角色列表
-                List roles = empRoleRelMapper.selectByEid(e.getEid());
+                List<EmpRoleRelEntity> roles = empRoleRelMapper.selectByEid(e.getEid());
                 e.setRoles(roles);
             }
         }
@@ -58,7 +58,7 @@ public class EmpInfoService {
 
     // 更新员工信息（基本信息、角色）
     @Transactional
-    public Map editEmp(EmpInfoEntity e){
+    public Map<String, Object> editEmp(EmpInfoEntity e){
         logger.info("待修改员工信息："+e);
         //修改员工基本信息
         eMapper.updateByPrimaryKeySelective(e);
@@ -77,20 +77,20 @@ public class EmpInfoService {
     }
 
     // 查询所有角色列表
-    public Map getAllRoles(){
+    public Map<String, Object> getAllRoles(){
         return ComUtils.getResp(20000,"查询成功",rMapper.getAllRoles());
     }
 
     // 新增员工 废弃
-    @Transactional
-    public Map addEmp(EmpInfoEntity e) {
-        return ComUtils.getResp(40008, "暂无用交易", null);
-    }
+//    @Transactional
+//    public Map addEmp(EmpInfoEntity e) {
+//        return ComUtils.getResp(40008, "暂无用交易", null);
+//    }
 
 
     //注册新员工
     @Transactional
-    public Map register(EmpInfoEntity e) {
+    public Map<String, Object> register(EmpInfoEntity e) {
         if (StringUtils.isEmpty(e.getLoginid())) {
             return ComUtils.getResp(40008, "登录名不能为空", null);
         }
@@ -114,7 +114,7 @@ public class EmpInfoService {
     }
 
     //员工登录
-    public Map loginin(EmpInfoEntity e) {
+    public Map<String, Object> loginin(EmpInfoEntity e) {
         if (StringUtils.isEmpty(e.getLoginid())) {
             return ComUtils.getResp(40008, "登录名不能为空", null);
         }
@@ -133,7 +133,7 @@ public class EmpInfoService {
         }
 
         //否则密码正确，登录成功
-        Map map = ComUtils.getResp(20000, "登陆成功", null);
+        Map<String, Object> map = ComUtils.getResp(20000, "登陆成功", null);
 
         Map<String, Object> data = new HashMap<>();
 
@@ -146,20 +146,20 @@ public class EmpInfoService {
     }
 
     // 查询单个员工信息
-    public Map getEmpInfo(EmpInfoEntity e) {
+    public Map<String, Object> getEmpInfo(EmpInfoEntity e) {
         if (e.getEid() == null)
             return ComUtils.getResp(40008, "无员工编号", null);
         EmpInfoEntity emp = eMapper.selectByPrimaryKey(e.getEid());
         if (emp == null)
             return ComUtils.getResp(40008, "无此员工信息", null);
         // 查询员工的角色列表
-        List roles = empRoleRelMapper.selectByEid(emp.getEid());
+        List<EmpRoleRelEntity> roles = empRoleRelMapper.selectByEid(emp.getEid());
         emp.setRoles(roles);
         return ComUtils.getResp(20000, "查询成功", emp);
     }
 
     //注销
-    public Map logout(Integer eid) {
+    public Map<String, Object> logout(Integer eid) {
         LoginTokenEntity lt = ltMapper.selectByPrimaryKey(eid);
         if (lt != null) {
             lt.setStatus(0);
@@ -171,9 +171,9 @@ public class EmpInfoService {
     }
 
     // 查询员工的待办统计信息
-    public Map getTodoNums(Integer eid){
-        Map<String,Object> map=new HashMap();
-        Statistics statistcs = null;
+    public Map<String, Object> getTodoNums(Integer eid){
+        HashMap<String, Integer> map=new HashMap<>();
+        Statistics statistcs;
         //获取今日联系计划待办
         statistcs=eMapper.getTodayTodoPlan(eid);
         if (statistcs!=null && statistcs.getNum()!=0){
@@ -201,7 +201,7 @@ public class EmpInfoService {
 
     @Transactional
     // 记录并返回token
-    public void addLoginToken(int eid, Map map) {
+    public void addLoginToken(int eid, Map<String, Object> map) {
         LoginTokenEntity lt = new LoginTokenEntity();
         lt.setEid(eid);
         lt = ltMapper.selectByPrimaryKey(eid);
