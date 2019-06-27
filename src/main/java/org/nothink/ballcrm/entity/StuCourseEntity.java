@@ -16,4 +16,5 @@ public class StuCourseEntity {
     private Integer fee;
     private Date createDate;
     private Date endDate;
+    private Date updateDate;
 }

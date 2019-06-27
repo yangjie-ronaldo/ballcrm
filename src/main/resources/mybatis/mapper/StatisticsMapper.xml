@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.nothink.ballcrm.mapper.StatisticMapper" >
+
+  <select id="getNewStuNum" resultType="org.nothink.ballcrm.entity.Statistics">
+    select
+      e.eid as eid,
+      count(s.sid) as num
+    from
+      emp_info e left outer join stu s on s.cc=e.eid
+      <if test="startDate!=null">and s.create_date &gt;= #{startDate}</if>
+      <if test="endDate!=null">and s.create_date &lt;= #{endDate}</if>
+    <where>
+      <if test="nid!=null">e.nid=#{nid}</if>
+    </where>
+    group by e.eid
+    order by e.eid
+  </select>
+  <select id="getDemoScheduleNum" resultType="org.nothink.ballcrm.entity.Statistics">
+    select
+    e.eid as eid,
+    count(c.course_type_id) as num
+    from
+    emp_info e left outer join stu s on s.cc=e.eid
+    left outer join course_schedule c on s.sid=c.sid
+    and c.course_type_id=1
+    <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
+    <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
+    <where>
+      <if test="nid!=null">e.nid=#{nid}</if>
+    </where>
+    group by e.eid
+    order by e.eid
+  </select>
+  <select id="getDemoSignNum" resultType="org.nothink.ballcrm.entity.Statistics">
+    select
+    e.eid as eid,
+    count(c.course_type_id) as num
+    from
+    emp_info e left outer join stu s on s.cc=e.eid
+    left outer join course_schedule c on s.sid=c.sid
+    and c.course_type_id=1 and c.sign_status='SIN01'
+    <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
+    <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
+    <where>
+      <if test="nid!=null">e.nid=#{nid}</if>
+    </where>
+    group by e.eid
+    order by e.eid
+  </select>
+  <select id="getDemoCloseNum" resultType="org.nothink.ballcrm.entity.Statistics">
+    select
+    e.eid as eid,
+    count(c.course_type_id) as num
+    from
+    emp_info e left outer join course_schedule c on e.eid=c.close_eid
+    and c.course_type_id=1 and c.sign_status='SIN01'
+    <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
+    <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
+    <where>
+      <if test="nid!=null">e.nid=#{nid}</if>
+    </where>
+    group by e.eid
+    order by e.eid
+  </select>
+  <select id="getBuy198Num" resultType="org.nothink.ballcrm.entity.Statistics">
+    select
+    e.eid as eid,
+    count(s.course_type_id) as num
+    from
+    emp_info e left outer join stu_course s on s.eid=e.eid
+    and s.course_type_id=2
+    <if test="startDate!=null">and s.create_date &gt;= #{startDate}</if>
+    <if test="endDate!=null">and s.create_date &lt;= #{endDate}</if>
+    <where>
+      <if test="nid!=null">e.nid=#{nid}</if>
+    </where>
+    group by e.eid
+    order by e.eid
+  </select>
+  <select id="getMyStu198Num" resultType="org.nothink.ballcrm.entity.Statistics">
+    select
+    e.eid as eid,
+    count(c.course_type_id) as num
+    from
+    emp_info e left outer join stu s on s.cc=e.eid
+    left outer join stu_course c on s.sid=c.sid
+    and c.course_type_id=2
+    <if test="startDate!=null">and c.create_date &gt;= #{startDate}</if>
+    <if test="endDate!=null">and c.create_date &lt;= #{endDate}</if>
+    <where>
+      <if test="nid!=null">e.nid=#{nid}</if>
+    </where>
+    group by e.eid
+    order by e.eid
+  </select>
+</mapper>

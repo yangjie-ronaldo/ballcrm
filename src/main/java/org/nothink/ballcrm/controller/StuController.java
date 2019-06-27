@@ -50,6 +50,15 @@ public class StuController {
     }
 
     /**
+     * 主管查询198学员情况列表
+     * @param c
+     * @return
+     */
+    @GetMapping("/stu198")
+    @ResponseBody
+    public Map getStu198List(StuEntity c){return stuService.getStu198List(c);}
+
+    /**
      * 新增学员
      *
      * @param c

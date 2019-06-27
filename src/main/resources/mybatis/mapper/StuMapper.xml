@@ -5,13 +5,16 @@
   <!-- 根据销售名下 或 机构获取学员列表 -->
   <select id="getStuList" resultType="org.nothink.ballcrm.entity.StuEntity" parameterType="org.nothink.ballcrm.entity.StuEntity">
     select * from stu where 1=1
-    <if test="name != null and name!='' "> and (name like CONCAT('%',#{name},'%') or niki_name like CONCAT('%',#{name},'%')) </if>
-    <if test="status!=null and status!='' "> and status = #{status} </if>
-    <if test="type!=null and type!='' "> and type = #{type} </if>
-    <if test="verifyStatus!=null and verifyStatus!='' "> and verify_status = #{verifyStatus} </if>
-    <if test="cc!=null and cc!=''"> and cc = #{cc} </if>
-    <if test="node!=null and node!=''"> and node = #{node} </if>
+    <if test="name != null"> and name like CONCAT('%',#{name},'%') </if>
+    <if test="status!=null"> and status = #{status} </if>
+    <if test="tel!=null"> and tel = #{tel} </if>
+    <if test="type!=null"> and type = #{type} </if>
+    <if test="verifyStatus!=null"> and verify_status = #{verifyStatus} </if>
+    <if test="cc!=null"> and cc = #{cc} </if>
+    <if test="node!=null"> and node = #{node} </if>
   </select>
+
+
 
   <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.StuEntity" parameterType="java.lang.Integer" >
     select
@@ -28,6 +31,7 @@
     <if test=" preCc!=null ">
       and s.pre_cc=#{preCc}
     </if>
+    <if test="name != null"> and s.name like CONCAT('%',#{name},'%') </if>
     <trim prefix=" and (" suffix=")" prefixOverrides="and |or ">
       <if test=" hasPlanTodo!=null ">
         exists (
@@ -44,6 +48,28 @@
         )
       </if>
     </trim>
+  </select>
+  <!--买了198课的学员情况列表-->
+  <select id="getStu198List" resultType="org.nothink.ballcrm.entity.StuEntity">
+    select
+    s.*,
+    c.num as Course198Num
+    from stu s inner join stu_course c on c.sid=s.sid and c.course_type_id=2
+    <where>
+      <if test="node!=null">s.node=#{node}</if>
+      <if test="name != null"> and s.name like CONCAT('%',#{name},'%') </if>
+      <if test="hasCourse198==false">
+        and not exists (
+        select * from course_schedule c where s.sid=c.sid and c.course_type_id=2 and booking_date>curdate()
+        )
+      </if>
+      <if test="hasCourse198==true">
+        and exists (
+        select * from course_schedule c where s.sid=c.sid and c.course_type_id=2 and booking_date>curdate()
+        )
+      </if>
+    </where>
+    order by c.num asc,c.update_date desc
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from stu

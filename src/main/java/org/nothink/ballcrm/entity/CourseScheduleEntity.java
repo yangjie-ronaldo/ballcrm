@@ -26,5 +26,9 @@ public class CourseScheduleEntity extends PagedCriteria {
     private String traceStatus;
     private String traceStatusDef;
     private String traceNote;
+    private Integer traceEid;
+    private String traceEName;
+    private Integer closeEid;
+    private String closeEname;
     private Date createDate;
 }

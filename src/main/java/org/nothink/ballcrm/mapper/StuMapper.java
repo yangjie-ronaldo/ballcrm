@@ -10,6 +10,8 @@ public interface StuMapper {
 
     List<StuEntity> getStuTransList(StuTransCriteria criteria);
 
+    List<StuEntity> getStu198List(StuEntity criteria);
+
     int deleteByPrimaryKey(Integer sid);
 
     int insert(StuEntity record);

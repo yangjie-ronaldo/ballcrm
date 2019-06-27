@@ -33,4 +33,7 @@ public class StuEntity extends PagedCriteria {
     private String teacherIdName;
     private Integer node;
     private String nodeName;
+
+    private Boolean hasCourse198;
+    private Integer Course198Num;
 }

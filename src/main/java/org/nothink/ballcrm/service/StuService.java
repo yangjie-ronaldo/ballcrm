@@ -94,7 +94,7 @@ public class StuService {
         stc.setCreateDate(new Date());
         stuCourseMapper.insert(stc);
         if (i > 0)
-            return ComUtils.getResp(20000, "新增成功", null);
+            return ComUtils.getResp(20000, "新增成功", c);
         else
             return ComUtils.getResp(40008, "新增失败", null);
     }
@@ -107,7 +107,7 @@ public class StuService {
         logger.info("更新学员基本信息" + c.getSid());
         int i = stuMapper.updateByPrimaryKeySelective(c);
         if (i > 0)
-            return ComUtils.getResp(20000, "更新成功", null);
+            return ComUtils.getResp(20000, "更新成功", c);
         else
             return ComUtils.getResp(40008, "更新失败", null);
     }
@@ -250,6 +250,7 @@ public class StuService {
 
     /**
      * 执行转移
+     *
      * @param c
      * @return
      */
@@ -276,6 +277,25 @@ public class StuService {
             }
             return ComUtils.getResp(20000, "转移成功", null);
         }
+    }
+
+    /**
+     * 主管查询198学员情况列表
+     * @param c
+     * @return
+     */
+    public Map getStu198List(StuEntity c){
+        Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
+        //执行查询
+        List<StuEntity> list = stuMapper.getStu198List(c);
+        PagedResult<StuEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());
+        //翻译代码值
+        if (list != null)
+            for (StuEntity s : list)
+                stuCodeTrans(s);
+        result.setItems(list);
+        return ComUtils.getResp(20000, "查询成功", result);
+
     }
 
     //放弃客户处理

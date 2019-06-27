@@ -59,11 +59,11 @@
     insert into course_schedule (pkid, sid, booking_date, 
       course_type_id, teach_eid, notify_status, 
       notify_note, sign_status, trace_status, 
-      trace_note, create_date)
+      trace_note, create_date,trace_eid,close_eid)
     values (#{pkid,jdbcType=INTEGER}, #{sid,jdbcType=INTEGER}, #{bookingDate,jdbcType=DATE}, 
       #{courseTypeId,jdbcType=INTEGER}, #{teachEid,jdbcType=INTEGER}, #{notifyStatus,jdbcType=VARCHAR}, 
       #{notifyNote,jdbcType=VARCHAR}, #{signStatus,jdbcType=VARCHAR}, #{traceStatus,jdbcType=VARCHAR}, 
-      #{traceNote,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP})
+      #{traceNote,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},#{traceEid,jdbcType=INTEGER},#{closeEid,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="org.nothink.ballcrm.entity.CourseScheduleEntity" >
     insert into course_schedule
@@ -101,6 +101,12 @@
       <if test="createDate != null" >
         create_date,
       </if>
+      <if test="traceEid != null" >
+        trace_eid,
+      </if>
+      <if test="closeEid != null" >
+        close_eid,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="pkid != null" >
@@ -135,6 +141,12 @@
       </if>
       <if test="createDate != null" >
         #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="traceEid != null" >
+        #{traceEid,jdbcType=INTEGER},
+      </if>
+      <if test="closeEid != null" >
+        #{closeEid,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -171,6 +183,12 @@
       <if test="createDate != null" >
         create_date = #{createDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="traceEid != null" >
+        trace_eid = #{traceEid,jdbcType=INTEGER},
+      </if>
+      <if test="closeEid != null" >
+        close_eid = #{closeEid,jdbcType=INTEGER},
+      </if>
     </set>
     where pkid = #{pkid,jdbcType=INTEGER}
   </update>
@@ -185,7 +203,9 @@
       sign_status = #{signStatus,jdbcType=VARCHAR},
       trace_status = #{traceStatus,jdbcType=VARCHAR},
       trace_note = #{traceNote,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP}
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      trace_eid = #{traceEid,jdbcType=INTEGER},
+      close_eid = #{closeEid,jdbcType=INTEGER},
     where pkid = #{pkid,jdbcType=INTEGER}
   </update>
 </mapper>

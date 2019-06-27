@@ -231,6 +231,7 @@ public class CourseScheduleService {
             return ComUtils.getResp(40008,"学员已无课时信息！",null);
         }
         sc.setNum(sc.getNum() - 1);
+        sc.setUpdateDate(new Date()); //更新时间
         stuCoureMapper.updateByPrimaryKeySelective(sc);
 
         //更新学员状态 如果课时已为0了 则学员上完课了
@@ -267,6 +268,7 @@ public class CourseScheduleService {
             return ComUtils.getResp(40008,"未找到上课信息",null);
         // 更新此次上课签到状态
         course.setSignStatus(CodeDef.SIGN_WAITING); //改为等待上课
+        course.setCloseEid(0);  //撤销课程关单人
         csMapper.updateByPrimaryKeySelective(course);
 
         // 恢复学员签到课的课时信息

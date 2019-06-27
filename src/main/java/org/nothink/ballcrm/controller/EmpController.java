@@ -1,7 +1,9 @@
 package org.nothink.ballcrm.controller;
 
 import org.nothink.ballcrm.entity.EmpInfoEntity;
+import org.nothink.ballcrm.entity.StatisticsCriteria;
 import org.nothink.ballcrm.service.EmpInfoService;
+import org.nothink.ballcrm.service.StatisticsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ public class EmpController {
 
     @Autowired
     EmpInfoService eService;
+    @Autowired
+    StatisticsService statisticsService;
 
     /**
      * 查询本店员工列表
@@ -65,11 +69,15 @@ public class EmpController {
     /**
      * 查询所有角色列表
      */
-    @GetMapping("roles")
+    @GetMapping("/roles")
     @ResponseBody
     public Map getRoles(){
         return eService.getAllRoles();
     }
+
+    @GetMapping("/ccstatistics")
+    @ResponseBody
+    public Map getccStatistics(StatisticsCriteria c){return statisticsService.getCcStatistics(c);}
 
     /**
      * 注销用户

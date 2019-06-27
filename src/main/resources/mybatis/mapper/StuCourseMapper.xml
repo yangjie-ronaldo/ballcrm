@@ -48,11 +48,10 @@
   </delete>
   <insert id="insert" parameterType="org.nothink.ballcrm.entity.StuCourseEntity" >
     insert into stu_course (pkid, sid, eid, course_type_id,
-      num, fee, create_date,
-      end_date)
+      num, fee, create_date,end_date,update_date)
     values (#{pkid,jdbcType=INTEGER}, #{sid,jdbcType=INTEGER}, #{eid,jdbcType=INTEGER},#{courseTypeId,jdbcType=INTEGER},
       #{num,jdbcType=INTEGER}, #{fee,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},
-      #{endDate,jdbcType=TIMESTAMP})
+      #{endDate,jdbcType=TIMESTAMP},#{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="org.nothink.ballcrm.entity.StuCourseEntity" >
     insert into stu_course
@@ -81,6 +80,9 @@
       <if test="endDate != null" >
         end_date,
       </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="pkid != null" >
@@ -106,6 +108,9 @@
       </if>
       <if test="endDate != null" >
         #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -133,6 +138,9 @@
       <if test="endDate != null" >
         end_date = #{endDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where pkid = #{pkid,jdbcType=INTEGER}
   </update>
@@ -144,7 +152,8 @@
       num = #{num,jdbcType=INTEGER},
       fee = #{fee,jdbcType=INTEGER},
       create_date = #{createDate,jdbcType=TIMESTAMP},
-      end_date = #{endDate,jdbcType=TIMESTAMP}
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
     where pkid = #{pkid,jdbcType=INTEGER}
   </update>
 </mapper>
