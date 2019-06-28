@@ -7,7 +7,7 @@
     select * from emp_info
     where 1=1
     <if test="nid!=null"> and nid = #{nid} </if>
-    <if test="role!=null"> and role = #{role} </if>
+    <if test="role!=null and role!=''"> and role = #{role} </if>
   </select>
 
   <!--查询员工今日联系计划待办数量 -->

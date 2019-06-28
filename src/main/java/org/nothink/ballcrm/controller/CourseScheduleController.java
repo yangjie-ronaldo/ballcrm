@@ -81,7 +81,12 @@ public class CourseScheduleController {
         return csService.signIn(cs);
     }
 
-    /*
-
+    /**
+     * 撤销签到
+     * @param cs
+     * @return
      */
+    @PutMapping("/signreverse")
+    @ResponseBody
+    public Map SignInReverse(CourseScheduleEntity cs){return csService.SignInReverse(cs);}
 }

@@ -1,12 +1,52 @@
 package org.nothink.ballcrm.entity;
 
-import lombok.Data;
 import java.util.Date;
 
-@Data
 public class LoginTokenEntity {
     private Integer eid;
     private String token;
     private Date expired;
     private Integer status;
+
+    public Integer getEid() {
+        return eid;
+    }
+
+    public void setEid(Integer eid) {
+        this.eid = eid;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Date getExpired() {
+        return expired;
+    }
+
+    public void setExpired(Date expired) {
+        this.expired = expired;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginTokenEntity{" +
+                "eid=" + eid +
+                ", token='" + token + '\'' +
+                ", expired=" + expired +
+                ", status=" + status +
+                '}';
+    }
 }

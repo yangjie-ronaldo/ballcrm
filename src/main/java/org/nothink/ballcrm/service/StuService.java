@@ -185,7 +185,7 @@ public class StuService {
 
     //能买的课程
     public Map courseBuyList() {
-        return ComUtils.getResp(20000, "查询成功", courseMapper.getCourse());
+        return ComUtils.getResp(20000, "查询成功", courseMapper.getCourseForBuy());
     }
 
     /**

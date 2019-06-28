@@ -185,7 +185,7 @@ public class ContactPlanService {
             //代码
             p.setStatusDef(cache.CodeDefCache().get(p.getStatus()));
             //员工名
-            p.setEName(cache.EmpCache().get(p.getEid()));
+            p.seteName(cache.EmpCache().get(p.getEid()));
             p.setVerifyEName(cache.EmpCache().get(p.getVerifyEid()));
         }
 

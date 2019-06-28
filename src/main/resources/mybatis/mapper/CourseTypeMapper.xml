@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.CourseTypeMapper" >
-  <!-- 查询所有可以买的课程 -->
+  <!-- 查询所有课程 -->
   <select id="getCourse" resultType="org.nothink.ballcrm.entity.CourseTypeEntity">
-    select * from course_type where num &gt; 1
+    select * from course_type
   </select>
-
+  <!-- 查询可买课程 -->
+  <select id="getCourseForBuy" resultType="org.nothink.ballcrm.entity.CourseTypeEntity">
+    select * from course_type where pkid!=1 and pkid!=4
+  </select>
   <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.CourseTypeEntity" parameterType="java.lang.Integer" >
     select
     *
     from course_type
     where pkid = #{pkid,jdbcType=INTEGER}
   </select>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from course_type
     where pkid = #{pkid,jdbcType=INTEGER}
