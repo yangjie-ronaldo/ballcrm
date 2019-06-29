@@ -15,32 +15,45 @@
     select
     c.*,
     s.name as s_name,
+    s.tel as tel,
     course.type_name as course_type_name
     from course_schedule c inner join stu s on s.sid=c.sid
     inner join course_type course on course.pkid=c.course_type_id
-    where
-    c.booking_date &gt; now() and booking_date &lt; date_add(now(), interval 1 day)
+    where 1=1
     <if test="eid!=null"> and s.cc=#{eid} </if>
     <if test="nid!=null"> and s.node=#{nid} </if>
-    <if test="notifyStatus!=null and notifyStatus!='' "> and c.notify_stauts = #{notifyStatus} </if>
+    <if test="notifyStatus!=null and notifyStatus!='' "> and c.notify_status = #{notifyStatus} </if>
+
+    <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
+    <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
+    <if test="startDate==null and endDate==null">
+      and c.booking_date &gt;= date(curdate()+1) and c.booking_date &lt; date(curdate()+2)
+    </if>
   </select>
 
   <!-- 当日约课表 销售 和 ccm 都可用 -->
   <select id="getScheduleToday" resultType="org.nothink.ballcrm.entity.CourseScheduleEntity" parameterType="org.nothink.ballcrm.entity.CourseScheduleEntity">
     select
     c.*,
-    s.name as sName
+    s.name as sName,
+    s.tel as tel
     from course_schedule c inner join stu s on s.sid=c.sid
     where 1=1
     <if test="eid!=null"> and s.cc=#{eid} </if>
     <if test="nid!=null"> and s.node=#{nid} </if>
-    and (c.sign_status!='SIG04')
-    and (
-      (c.booking_date &lt; curdate() and c.trace_status='PST01')
-      or
-      (c.booking_date &gt;= curdate() and c.booking_date &lt; date(curdate()+1))
-    )
-    <if test="traceStatus!=null and traceStatus!='' "> and c.trace_stauts = #{traceStatus} </if>
+    <if test="traceStatus!=null and traceStatus!='' "> and c.trace_status = #{traceStatus} </if>
+    <if test="startDate!=null or endDate!=null">
+      <!-- 选了时间段，查时间段的所有 -->
+      <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
+      <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
+    </if>
+    <if test="startDate==null and endDate==null">
+      <!-- 未选时间段，查今日的所有和之前的待办 -->
+      and (
+        (c.booking_date &gt;= curdate() and c.booking_date &lt; date(curdate()+1))
+        or (c.booking_date &lt; curdate() and c.trace_status='PST01')
+      )
+    </if>
     order by c.booking_date asc
   </select>
 

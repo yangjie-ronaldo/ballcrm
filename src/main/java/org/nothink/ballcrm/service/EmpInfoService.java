@@ -35,13 +35,33 @@ public class EmpInfoService {
     @Autowired
     EmpInfoService eService;
 
-    // 查询本店的员工列表
+    // 查询本店的员工列表 不分页
     public Map<String, Object> getEmpList(EmpInfoEntity c) {
         if (c.getNid() == 0) {
             return ComUtils.getResp(40008, "无门店编号", null);
         }
         // 先写死查第一页 1000条 查员工不分页
         Page p = PageHelper.startPage(1, 1000);
+        //执行查询
+        List<EmpInfoEntity> list = eMapper.getEmpList(c);
+        PagedResult<EmpInfoEntity> result = new PagedResult<>(c.getCurrentPage(), 1000, (int) p.getTotal());
+        if (list != null) {
+            for (EmpInfoEntity e : list) {
+                // 查询员工的角色列表
+                List<EmpRoleRelEntity> roles = empRoleRelMapper.selectByEid(e.getEid());
+                e.setRoles(roles);
+            }
+        }
+        result.setItems(list);
+        return ComUtils.getResp(20000, "查询成功", result);
+    }
+
+    // 查询本店的员工列表 分页
+    public Map<String, Object> getEmpListPaged(EmpInfoEntity c) {
+        if (c.getNid() == 0) {
+            return ComUtils.getResp(40008, "无门店编号", null);
+        }
+        Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
         //执行查询
         List<EmpInfoEntity> list = eMapper.getEmpList(c);
         PagedResult<EmpInfoEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());

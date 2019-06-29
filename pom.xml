@@ -99,6 +99,11 @@
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
+        <!--AOP-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
         <!-- lombok javabean -->
         <!--<dependency>-->
             <!--<groupId>org.projectlombok</groupId>-->

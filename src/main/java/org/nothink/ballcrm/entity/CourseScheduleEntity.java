@@ -7,6 +7,7 @@ public class CourseScheduleEntity extends PagedCriteria {
     private Integer nid;// 查机构的明日待上课
     private Integer pkid;
     private Integer sid;
+    private String tel;
     private String sName;
     private Date bookingDate;
     private Integer courseTypeId;
@@ -26,6 +27,33 @@ public class CourseScheduleEntity extends PagedCriteria {
     private Integer closeEid;
     private String closeEname;
     private Date createDate;
+
+    private Date startDate;
+    private Date endDate;
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
     public Integer getEid() {
         return eid;

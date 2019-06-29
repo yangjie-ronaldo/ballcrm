@@ -100,8 +100,10 @@ public class CourseScheduleService {
      */
     public Map scheduleListToday(CourseScheduleEntity cs) {
         Page p = PageHelper.startPage(cs.getCurrentPage(), cs.getPageSize());
-        //设为查当日
-        cs.setBookingDate(DateUtils.getToday());
+        //如果没有选时间条件，则设为查当日
+        if (cs.getStartDate()==null && cs.getEndDate()==null){
+            cs.setBookingDate(DateUtils.getToday());
+        }
         List<CourseScheduleEntity> list = csMapper.getScheduleToday(cs);
         PagedResult<CourseScheduleEntity> result = new PagedResult<>(cs.getCurrentPage(), cs.getPageSize(), (int) p.getTotal());
         //翻译代码值
@@ -167,7 +169,7 @@ public class CourseScheduleService {
         relCs.setTraceNote(cs.getTraceNote());
 
         if (CodeDef.SIGN_WAITING.equals(relCs.getSignStatus()) && CodeDef.SIGN_TRUANCY.equals(cs.getSignStatus())){
-            // 学员未签到，是旷课情况处理
+            // 学员未签到，是旷课情况 处理
             relCs.setSignStatus(CodeDef.SIGN_TRUANCY);
             StuEntity stu = stuService.findById(cs.getSid());
             stuService.updateStuStatus(stu,CodeDef.STU_TRUANCY,"爽约未上课，及时跟进");
@@ -200,6 +202,8 @@ public class CourseScheduleService {
             return ComUtils.getResp(40008,"未找到上课信息",null);
         // 更新此次上课签到状态
         course.setSignStatus(CodeDef.SIGN_OK);
+        course.setCloseEid(cs.getCloseEid());  //聊天人
+        course.setTeachEid(cs.getTeachEid());  //上课老师
         csMapper.updateByPrimaryKeySelective(course);
 
         // 加入流程：如果签的是198小课包，则查询有无ishow课激活，若无，则插入ishow课
@@ -269,6 +273,7 @@ public class CourseScheduleService {
         // 更新此次上课签到状态
         course.setSignStatus(CodeDef.SIGN_WAITING); //改为等待上课
         course.setCloseEid(0);  //撤销课程关单人
+        course.setTeachEid(0);  //撤销课程上课人
         csMapper.updateByPrimaryKeySelective(course);
 
         // 恢复学员签到课的课时信息

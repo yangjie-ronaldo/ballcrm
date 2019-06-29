@@ -22,7 +22,7 @@ public class EmpController {
     StatisticsService statisticsService;
 
     /**
-     * 查询本店员工列表
+     * 查询本店员工列表 不分页
      * @param e
      * @return
      */
@@ -30,6 +30,17 @@ public class EmpController {
     @ResponseBody
     public Map getEmpList(EmpInfoEntity e){
         return eService.getEmpList(e);
+    }
+
+    /**
+     * 查询本店员工列表 分页
+     * @param e
+     * @return
+     */
+    @GetMapping("/emppaged")
+    @ResponseBody
+    public Map getEmpListPaged(EmpInfoEntity e){
+        return eService.getEmpListPaged(e);
     }
 
     //添加员工 暂时不用
