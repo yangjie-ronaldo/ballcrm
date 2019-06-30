@@ -48,6 +48,10 @@ public class CourseScheduleService {
         if (CodeDef.STU_BOOKED.equals(stu.getStatus())) {
             return ComUtils.getResp(40008,"已有预约课程",null);
         }
+        //判断约课的情况
+        if (book.getCourseTypeId()==null || book.getBookingDate()==null){
+            return ComUtils.getResp(40008,"未选预约课程或日期",null);
+        }
 
         //新增约课记录
         book.setCreateDate(new Date());
@@ -217,7 +221,8 @@ public class CourseScheduleService {
             if (choose==null || choose.getSid()==null){
                 //无ishow课，新增ishow课购买纪录
                 sc.setSid(course.getSid());
-                sc.setNum(30);
+                //不设置ishow课的数量
+                sc.setNum(null);
                 sc.setCourseTypeId(4);
                 sc.setCreateDate(new Date());
                 //结束时间为30天后

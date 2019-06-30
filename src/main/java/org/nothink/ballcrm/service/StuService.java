@@ -149,12 +149,30 @@ public class StuService {
      */
     @Transactional
     public Map buyCourse(StuCourseEntity sc) {
-        sc.setCreateDate(new Date());
         StuEntity stu = this.findById(sc.getSid());
         if (stu == null)
             return ComUtils.getResp(40008, "无此学员", null);
-        // 1.新增买课记录
-        int r = stuCourseMapper.insertSelective(sc);
+
+        //先查询是否已买相应课程
+        int r=0;
+        StuCourseEntity criteria=new StuCourseEntity();
+        criteria.setSid(sc.getSid());
+        criteria.setCourseTypeId(sc.getCourseTypeId());
+        StuCourseEntity relSc = stuCourseMapper.getStuCourseSelective(criteria);
+        if (relSc==null){
+            //未买过
+            sc.setCreateDate(new Date());
+            sc.setUpdateDate(new Date());
+            //新增买课记录
+            r = stuCourseMapper.insertSelective(sc);
+        } else {
+            //买过 追加
+            relSc.setUpdateDate(new Date());
+            relSc.setNum(relSc.getNum()+sc.getNum());
+            relSc.setEid(sc.getEid());
+            relSc.setFee(relSc.getFee()+sc.getFee());
+            r = stuCourseMapper.updateByPrimaryKeySelective(relSc);
+        }
 
         // 2.不同课程，不同的处理
         String status = null, note = null;
@@ -165,11 +183,13 @@ public class StuService {
             stu.setType(CodeDef.TYPE_198);
             // 把这个学员的demo课数量置为0
             StuCourseEntity demo = new StuCourseEntity();
-            demo.setSid(sc.getSid());
-            demo.setCourseTypeId(1);
-            demo = stuCourseMapper.getStuCourseSelective(demo);
-            demo.setNum(0);
-            stuCourseMapper.updateByPrimaryKeySelective(demo);
+            if (demo!=null){
+                demo.setSid(sc.getSid());
+                demo.setCourseTypeId(1);
+                demo = stuCourseMapper.getStuCourseSelective(demo);
+                demo.setNum(0);
+                stuCourseMapper.updateByPrimaryKeySelective(demo);
+            }
         } else if (sc.getCourseTypeId() == 3) {
             //买了正课
             status = CodeDef.STU_BUYVIP;
