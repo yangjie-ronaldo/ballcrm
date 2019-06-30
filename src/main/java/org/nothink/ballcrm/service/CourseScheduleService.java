@@ -128,8 +128,7 @@ public class CourseScheduleService {
             return ComUtils.getResp(40008,"无上课信息",null);
         relCs.setNotifyStatus(CodeDef.HANDLED);
         relCs.setNotifyNote(cs.getNotifyNote());
-        //学生情况，只能处理成 待上课 和 改期
-        relCs.setSignStatus(cs.getSignStatus());
+        //学生情况 改期
         if (CodeDef.SIGN_CHANGE.equals(cs.getSignStatus())) {
             // 如果是改期，修改学员状态
             StuEntity stu = stuService.findById(cs.getSid());
@@ -149,13 +148,13 @@ public class CourseScheduleService {
     /**
      * 本日上课处理
      *
-     * @param cs
+     * @param criteria
      */
     @Transactional
-    public Map handleScheduleToday(CourseScheduleEntity cs) {
-        CourseScheduleEntity relCs = csMapper.selectByPrimaryKey(cs.getPkid());
+    public Map handleScheduleToday(CourseScheduleEntity criteria) {
+        CourseScheduleEntity relCs = csMapper.selectByPrimaryKey(criteria.getPkid());
         if (relCs == null)
-            return ComUtils.getResp(40008,"无上课信息",null);
+            return ComUtils.getResp(40008,"无课程信息",null);
 
         //如果是198课，查询有无维护家庭信息，没有则不能处理
         if (relCs.getCourseTypeId()==2){
@@ -166,12 +165,15 @@ public class CourseScheduleService {
         }
 
         relCs.setTraceStatus(CodeDef.HANDLED);
-        relCs.setTraceNote(cs.getTraceNote());
+        relCs.setTraceNote(criteria.getTraceNote());
 
-        if (CodeDef.SIGN_WAITING.equals(relCs.getSignStatus()) && CodeDef.SIGN_TRUANCY.equals(cs.getSignStatus())){
+        if (CodeDef.SIGN_WAITING.equals(relCs.getSignStatus()) && CodeDef.SIGN_TRUANCY.equals(criteria.getSignStatus())){
             // 学员未签到，是旷课情况 处理
             relCs.setSignStatus(CodeDef.SIGN_TRUANCY);
-            StuEntity stu = stuService.findById(cs.getSid());
+            StuEntity stu = stuService.findById(criteria.getSid());
+            if (stu==null){
+                throw new CommonException(40008,"无学员信息");
+            }
             stuService.updateStuStatus(stu,CodeDef.STU_TRUANCY,"爽约未上课，及时跟进");
         }
         int r = csMapper.updateByPrimaryKeySelective(relCs);

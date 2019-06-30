@@ -27,7 +27,8 @@
     <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
     <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
     <if test="startDate==null and endDate==null">
-      and c.booking_date &gt;= date(curdate()+1) and c.booking_date &lt; date(curdate()+2)
+      and c.booking_date &gt;= date_add(curdate(),interval 1 day)
+      and c.booking_date &lt; date_add(curdate(),interval 2 day)
     </if>
   </select>
 
@@ -50,7 +51,7 @@
     <if test="startDate==null and endDate==null">
       <!-- 未选时间段，查今日的所有和之前的待办 -->
       and (
-        (c.booking_date &gt;= curdate() and c.booking_date &lt; date(curdate()+1))
+        (c.booking_date &gt;= curdate() and c.booking_date &lt; date_add(curdate(),interval 1 day))
         or (c.booking_date &lt; curdate() and c.trace_status='PST01')
       )
     </if>

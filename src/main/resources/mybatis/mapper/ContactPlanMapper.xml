@@ -17,7 +17,7 @@
     <if test="planDate!=null"> and p.plan_date = #{planDate,jdbcType=DATE} </if>
     <if test="sName != null and sName!='' "> and s.name like CONCAT('%',#{sName},'%')</if>
     <if test="node!=null"> and s.node = #{node} </if>
-    order by p.plan_date asc
+    order by p.plan_date desc
   </select>
 
   <!-- 查询机构下的待审核联系计划 通过 eid -->
@@ -32,7 +32,7 @@
     (p.status='PST03' or p.status='PST05')
     and e.eid=#{eid}
     <if test="sName != null and sName!='' "> and s.name like CONCAT('%',#{sName},'%')</if>
-    order by p.plan_date asc
+    order by p.plan_date desc
   </select>
 
 

@@ -61,6 +61,5 @@ public class TraceAOP {
         logger.info("返回参数保密，全局跟踪号 = "+MDC.get("requestId"));
         MDC.clear();
         logger.info("------------------------------- end -------------------------------------");
-
     }
 }

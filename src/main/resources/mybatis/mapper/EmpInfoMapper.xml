@@ -20,7 +20,7 @@
     s.cc=#{eid}
     and p.status = 'PST01'
     and p.plan_date &gt;= curdate()
-    and p.plan_date &lt; date(curdate()+1)
+    and p.plan_date &lt; date_add(curdate(),interval 1 day)
     group by s.cc
   </select>
 
@@ -32,7 +32,7 @@
     from course_schedule c inner join stu s on s.sid=c.sid
     where
     s.cc=#{eid}
-    and c.booking_date &lt; date(curdate()+1)
+    and c.booking_date &lt; date_add(curdate(),interval 1 day)
     and c.trace_status = 'PST01'
     group by s.cc
   </select>
@@ -44,8 +44,8 @@
     from course_schedule c inner join stu s on s.sid=c.sid
     where
     s.cc=#{eid}
-    and c.booking_date &gt;= date(curdate()+1)
-    and c.booking_date &lt; date(curdate()+2)
+    and c.booking_date &gt;= date_add(curdate(),interval 1 day)
+    and c.booking_date &lt; date_add(curdate(),interval 2 day)
     and c.notify_status = 'PST01'
     group by s.cc
   </select>

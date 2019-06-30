@@ -25,14 +25,13 @@ public class MyExceptionHandler {
         if (e instanceof CommonException) {
             CommonException commonE = (CommonException) e;
             logger.warn("请求路径 " + request.getRequestURL() + " 抛出自定义异常：" + commonE.getCode() + " " + commonE.getMsg());
-            logger.info("------------------------------- end -------------------------------------");
+            commonE.printStackTrace();
             Map out=ComUtils.getResp(commonE.getCode(), commonE.getMsg(), null);
             out.put("requestId",request.getAttribute("requestId"));
             return out;
         } else {
             logger.error("请求路径 " + request.getRequestURL() + " 抛出系统级异常：" + e.getMessage());
-            logger.error(e.getStackTrace().toString());
-            logger.info("------------------------------- end -------------------------------------");
+            e.printStackTrace();
             Map out=ComUtils.getResp(50000, e.getMessage(), null);
             out.put("requestId",request.getAttribute("requestId"));
             return out;
