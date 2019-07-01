@@ -13,6 +13,15 @@ public class EmpInfoEntity extends PagedCriteria {
     private String role;
     private List<EmpRoleRelEntity> roles;
     private Integer nid;
+    private String nodeName;
+
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
+    }
 
     public Integer getEid() {
         return eid;

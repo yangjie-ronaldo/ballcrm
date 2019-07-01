@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-
 import java.util.*;
 
 @Service
@@ -47,6 +46,8 @@ public class EmpInfoService {
         PagedResult<EmpInfoEntity> result = new PagedResult<>(c.getCurrentPage(), 1000, (int) p.getTotal());
         if (list != null) {
             for (EmpInfoEntity e : list) {
+                //翻译员工门店
+                transEmpInfo(e);
                 // 查询员工的角色列表
                 List<EmpRoleRelEntity> roles = empRoleRelMapper.selectByEid(e.getEid());
                 e.setRoles(roles);
@@ -69,6 +70,8 @@ public class EmpInfoService {
             for (EmpInfoEntity e : list) {
                 // 查询员工的角色列表
                 List<EmpRoleRelEntity> roles = empRoleRelMapper.selectByEid(e.getEid());
+                //翻译员工门店
+                transEmpInfo(e);
                 e.setRoles(roles);
             }
         }
@@ -94,6 +97,32 @@ public class EmpInfoService {
         }
         cacheService.freshEmpCache();
         return ComUtils.getResp(20000,"修改成功",null);
+    }
+
+    // 更新员工密码 加密后存储
+    @Transactional
+    public Map<String, Object> editPass(EmpPass p){
+        if (p==null || p.getEid()==null){
+            return ComUtils.getResp(40008,"员工编号未知",null);
+        }
+        EmpInfoEntity e = eMapper.selectByPrimaryKey(p.getEid());
+        if (e==null){
+            return ComUtils.getResp(40008,"无员工信息",null);
+        }
+        //原密码 loginid+pass
+        String passMD5=ComUtils.encodeByMd5(e.getLoginid()+p.getOldPass());
+        if (!e.getPass().equals(p.getOldPass()) && !e.getPass().equals(passMD5)){
+            return ComUtils.getResp(40008,"原密码有误",null);
+        }
+        if (p.getNewPass()==null || !p.getNewPass().equals(p.getConfirmPass())){
+            return ComUtils.getResp(40008,"两次密码不一致",null);
+        }
+
+        //存储加密后密码
+        String newPassMD5=ComUtils.encodeByMd5(e.getLoginid()+p.getNewPass());
+        e.setPass(newPassMD5);
+        eMapper.updateByPrimaryKeySelective(e);
+        return ComUtils.getResp(20000,"修改成功",e.getLoginid());
     }
 
     // 查询所有角色列表
@@ -148,12 +177,13 @@ public class EmpInfoService {
             return ComUtils.getResp(40008, "用户不存在", null);
         }
 
-        if (!rel.getPass().equals(e.getPass())) {
+        String passMD5=ComUtils.encodeByMd5(rel.getLoginid()+e.getPass());
+        if (!rel.getPass().equals(e.getPass()) && !rel.getPass().equals(passMD5) ) {
             return ComUtils.getResp(40008, "密码错误", null);
         }
 
         //否则密码正确，登录成功
-        Map<String, Object> map = ComUtils.getResp(20000, "登陆成功", null);
+        Map<String, Object> map = ComUtils.getResp(20000, "登录成功", null);
 
         Map<String, Object> data = new HashMap<>();
 
@@ -244,5 +274,10 @@ public class EmpInfoService {
             ltMapper.insertSelective(lt);
         }
         map.put("token", lt.getToken());
+    }
+
+    //获取员工所属门店
+    private void transEmpInfo(EmpInfoEntity e){
+        e.setNodeName(cacheService.NodeCache().get(e.getNid()));
     }
 }

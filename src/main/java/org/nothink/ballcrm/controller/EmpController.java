@@ -1,6 +1,7 @@
 package org.nothink.ballcrm.controller;
 
 import org.nothink.ballcrm.entity.EmpInfoEntity;
+import org.nothink.ballcrm.entity.EmpPass;
 import org.nothink.ballcrm.entity.StatisticsCriteria;
 import org.nothink.ballcrm.service.EmpInfoService;
 import org.nothink.ballcrm.service.StatisticsService;
@@ -76,6 +77,13 @@ public class EmpController {
     public Map editEmp(@RequestBody EmpInfoEntity e){
         return eService.editEmp(e);
     }
+
+    /**
+     * 修改用户密码
+     */
+    @PutMapping("/editpass")
+    @ResponseBody
+    public Map editPass(EmpPass pass){return eService.editPass(pass);}
 
     /**
      * 查询所有角色列表
