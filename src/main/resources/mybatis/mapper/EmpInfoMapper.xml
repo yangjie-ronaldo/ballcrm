@@ -50,6 +50,28 @@
     group by s.cc
   </select>
 
+  <!--获取目前无跟进学员数量（既无联系计划也无约课）-->
+  <select id="getNoTraceStuNum" parameterType="java.lang.Integer" resultType="org.nothink.ballcrm.entity.Statistics">
+    select
+    s.cc as eid,
+    count(sid) as num
+    from stu s
+    where
+    s.cc=#{eid}
+    and s.type!='STP04'
+    and not exists (
+      select * from contact_plan p where
+        p.sid=s.sid and p.status='PST01'
+        and p.plan_note &gt;= curdate()
+    )
+    and not exists (
+      select * from course_schedule c where
+        c.sid=s.sid and c.sign_status='SIG02'
+        and c.booking_date &gt;= curdate()
+    )
+    group by s.cc
+  </select>
+
 
   <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.EmpInfoEntity" parameterType="java.lang.Integer" >
     select

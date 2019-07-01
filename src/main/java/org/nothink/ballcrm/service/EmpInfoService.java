@@ -245,6 +245,13 @@ public class EmpInfoService {
         } else {
             map.put("tomorrowNotifyTodo",0);
         }
+        // 获取目前无跟进学员数量（既无联系计划也无约课）
+        statistcs=eMapper.getNoTraceStuNum(eid);
+        if (statistcs!=null && statistcs.getNum()!=0){
+            map.put("noTraceStuNum",statistcs.getNum());
+        } else {
+            map.put("noTraceStuNum",0);
+        }
         return ComUtils.getResp(20000,"查询成功",map);
     }
 

@@ -6,6 +6,7 @@ import java.util.Date;
 public class StuEntity extends PagedCriteria {
     private Integer sid;
     private Date createDate;
+    private Date updateDate;
     private String name;
     private String nikiName;
     private Date birthday;
@@ -27,17 +28,22 @@ public class StuEntity extends PagedCriteria {
     private String ccName;
     private Integer teacherId;
     private String teacherIdName;
+    private Integer popularizeId;
+    private String popularizeIdName;
     private Integer node;
     private String nodeName;
 
     private Boolean hasCourse198;
     private Integer Course198Num;
+    private Date startDate;
+    private Date endDate;
 
     @Override
     public String toString() {
         return "StuEntity{" +
                 "sid=" + sid +
                 ", createDate=" + createDate +
+                ", updateDate=" + updateDate +
                 ", name='" + name + '\'' +
                 ", nikiName='" + nikiName + '\'' +
                 ", birthday=" + birthday +
@@ -59,11 +65,55 @@ public class StuEntity extends PagedCriteria {
                 ", ccName='" + ccName + '\'' +
                 ", teacherId=" + teacherId +
                 ", teacherIdName='" + teacherIdName + '\'' +
+                ", popularizeId=" + popularizeId +
+                ", popularizeIdName='" + popularizeIdName + '\'' +
                 ", node=" + node +
                 ", nodeName='" + nodeName + '\'' +
                 ", hasCourse198=" + hasCourse198 +
                 ", Course198Num=" + Course198Num +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
                 '}';
+    }
+
+    public String getPopularizeIdName() {
+        return popularizeIdName;
+    }
+
+    public void setPopularizeIdName(String popularizeIdName) {
+        this.popularizeIdName = popularizeIdName;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Integer getPopularizeId() {
+        return popularizeId;
+    }
+
+    public void setPopularizeId(Integer popularizeId) {
+        this.popularizeId = popularizeId;
     }
 
     public Integer getSid() {

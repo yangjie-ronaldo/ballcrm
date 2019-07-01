@@ -30,4 +30,7 @@ public interface EmpInfoMapper {
 
     // 查询员工明日提醒数量
     Statistics getTomorrowTodoNotify(Integer eid);
+
+    // 获取目前无跟进学员数量（既无联系计划也无约课）
+    Statistics getNoTraceStuNum(Integer eid);
 }

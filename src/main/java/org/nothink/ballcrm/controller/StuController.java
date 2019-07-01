@@ -49,6 +49,13 @@ public class StuController {
         return stuService.getAllByCriteria(c);
     }
 
+    //查询无追踪的学员列表
+    @GetMapping("/stunotrace")
+    @ResponseBody
+    public Map getNoTraceStu(StuEntity c) {
+        return stuService.getNoTraceStu(c);
+    }
+
     /**
      * 主管查询198学员情况列表
      * @param c

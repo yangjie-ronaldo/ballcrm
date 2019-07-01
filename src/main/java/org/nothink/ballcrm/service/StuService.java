@@ -36,7 +36,6 @@ public class StuService {
 
     /**
      * 根据id查询学员
-     *
      * @param sid
      * @return
      */
@@ -50,7 +49,6 @@ public class StuService {
 
     /**
      * 根据条件筛选所有学员 分页
-     *
      * @param c
      * @return
      */
@@ -68,8 +66,28 @@ public class StuService {
     }
 
     /**
+     * 查询无追踪学员列表
+     * @param c
+     * @return
+     */
+    public Map getNoTraceStu(StuEntity c) {
+        if (StringUtils.isEmpty(c.getCc()) && StringUtils.isEmpty(c.getNode())){
+            return ComUtils.getResp(40008,"无员工或机构编号",null);
+        }
+        Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
+        //执行查询
+        List<StuEntity> list = stuMapper.getNoTraceStuList(c);
+        PagedResult<StuEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());
+        //翻译代码值
+        if (list != null)
+            for (StuEntity s : list)
+                stuCodeTrans(s);
+        result.setItems(list);
+        return ComUtils.getResp(20000, "查询成功", result);
+    }
+
+    /**
      * 新增学员
-     *
      * @param c
      * @return
      */
@@ -78,6 +96,7 @@ public class StuService {
         //1.新增学员基本信息到学员表
         c.setType(CodeDef.TYPE_PROTENTIAL);
         c.setCreateDate(new Date());
+        c.setUpdateDate(new Date());
         int i = stuMapper.insertSelectiveAndGetKey(c);
         int sid = c.getSid();
         logger.info("插入后的学员ID：" + sid);
@@ -196,6 +215,8 @@ public class StuService {
             note = "成就达成！成为正式年卡会员!";
             stu.setType(CodeDef.TYPE_YEARVIP);
         }
+        //设置学员买课的最新时间
+        stu.setUpdateDate(new Date());
         this.updateStuStatus(stu, status, note);
         if (r > 0)
             return ComUtils.getResp(20000, "操作成功", null);
@@ -357,6 +378,8 @@ public class StuService {
             stu.setNodeName(cache.NodeCache().get(stu.getNode()));
             // 新增关联的老师翻译
             stu.setTeacherIdName(cache.EmpCache().get(stu.getTeacherId()));
+            // 新增关联推广员翻译
+            stu.setPopularizeIdName(cache.EmpCache().get(stu.getPopularizeId()));
         }
     }
 

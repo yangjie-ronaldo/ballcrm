@@ -8,6 +8,8 @@ import java.util.List;
 public interface StuMapper {
     List<StuEntity> getStuList(StuEntity criteria);
 
+    List<StuEntity> getNoTraceStuList(StuEntity criteria);
+
     List<StuEntity> getStuTransList(StuTransCriteria criteria);
 
     List<StuEntity> getStu198List(StuEntity criteria);
