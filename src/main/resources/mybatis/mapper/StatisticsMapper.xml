@@ -39,7 +39,7 @@
     from
     emp_info e left outer join stu s on s.cc=e.eid
     left outer join course_schedule c on s.sid=c.sid
-    and c.course_type_id=1 and c.sign_status='SIN01'
+    and c.course_type_id=1 and c.sign_status='SIG01'
     <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
     <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
     <where>
@@ -54,7 +54,7 @@
     count(c.course_type_id) as num
     from
     emp_info e left outer join course_schedule c on e.eid=c.close_eid
-    and c.course_type_id=1 and c.sign_status='SIN01'
+    and c.course_type_id=1 and c.sign_status='SIG01'
     <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
     <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
     <where>

@@ -6,6 +6,7 @@ import org.nothink.ballcrm.entity.*;
 import org.nothink.ballcrm.mapper.*;
 import org.nothink.ballcrm.util.CodeDef;
 import org.nothink.ballcrm.util.ComUtils;
+import org.nothink.ballcrm.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,10 @@ public class StuService {
      * @return
      */
     public Map getAllByCriteria(StuEntity c) {
+        //如果上送了截止时间，把截止时间加一天，防止选不到最后一天
+        if (c.getEndDate()!=null)
+            c.setEndDate(DateUtils.addDate(c.getEndDate(),0,0,1,0,0,0,0));
+
         Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
         //执行查询
         List<StuEntity> list = stuMapper.getStuList(c);
