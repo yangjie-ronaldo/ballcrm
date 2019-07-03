@@ -36,9 +36,6 @@ public class EmpInfoService {
 
     // 查询本店的员工列表 不分页
     public Map<String, Object> getEmpList(EmpInfoEntity c) {
-        if (c.getNid() == 0) {
-            return ComUtils.getResp(40008, "无门店编号", null);
-        }
         // 先写死查第一页 1000条 查员工不分页
         Page p = PageHelper.startPage(1, 1000);
         //执行查询
@@ -59,9 +56,6 @@ public class EmpInfoService {
 
     // 查询本店的员工列表 分页
     public Map<String, Object> getEmpListPaged(EmpInfoEntity c) {
-        if (c.getNid() == 0) {
-            return ComUtils.getResp(40008, "无门店编号", null);
-        }
         Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
         //执行查询
         List<EmpInfoEntity> list = eMapper.getEmpList(c);
@@ -174,12 +168,12 @@ public class EmpInfoService {
 
         EmpInfoEntity rel = eMapper.getEmpByLoginid(e.getLoginid());
         if (rel == null) {
-            return ComUtils.getResp(40008, "用户不存在", null);
+            return ComUtils.getResp(40008, "用户名或密码错误", null);
         }
 
         String passMD5=ComUtils.encodeByMd5(rel.getLoginid()+e.getPass());
         if (!rel.getPass().equals(e.getPass()) && !rel.getPass().equals(passMD5) ) {
-            return ComUtils.getResp(40008, "密码错误", null);
+            return ComUtils.getResp(40008, "用户名或密码错误", null);
         }
 
         //否则密码正确，登录成功

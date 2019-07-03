@@ -34,6 +34,8 @@ public class StuService {
     CourseTypeMapper courseMapper;
     @Autowired
     StuFamilyMapper stuFamilyMapper;
+    @Autowired
+    EmpInfoMapper empMapper;
 
     /**
      * 根据id查询学员
@@ -358,11 +360,14 @@ public class StuService {
     // 单个学员转移
     private boolean transStu(Integer from, Integer to, Integer sid) {
         StuEntity stu = stuMapper.selectByPrimaryKey(sid);
-        if (stu == null) return false;
+        EmpInfoEntity e=empMapper.selectByPrimaryKey(to);
+        if (stu == null || e==null) return false;
         Integer preCc = stu.getCc();
         if (preCc != from) return false;
         stu.setPreCc(preCc);
         stu.setCc(to);
+        //设置到转出员工的机构
+        stu.setNode(e.getNid());
         stuMapper.updateByPrimaryKeySelective(stu);
         return true;
     }
