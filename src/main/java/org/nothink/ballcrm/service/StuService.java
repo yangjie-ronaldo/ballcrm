@@ -78,9 +78,6 @@ public class StuService {
      * @return
      */
     public Map getNoTraceStu(StuEntity c) {
-        if (StringUtils.isEmpty(c.getCc()) && StringUtils.isEmpty(c.getNode())){
-            return ComUtils.getResp(40008,"无员工或机构编号",null);
-        }
         Page p = PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
         //执行查询
         List<StuEntity> list = stuMapper.getNoTraceStuList(c);

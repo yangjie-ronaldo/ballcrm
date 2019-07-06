@@ -3,8 +3,10 @@ package org.nothink.ballcrm.service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.nothink.ballcrm.entity.ContactPlanEntity;
+import org.nothink.ballcrm.entity.EmpInfoEntity;
 import org.nothink.ballcrm.entity.PagedResult;
 import org.nothink.ballcrm.mapper.ContactPlanMapper;
+import org.nothink.ballcrm.mapper.EmpInfoMapper;
 import org.nothink.ballcrm.util.CodeDef;
 import org.nothink.ballcrm.util.ComUtils;
 import org.nothink.ballcrm.util.DateUtils;
@@ -27,6 +29,8 @@ public class ContactPlanService {
     CacheService cache;
     @Autowired
     StuService stuService;
+    @Autowired
+    EmpInfoMapper eMapper;
 
     /**
      * 添加联系计划
@@ -88,6 +92,11 @@ public class ContactPlanService {
      * @return
      */
     public Map getVerifyPlanByEid(ContactPlanEntity c){
+        if (c.getEid()==null){
+            return ComUtils.getResp(40008,"主管编号为空",null);
+        }
+        EmpInfoEntity emp = eMapper.selectByPrimaryKey(c.getEid());
+        c.setNode(emp.getNid());
         Page p= PageHelper.startPage(c.getCurrentPage(), c.getPageSize());
         List<ContactPlanEntity> list = planMapper.getVerifyPlanByEid(c);
         PagedResult<ContactPlanEntity> result = new PagedResult<>(c.getCurrentPage(), c.getPageSize(), (int) p.getTotal());

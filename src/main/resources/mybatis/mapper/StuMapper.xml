@@ -77,16 +77,19 @@
     c.num as Course198Num
     from stu s inner join stu_course c on c.sid=s.sid and c.course_type_id=2
     <where>
-      <if test="node!=null">s.node=#{node}</if>
+      s.type='STP02'
+      <if test="node!=null">and s.node=#{node}</if>
       <if test="name != null and name!=''"> and s.name like CONCAT('%',#{name},'%') </if>
       <if test="hasCourse198==false">
         and not exists (
-        select * from course_schedule c where s.sid=c.sid and c.course_type_id=2 and booking_date>curdate()
+          select * from course_schedule c where
+          s.sid=c.sid and c.course_type_id=2 and booking_date>curdate() and c.sign_status='SIG02'
         )
       </if>
       <if test="hasCourse198==true">
         and exists (
-        select * from course_schedule c where s.sid=c.sid and c.course_type_id=2 and booking_date>curdate()
+          select * from course_schedule c where
+          s.sid=c.sid and c.course_type_id=2 and booking_date>curdate() and c.sign_status='SIG02'
         )
       </if>
     </where>

@@ -54,12 +54,14 @@ public class TraceAOP {
     @AfterReturning(pointcut = "executionService()",returning="returnValue")
     public void  doAfterReturning(JoinPoint joinPoint,Object returnValue){
         //返回加入全局跟踪号
-        Map map=(Map) returnValue;
-        map.put("requestId",MDC.get("requestId"));
-        endTime = System.currentTimeMillis() - startTime;
-        logger.info("本次接口耗时{}ms",endTime);
-        logger.info("返回参数保密，全局跟踪号 = "+MDC.get("requestId"));
-        MDC.clear();
-        logger.info("------------------------------- end -------------------------------------");
+        if (returnValue instanceof Map){
+            Map map=(Map) returnValue;
+            map.put("requestId",MDC.get("requestId"));
+            endTime = System.currentTimeMillis() - startTime;
+            logger.info("本次接口耗时{}ms",endTime);
+            logger.info("返回参数保密，全局跟踪号 = "+MDC.get("requestId"));
+            MDC.clear();
+            logger.info("------------------------------- end -------------------------------------");
+        }
     }
 }
