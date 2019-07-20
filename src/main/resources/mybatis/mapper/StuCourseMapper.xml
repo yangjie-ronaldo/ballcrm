@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.StuCourseMapper" >
 
-  <!-- 选取学员购买的课程，按条件-->
+  <!-- 选取学员购买的单个课程，按条件-->
   <select id="getStuCourseSelective" resultType="org.nothink.ballcrm.entity.StuCourseEntity" parameterType="org.nothink.ballcrm.entity.StuCourseEntity">
     select
       *
@@ -15,18 +15,7 @@
     limit 1
   </select>
 
-  <!-- 选取学员可约的课程  废弃  暂时不用-->
-  <select id="getStuCourseAvailable" resultType="org.nothink.ballcrm.entity.StuCourseEntity" parameterType="java.lang.Integer">
-    select
-      buy.*,
-      c.type_name as course_name
-    from
-      stu_course buy inner join course_type c on buy.course_type_id=c.pkid
-    where buy.sid=#{sid}
-    and buy.course_type_id=#{courseTypeId}
-    and buy.num &gt; 0
-    limit 1
-  </select>
+  <!-- 选取学员的课程列表 所有课程-->
   <select id="getStuCourseListBySid" resultType="org.nothink.ballcrm.entity.StuCourseEntity" parameterType="java.lang.Integer">
     select
       buy.*,
@@ -34,6 +23,17 @@
     from
       stu_course buy inner join course_type c on buy.course_type_id=c.pkid
     where sid=#{sid}
+  </select>
+
+  <!-- 选取学员可约课程列表 目前只能约体验课、营销课 -->
+  <select id="getStuCourseListToBook" resultType="org.nothink.ballcrm.entity.StuCourseEntity" parameterType="java.lang.Integer">
+    select
+      buy.*,
+      c.type_name as course_name
+    from
+      stu_course buy inner join course_type c on buy.course_type_id=c.pkid
+    where sid=#{sid}
+    and c.phase_id in (2,3)
   </select>
 
   <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.StuCourseEntity" parameterType="java.lang.Integer" >

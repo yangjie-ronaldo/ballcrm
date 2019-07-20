@@ -5,6 +5,34 @@ public class CourseTypeEntity {
     private String typeName;
     private String desc;
     private Integer num;
+    private Integer fee;
+    private Integer validDay;
+    private Integer phaseId;
+    private String phaseName;
+
+    public Integer getFee() {
+        return fee;
+    }
+
+    public void setFee(Integer fee) {
+        this.fee = fee;
+    }
+
+    public Integer getValidDay() {
+        return validDay;
+    }
+
+    public void setValidDay(Integer validDay) {
+        this.validDay = validDay;
+    }
+
+    public Integer getPhaseId() {
+        return phaseId;
+    }
+
+    public void setPhaseId(Integer phaseId) {
+        this.phaseId = phaseId;
+    }
 
     @Override
     public String toString() {
@@ -13,7 +41,19 @@ public class CourseTypeEntity {
                 ", typeName='" + typeName + '\'' +
                 ", desc='" + desc + '\'' +
                 ", num=" + num +
+                ", fee=" + fee +
+                ", validDay=" + validDay +
+                ", phaseId=" + phaseId +
+                ", phaseName='" + phaseName + '\'' +
                 '}';
+    }
+
+    public String getPhaseName() {
+        return phaseName;
+    }
+
+    public void setPhaseName(String phaseName) {
+        this.phaseName = phaseName;
     }
 
     public Integer getPkid() {

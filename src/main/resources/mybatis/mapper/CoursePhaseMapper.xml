@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.nothink.ballcrm.mapper.CoursePhaseMapper" >
+
+  <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.CoursePhaseEntity" parameterType="java.lang.Integer" >
+    select 
+    *
+    from course_phase
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from course_phase
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.nothink.ballcrm.entity.CoursePhaseEntity" >
+    insert into course_phase (pkid, name)
+    values (#{pkid,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="org.nothink.ballcrm.entity.CoursePhaseEntity" >
+    insert into course_phase
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pkid != null" >
+        pkid,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pkid != null" >
+        #{pkid,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.nothink.ballcrm.entity.CoursePhaseEntity" >
+    update course_phase
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.nothink.ballcrm.entity.CoursePhaseEntity" >
+    update course_phase
+    set name = #{name,jdbcType=VARCHAR}
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -21,9 +21,15 @@ public class StatisticsService {
 
     //获取按CC统计的数据
     public Map getCcStatistics(StatisticsCriteria c) {
-        //如果上送了截止时间，把截止时间加一天，防止选不到最后一天
+        if (c.getStartDate() == null && c.getEndDate() == null) {
+            //如果没有时间，默认查最近一个月
+            Date todayEnd = DateUtils.getDayEndTime(DateUtils.getToday());
+            c.setEndDate(todayEnd);
+            c.setStartDate(DateUtils.addDate(todayEnd, 0, 0, -31, 0, 0, 0, 0));
+        }
+        //如果上送了截止时间，调整时间
         if (c.getEndDate() != null)
-            c.setEndDate(DateUtils.addDate(c.getEndDate(), 0, 0, 1, 0, 0, 0, 0));
+            c.setEndDate(DateUtils.getDayEndTime(c.getEndDate()));
 
         List<Statistics> newStuNumList = sMapper.getNewStuNum(c);
         List<Statistics> demoScheduleNumList = sMapper.getDemoScheduleNum(c);

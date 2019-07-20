@@ -1,28 +1,34 @@
 package org.nothink.ballcrm.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class StuFamilyEntity {
     private Integer sid;
-    private String payAbility;
-    private String payWill;
-    private Date orderDate;
-    private String educationIdea;
-    private String pickup;
-    private String decision;
 
-    @Override
-    public String toString() {
-        return "StuFamilyEntity{" +
-                "sid=" + sid +
-                ", payAbility='" + payAbility + '\'' +
-                ", payWill='" + payWill + '\'' +
-                ", orderDate=" + orderDate +
-                ", educationIdea='" + educationIdea + '\'' +
-                ", pickup='" + pickup + '\'' +
-                ", decision='" + decision + '\'' +
-                '}';
-    }
+    private Integer payAbility;
+
+    private Integer payWillMother;
+
+    private Integer payWillFather;
+
+    private Integer classWeekday;
+
+    @JsonFormat(pattern="HH:mm:ss",timezone="GMT+8")
+    private Date classTime;
+
+    private String demoTarget;
+
+    private String educationIdea;
+
+    private Integer pickup;
+
+    private Integer deal;
+
+    private String dealReason;
+
+    private Date updateDate;
 
     public Integer getSid() {
         return sid;
@@ -32,28 +38,52 @@ public class StuFamilyEntity {
         this.sid = sid;
     }
 
-    public String getPayAbility() {
+    public Integer getPayAbility() {
         return payAbility;
     }
 
-    public void setPayAbility(String payAbility) {
+    public void setPayAbility(Integer payAbility) {
         this.payAbility = payAbility;
     }
 
-    public String getPayWill() {
-        return payWill;
+    public Integer getPayWillMother() {
+        return payWillMother;
     }
 
-    public void setPayWill(String payWill) {
-        this.payWill = payWill;
+    public void setPayWillMother(Integer payWillMother) {
+        this.payWillMother = payWillMother;
     }
 
-    public Date getOrderDate() {
-        return orderDate;
+    public Integer getPayWillFather() {
+        return payWillFather;
     }
 
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
+    public void setPayWillFather(Integer payWillFather) {
+        this.payWillFather = payWillFather;
+    }
+
+    public Integer getClassWeekday() {
+        return classWeekday;
+    }
+
+    public void setClassWeekday(Integer classWeekday) {
+        this.classWeekday = classWeekday;
+    }
+
+    public Date getClassTime() {
+        return classTime;
+    }
+
+    public void setClassTime(Date classTime) {
+        this.classTime = classTime;
+    }
+
+    public String getDemoTarget() {
+        return demoTarget;
+    }
+
+    public void setDemoTarget(String demoTarget) {
+        this.demoTarget = demoTarget == null ? null : demoTarget.trim();
     }
 
     public String getEducationIdea() {
@@ -61,22 +91,38 @@ public class StuFamilyEntity {
     }
 
     public void setEducationIdea(String educationIdea) {
-        this.educationIdea = educationIdea;
+        this.educationIdea = educationIdea == null ? null : educationIdea.trim();
     }
 
-    public String getPickup() {
+    public Integer getPickup() {
         return pickup;
     }
 
-    public void setPickup(String pickup) {
+    public void setPickup(Integer pickup) {
         this.pickup = pickup;
     }
 
-    public String getDecision() {
-        return decision;
+    public Integer getDeal() {
+        return deal;
     }
 
-    public void setDecision(String decision) {
-        this.decision = decision;
+    public void setDeal(Integer deal) {
+        this.deal = deal;
+    }
+
+    public String getDealReason() {
+        return dealReason;
+    }
+
+    public void setDealReason(String dealReason) {
+        this.dealReason = dealReason == null ? null : dealReason.trim();
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }

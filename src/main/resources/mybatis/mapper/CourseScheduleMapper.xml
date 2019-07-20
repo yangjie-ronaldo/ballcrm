@@ -10,6 +10,13 @@
     order by booking_date desc
   </select>
 
+  <!-- 查询是否有待上课课程 -->
+  <select id="getCourseScheduleTodo" resultType="org.nothink.ballcrm.entity.CourseScheduleEntity">
+    select * from course_schedule
+    where sign_status='SIG02'
+    <if test="sid!=null"> and sid = #{sid} </if>
+  </select>
+
   <!-- 明日上课提醒表 销售看 -->
   <select id="getNotifyScheduleList" resultType="org.nothink.ballcrm.entity.CourseScheduleEntity" parameterType="org.nothink.ballcrm.entity.CourseScheduleEntity">
     select

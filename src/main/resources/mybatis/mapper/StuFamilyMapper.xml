@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.StuFamilyMapper" >
 
-
   <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.StuFamilyEntity" parameterType="java.lang.Integer" >
     select 
     *
@@ -14,12 +13,16 @@
     where sid = #{sid,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="org.nothink.ballcrm.entity.StuFamilyEntity" >
-    insert into stu_family (sid, pay_ability, pay_will, 
-      order_date, education_idea, pickup, 
-      decision)
-    values (#{sid,jdbcType=INTEGER}, #{payAbility,jdbcType=VARCHAR}, #{payWill,jdbcType=VARCHAR}, 
-      #{orderDate,jdbcType=DATE}, #{educationIdea,jdbcType=VARCHAR}, #{pickup,jdbcType=VARCHAR}, 
-      #{decision,jdbcType=VARCHAR})
+    insert into stu_family (sid, pay_ability, pay_will_mother, 
+      pay_will_father, class_weekday, class_time, 
+      demo_target, education_idea, pickup, 
+      deal, deal_reason, update_date
+      )
+    values (#{sid,jdbcType=INTEGER}, #{payAbility,jdbcType=INTEGER}, #{payWillMother,jdbcType=INTEGER}, 
+      #{payWillFather,jdbcType=INTEGER}, #{classWeekday,jdbcType=INTEGER}, #{classTime,jdbcType=TIME}, 
+      #{demoTarget,jdbcType=VARCHAR}, #{educationIdea,jdbcType=VARCHAR}, #{pickup,jdbcType=INTEGER}, 
+      #{deal,jdbcType=INTEGER}, #{dealReason,jdbcType=VARCHAR}, #{updateDate,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="org.nothink.ballcrm.entity.StuFamilyEntity" >
     insert into stu_family
@@ -30,11 +33,20 @@
       <if test="payAbility != null" >
         pay_ability,
       </if>
-      <if test="payWill != null" >
-        pay_will,
+      <if test="payWillMother != null" >
+        pay_will_mother,
       </if>
-      <if test="orderDate != null" >
-        order_date,
+      <if test="payWillFather != null" >
+        pay_will_father,
+      </if>
+      <if test="classWeekday != null" >
+        class_weekday,
+      </if>
+      <if test="classTime != null" >
+        class_time,
+      </if>
+      <if test="demoTarget != null" >
+        demo_target,
       </if>
       <if test="educationIdea != null" >
         education_idea,
@@ -42,8 +54,14 @@
       <if test="pickup != null" >
         pickup,
       </if>
-      <if test="decision != null" >
-        decision,
+      <if test="deal != null" >
+        deal,
+      </if>
+      <if test="dealReason != null" >
+        deal_reason,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -51,22 +69,37 @@
         #{sid,jdbcType=INTEGER},
       </if>
       <if test="payAbility != null" >
-        #{payAbility,jdbcType=VARCHAR},
+        #{payAbility,jdbcType=INTEGER},
       </if>
-      <if test="payWill != null" >
-        #{payWill,jdbcType=VARCHAR},
+      <if test="payWillMother != null" >
+        #{payWillMother,jdbcType=INTEGER},
       </if>
-      <if test="orderDate != null" >
-        #{orderDate,jdbcType=DATE},
+      <if test="payWillFather != null" >
+        #{payWillFather,jdbcType=INTEGER},
+      </if>
+      <if test="classWeekday != null" >
+        #{classWeekday,jdbcType=INTEGER},
+      </if>
+      <if test="classTime != null" >
+        #{classTime,jdbcType=TIME},
+      </if>
+      <if test="demoTarget != null" >
+        #{demoTarget,jdbcType=VARCHAR},
       </if>
       <if test="educationIdea != null" >
         #{educationIdea,jdbcType=VARCHAR},
       </if>
       <if test="pickup != null" >
-        #{pickup,jdbcType=VARCHAR},
+        #{pickup,jdbcType=INTEGER},
       </if>
-      <if test="decision != null" >
-        #{decision,jdbcType=VARCHAR},
+      <if test="deal != null" >
+        #{deal,jdbcType=INTEGER},
+      </if>
+      <if test="dealReason != null" >
+        #{dealReason,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -74,34 +107,54 @@
     update stu_family
     <set >
       <if test="payAbility != null" >
-        pay_ability = #{payAbility,jdbcType=VARCHAR},
+        pay_ability = #{payAbility,jdbcType=INTEGER},
       </if>
-      <if test="payWill != null" >
-        pay_will = #{payWill,jdbcType=VARCHAR},
+      <if test="payWillMother != null" >
+        pay_will_mother = #{payWillMother,jdbcType=INTEGER},
       </if>
-      <if test="orderDate != null" >
-        order_date = #{orderDate,jdbcType=DATE},
+      <if test="payWillFather != null" >
+        pay_will_father = #{payWillFather,jdbcType=INTEGER},
+      </if>
+      <if test="classWeekday != null" >
+        class_weekday = #{classWeekday,jdbcType=INTEGER},
+      </if>
+      <if test="classTime != null" >
+        class_time = #{classTime,jdbcType=TIME},
+      </if>
+      <if test="demoTarget != null" >
+        demo_target = #{demoTarget,jdbcType=VARCHAR},
       </if>
       <if test="educationIdea != null" >
         education_idea = #{educationIdea,jdbcType=VARCHAR},
       </if>
       <if test="pickup != null" >
-        pickup = #{pickup,jdbcType=VARCHAR},
+        pickup = #{pickup,jdbcType=INTEGER},
       </if>
-      <if test="decision != null" >
-        decision = #{decision,jdbcType=VARCHAR},
+      <if test="deal != null" >
+        deal = #{deal,jdbcType=INTEGER},
+      </if>
+      <if test="dealReason != null" >
+        deal_reason = #{dealReason,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
       </if>
     </set>
     where sid = #{sid,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="org.nothink.ballcrm.entity.StuFamilyEntity" >
     update stu_family
-    set pay_ability = #{payAbility,jdbcType=VARCHAR},
-      pay_will = #{payWill,jdbcType=VARCHAR},
-      order_date = #{orderDate,jdbcType=DATE},
+    set pay_ability = #{payAbility,jdbcType=INTEGER},
+      pay_will_mother = #{payWillMother,jdbcType=INTEGER},
+      pay_will_father = #{payWillFather,jdbcType=INTEGER},
+      class_weekday = #{classWeekday,jdbcType=INTEGER},
+      class_time = #{classTime,jdbcType=TIME},
+      demo_target = #{demoTarget,jdbcType=VARCHAR},
       education_idea = #{educationIdea,jdbcType=VARCHAR},
-      pickup = #{pickup,jdbcType=VARCHAR},
-      decision = #{decision,jdbcType=VARCHAR}
+      pickup = #{pickup,jdbcType=INTEGER},
+      deal = #{deal,jdbcType=INTEGER},
+      deal_reason = #{dealReason,jdbcType=VARCHAR},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
     where sid = #{sid,jdbcType=INTEGER}
   </update>
 </mapper>

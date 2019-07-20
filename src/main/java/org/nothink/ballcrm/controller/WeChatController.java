@@ -1,17 +1,27 @@
 package org.nothink.ballcrm.controller;
 
 import net.sf.json.JSONObject;
+import org.nothink.ballcrm.service.WeChatService;
 import org.nothink.ballcrm.util.AesCbcUtil;
 import org.nothink.ballcrm.util.HttpRequest;
+import org.nothink.ballcrm.util.WeChatUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
 @Controller
 public class WeChatController {
+
+
+    @Autowired
+    WeChatService weChatService;
+
 
     @ResponseBody
     @PostMapping("/decodeuser")
@@ -82,5 +92,51 @@ public class WeChatController {
         map.put("status", 0);
         map.put("msg", "解密失败");
         return map;
+    }
+
+    /**
+     * 微信公众号后台认证
+     * @param signature
+     * @param timestamp
+     * @param nonce
+     * @param echostr
+     * @return
+     */
+    @GetMapping("/wechat")
+    @ResponseBody
+    public String validate(@RequestParam(value = "signature") String signature,
+                           @RequestParam(value = "timestamp") String timestamp,
+                           @RequestParam(value = "nonce") String nonce,
+                           @RequestParam(value = "echostr") String echostr) {
+        //直接返true或false 验证成功
+        return WeChatUtils.checkSignature(signature, timestamp, nonce) ? echostr : null;
+    }
+
+    /**
+     * 此处是处理微信服务器的事件
+     */
+    @PostMapping("/wechat")
+    @ResponseBody
+    public String processMsg(HttpServletRequest request) {
+        // 调用核心服务类接收处理请求
+        return weChatService.processRequest(request);
+    }
+
+    @GetMapping("/wechat/sendmodelmsg")
+    @ResponseBody
+    public String sendModelMsg(){
+        return weChatService.sendModelMsg(null);
+    }
+
+    @GetMapping("/wechat/createmenu")
+    @ResponseBody
+    public String createMenu(){
+        return weChatService.createMenu();
+    }
+
+    @GetMapping("/wechat/getitemlist")
+    @ResponseBody
+    public String getItemList(){
+        return weChatService.getItemList();
     }
 }

@@ -174,7 +174,6 @@ public class ContactPlanService {
         rel.setVerifyEid(plan.getVerifyEid());
         rel.setVerifyNote(plan.getVerifyNote());
         if (CodeDef.HANDLE_ABANDEN_STU.equals(plan.getStatus())){
-            System.out.println("进入放弃客户");
             //主管同意放弃客户，将客户变为 候选客户
             stuService.abandonStu(rel.getSid());
             rel.setStatus(CodeDef.HANDLED);

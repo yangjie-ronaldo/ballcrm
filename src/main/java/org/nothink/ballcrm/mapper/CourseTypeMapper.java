@@ -7,6 +7,9 @@ import java.util.List;
 public interface CourseTypeMapper {
     List<CourseTypeEntity> getCourse();
 
+    List<CourseTypeEntity> getCourseByCriteria(CourseTypeEntity criteria);
+
+
     List<CourseTypeEntity> getCourseForBuy();
 
     int deleteByPrimaryKey(Integer pkid);

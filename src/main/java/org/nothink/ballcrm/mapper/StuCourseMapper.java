@@ -8,9 +8,8 @@ public interface StuCourseMapper {
 
     StuCourseEntity getStuCourseSelective(StuCourseEntity sc);
 
-    StuCourseEntity getStuCourseAvailable(StuCourseEntity sc);
-
     List<StuCourseEntity> getStuCourseListBySid(Integer sid);
+    List<StuCourseEntity> getStuCourseListToBook(Integer sid);
 
     int deleteByPrimaryKey(Integer pkid);
 

@@ -36,13 +36,15 @@ public class StuService {
     StuFamilyMapper stuFamilyMapper;
     @Autowired
     EmpInfoMapper empMapper;
+    @Autowired
+    CourseBuyRecordMapper courseBuyRecordMapper;
 
     /**
      * 根据id查询学员
      * @param sid
      * @return
      */
-    public StuEntity findById(int sid) {
+    public StuEntity findById(Integer sid) {
         StuEntity s = stuMapper.selectByPrimaryKey(sid);
         //翻译代码值
         if (s != null)
@@ -97,25 +99,41 @@ public class StuService {
      */
     @Transactional
     public Map addOne(StuEntity c) {
+        Date now=new Date();
         //1.新增学员基本信息到学员表
         c.setType(CodeDef.TYPE_PROTENTIAL);
-        c.setCreateDate(new Date());
-        c.setUpdateDate(new Date());
+        c.setCreateDate(now);
+        c.setUpdateDate(now);
         int i = stuMapper.insertSelectiveAndGetKey(c);
         int sid = c.getSid();
         logger.info("插入后的学员ID：" + sid);
 
         //2.更新学员状态
-        updateStuStatus(c, CodeDef.STU_NEW, "新添一枚客户！即时维护加油鸭！");
+        updateStuStatus(c, CodeDef.STU_NEW, "新添一枚体验客户！即时维护哟！");
 
-        //3.赠送DEMO课程
-        StuCourseEntity stc = new StuCourseEntity();
-        stc.setCourseTypeId(1);
-        stc.setFee(0);
-        stc.setNum(1);
-        stc.setSid(sid);
-        stc.setCreateDate(new Date());
-        stuCourseMapper.insert(stc);
+        //3.赠送体验课
+        //查询当前体验课
+        CourseTypeEntity criteria=new CourseTypeEntity();
+        criteria.setPhaseId(2); //课程阶段为2 体验课
+        List<CourseTypeEntity> courseList = courseMapper.getCourseByCriteria(criteria);
+        if (courseList!=null && courseList.size()>=1){
+            //选第一节体验课
+            CourseTypeEntity course=courseList.get(0);
+            //给学员添加体验课
+            StuCourseEntity stc = new StuCourseEntity();
+            stc.setCourseTypeId(course.getPkid());
+            stc.setFee(course.getFee());
+            stc.setNum(course.getNum());
+            stc.setSid(sid);
+
+            stc.setCreateDate(now);
+            stc.setEndDate(DateUtils.addDate(now,0,0,course.getValidDay(),0,0,0,0));
+            stc.setUpdateDate(now);
+            stuCourseMapper.insert(stc);
+        } else {
+            return ComUtils.getResp(40008,"无体验课，无法新增学员",null);
+        }
+
         if (i > 0)
             return ComUtils.getResp(20000, "新增成功", c);
         else
@@ -163,10 +181,17 @@ public class StuService {
     public Map getStuCourseList(StuEntity c) {
         return ComUtils.getResp(20000, "查询成功", stuCourseMapper.getStuCourseListBySid(c.getSid()));
     }
+    /**
+     * 查询学员能约课程列表
+     *
+     * @param c
+     */
+    public Map getStuCourseToBook(StuEntity c) {
+        return ComUtils.getResp(20000, "查询成功", stuCourseMapper.getStuCourseListToBook(c.getSid()));
+    }
 
     /**
      * 学员买课
-     *
      * @param sc
      * @return
      */
@@ -174,53 +199,81 @@ public class StuService {
     public Map buyCourse(StuCourseEntity sc) {
         StuEntity stu = this.findById(sc.getSid());
         if (stu == null)
-            return ComUtils.getResp(40008, "无此学员", null);
+            return ComUtils.getResp(40008, "学员无效", null);
+        //查询购买的课程的信息
+        CourseTypeEntity course = courseMapper.selectByPrimaryKey(sc.getCourseTypeId());
+        if (course==null)
+            return ComUtils.getResp(40008,"无购买的课程信息",null);
+        if (sc.getCreateDate()==null)
+            return ComUtils.getResp(40008,"无买课程生效日期",null);
+        if (sc.getEid()==null)
+            return ComUtils.getResp(40008,"无关单人",null);
 
-        //先查询是否已买相应课程
-        int r=0;
+        Date now=new Date();
+        //1.记录买课流水
+        CourseBuyRecordEntity record=new CourseBuyRecordEntity();
+        record.setSid(sc.getSid());
+        record.setEid(sc.getEid());
+        record.setCourseTypeId(sc.getCourseTypeId());
+        record.setFee(sc.getFee());
+        record.setCreateDate(now);
+        courseBuyRecordMapper.insertSelective(record);
+
+        //2.是否已买相应课程处理
+        int r;
         StuCourseEntity criteria=new StuCourseEntity();
         criteria.setSid(sc.getSid());
         criteria.setCourseTypeId(sc.getCourseTypeId());
         StuCourseEntity relSc = stuCourseMapper.getStuCourseSelective(criteria);
         if (relSc==null){
             //未买过
-            sc.setCreateDate(new Date());
-            sc.setUpdateDate(new Date());
-            //新增买课记录
+            //开始日期由前端传入sc.setCreateDate()
+            //更新日期
+            sc.setUpdateDate(now);
+            //截止日期为开始加上课程的生效天数
+            sc.setEndDate(DateUtils.addDate(sc.getCreateDate(),0,0,course.getValidDay(),0,0,0,0));
+            sc.setNum(course.getNum());
+            //新增课时记录
             r = stuCourseMapper.insertSelective(sc);
         } else {
-            //买过 追加
-            relSc.setUpdateDate(new Date());
-            relSc.setNum(relSc.getNum()+sc.getNum());
-            relSc.setEid(sc.getEid());
-            relSc.setFee(relSc.getFee()+sc.getFee());
+            //买过
+            if (relSc.getNum()==0){
+                //已经上完了 更新
+                relSc.setCreateDate(sc.getCreateDate());
+                relSc.setUpdateDate(sc.getCreateDate());
+                relSc.setEndDate(DateUtils.addDate(sc.getCreateDate(),0,0,course.getValidDay(),0,0,0,0));
+                relSc.setNum(course.getNum());
+                relSc.setEid(sc.getEid());
+                //总费用累加
+                relSc.setFee(relSc.getFee()+sc.getFee());
+            } else {
+                //还没上完 直接改结束日期 当前日期加生效天数
+                relSc.setUpdateDate(now);
+                relSc.setEndDate(DateUtils.addDate(now,0,0,course.getValidDay(),0,0,0,0));
+                relSc.setNum(relSc.getNum()+course.getNum());
+                relSc.setEid(sc.getEid());
+                //总费用累加
+                relSc.setFee(relSc.getFee()+sc.getFee());
+
+            }
             r = stuCourseMapper.updateByPrimaryKeySelective(relSc);
         }
 
-        // 2.不同课程，不同的处理
+        // 2.不同课程阶段，不同的状态变化
         String status = null, note = null;
-        if (sc.getCourseTypeId() == 2) {
-            //买小课包
-            status = CodeDef.STU_BUY198;
-            note = "成为小课包学员！再接再厉！";
-            stu.setType(CodeDef.TYPE_198);
-            // 把这个学员的demo课数量置为0
-            StuCourseEntity demo = new StuCourseEntity();
-            if (demo!=null){
-                demo.setSid(sc.getSid());
-                demo.setCourseTypeId(1);
-                demo = stuCourseMapper.getStuCourseSelective(demo);
-                demo.setNum(0);
-                stuCourseMapper.updateByPrimaryKeySelective(demo);
-            }
-        } else if (sc.getCourseTypeId() == 3) {
+        if (course.getPhaseId() == 3) {
+            //买营销课
+            status = CodeDef.STU_SALE_READY;  //营销课待开班
+            note = "成为营销课学员！";
+            stu.setType(CodeDef.TYPE_SALE);
+        } else if (course.getPhaseId() == 4) {
             //买了正课
-            status = CodeDef.STU_BUYVIP;
-            note = "成就达成！成为正式年卡会员!";
+            status = CodeDef.STU_VIP_READY;
+            note = "成为正课学员!";
             stu.setType(CodeDef.TYPE_YEARVIP);
         }
-        //设置学员买课的最新时间
-        stu.setUpdateDate(new Date());
+        //设置学员主表买课的最新时间
+        stu.setUpdateDate(now);
         this.updateStuStatus(stu, status, note);
         if (r > 0)
             return ComUtils.getResp(20000, "操作成功", null);
@@ -257,6 +310,7 @@ public class StuService {
         if (c.getSid() == null) {
             return ComUtils.getResp(40008, "无此学员", null);
         }
+        c.setUpdateDate(new Date());
         StuFamilyEntity f = stuFamilyMapper.selectByPrimaryKey(c.getSid());
         int r = 0;
         if (f == null) {
@@ -348,9 +402,21 @@ public class StuService {
     public int abandonStu(Integer sid) {
         StuEntity stu = stuMapper.selectByPrimaryKey(sid);
         if (stu == null)
-            return 0;
+            throw new CommonException(40008,"无此学员");
+        //根据学员的类型来置成不同的放弃状态
+        String nowStatus=stu.getType();
+        String afterStatus = null;
+        if (CodeDef.TYPE_PROTENTIAL.equals(nowStatus)){
+            afterStatus=CodeDef.STU_BOOKED_ABANDON;
+        } else if (CodeDef.TYPE_SALE.equals(nowStatus)){
+            afterStatus=CodeDef.STU_SALE_ABANDON;
+        } else if (CodeDef.TYPE_YEARVIP.equals(nowStatus)){
+            //TODO 正课学员放弃改状态
+            afterStatus="";
+        }
+        //修改类型
         stu.setType(CodeDef.TYPE_HOUXUAN);
-        this.updateStuStatus(stu, CodeDef.STU_HOUXUAN, "主管同意放弃客户，以后再维护吧");
+        this.updateStuStatus(stu, afterStatus, "暂放弃客户，以后再维护吧");
         return 1;
     }
 

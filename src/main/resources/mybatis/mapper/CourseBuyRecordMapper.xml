@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.nothink.ballcrm.mapper.CourseBuyRecordMapper" >
+
+  <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.CourseBuyRecordEntity" parameterType="java.lang.Integer" >
+    select 
+    *
+    from course_buy_record
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from course_buy_record
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.nothink.ballcrm.entity.CourseBuyRecordEntity" >
+    insert into course_buy_record (pkid, sid, eid, 
+      course_type_id, fee, create_date
+      )
+    values (#{pkid,jdbcType=INTEGER}, #{sid,jdbcType=INTEGER}, #{eid,jdbcType=INTEGER}, 
+      #{courseTypeId,jdbcType=INTEGER}, #{fee,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="org.nothink.ballcrm.entity.CourseBuyRecordEntity" >
+    insert into course_buy_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pkid != null" >
+        pkid,
+      </if>
+      <if test="sid != null" >
+        sid,
+      </if>
+      <if test="eid != null" >
+        eid,
+      </if>
+      <if test="courseTypeId != null" >
+        course_type_id,
+      </if>
+      <if test="fee != null" >
+        fee,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pkid != null" >
+        #{pkid,jdbcType=INTEGER},
+      </if>
+      <if test="sid != null" >
+        #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="eid != null" >
+        #{eid,jdbcType=INTEGER},
+      </if>
+      <if test="courseTypeId != null" >
+        #{courseTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="fee != null" >
+        #{fee,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.nothink.ballcrm.entity.CourseBuyRecordEntity" >
+    update course_buy_record
+    <set >
+      <if test="sid != null" >
+        sid = #{sid,jdbcType=INTEGER},
+      </if>
+      <if test="eid != null" >
+        eid = #{eid,jdbcType=INTEGER},
+      </if>
+      <if test="courseTypeId != null" >
+        course_type_id = #{courseTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="fee != null" >
+        fee = #{fee,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null" >
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.nothink.ballcrm.entity.CourseBuyRecordEntity" >
+    update course_buy_record
+    set sid = #{sid,jdbcType=INTEGER},
+      eid = #{eid,jdbcType=INTEGER},
+      course_type_id = #{courseTypeId,jdbcType=INTEGER},
+      fee = #{fee,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where pkid = #{pkid,jdbcType=INTEGER}
+  </update>
+</mapper>

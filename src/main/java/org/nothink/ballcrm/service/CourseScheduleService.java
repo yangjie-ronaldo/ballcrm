@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.nothink.ballcrm.entity.*;
 import org.nothink.ballcrm.mapper.CourseScheduleMapper;
+import org.nothink.ballcrm.mapper.CourseTypeMapper;
 import org.nothink.ballcrm.mapper.StuCourseMapper;
 import org.nothink.ballcrm.mapper.StuFamilyMapper;
 import org.nothink.ballcrm.util.CodeDef;
@@ -29,6 +30,8 @@ public class CourseScheduleService {
     @Autowired
     StuCourseMapper stuCoureMapper;
     @Autowired
+    CourseTypeMapper courseTypeMapper;
+    @Autowired
     CacheService cache;
     @Autowired
     StuFamilyMapper sfMapper;
@@ -42,27 +45,54 @@ public class CourseScheduleService {
     @Transactional
     public Map bookCourse(CourseScheduleEntity book) {
         int sid = book.getSid();
+        Date bookingDate=book.getBookingDate();
         StuEntity stu = stuService.findById(sid);
         if (stu==null)
             return ComUtils.getResp(40008,"无学员信息",null);
-        if (CodeDef.STU_BOOKED.equals(stu.getStatus())) {
-            return ComUtils.getResp(40008,"已有预约课程",null);
-        }
         //判断约课的情况
-        if (book.getCourseTypeId()==null || book.getBookingDate()==null){
+        if (book.getCourseTypeId()==null || bookingDate==null){
             return ComUtils.getResp(40008,"未选预约课程或日期",null);
         }
+        // 查询是否有待上课的课程
+        CourseScheduleEntity courseCriteria=new CourseScheduleEntity();
+        courseCriteria.setSid(sid);
+        List<CourseScheduleEntity> courseScheduleTodo = csMapper.getCourseScheduleTodo(courseCriteria);
+        if (courseScheduleTodo!=null && courseScheduleTodo.size()>=1){
+            return ComUtils.getResp(40008,"已有预约课程",null);
+        }
 
-        //新增约课记录
+        //判断约课时间是否在学员此课程有效期内
+        StuCourseEntity scCriteria=new StuCourseEntity();
+        scCriteria.setSid(sid);
+        scCriteria.setCourseTypeId(book.getCourseTypeId());
+        StuCourseEntity stuCourse = stuCoureMapper.getStuCourseSelective(scCriteria);
+        if (stuCourse==null){
+            return ComUtils.getResp(40008,"无此课程的购买信息",null);
+        }
+        Date startDate=DateUtils.getDayBeginTime(stuCourse.getCreateDate());
+        Date endDate=DateUtils.getDayEndTime(stuCourse.getEndDate());
+        if (DateUtils.isBefore(bookingDate,startDate) || DateUtils.isBefore(endDate,bookingDate)){
+            return ComUtils.getResp(40008,"预约时间不在购买课程的有效期内",null);
+        }
+
+        //可以约课 新增约课记录
         book.setCreateDate(new Date());
         book.setNotifyStatus(CodeDef.HANDLE_WAITING);
         book.setSignStatus(CodeDef.SIGN_WAITING);
         book.setTraceStatus(CodeDef.HANDLE_WAITING);
-        System.out.println(book);
         int i = csMapper.insertSelective(book);
 
-        //学员状态改变
-        stuService.updateStuStatus(stu, CodeDef.STU_BOOKED, "");
+        //学员状态改变 根据学员的类型来确认约了课是什么状态
+        if (CodeDef.TYPE_PROTENTIAL.equals(stu.getType())){
+            //体验课学员
+            stuService.updateStuStatus(stu, CodeDef.STU_BOOKED, "预约体验课");
+        } else if (CodeDef.TYPE_SALE.equals(stu.getType())){
+            //营销课学员
+            stuService.updateStuStatus(stu,CodeDef.STU_SALE_STUDY,"预约营销课");
+        } else {
+            //TODO 正课约课状态
+        }
+
         return ComUtils.getResp(20000,"已成功约课",null);
     }
 
@@ -126,21 +156,31 @@ public class CourseScheduleService {
      */
     @Transactional
     public Map handleScheduleNotify(CourseScheduleEntity cs) {
-        System.out.println(cs);
         CourseScheduleEntity relCs = csMapper.selectByPrimaryKey(cs.getPkid());
         if (relCs == null)
             return ComUtils.getResp(40008,"无上课信息",null);
         relCs.setNotifyStatus(CodeDef.HANDLED);
         relCs.setNotifyNote(cs.getNotifyNote());
+        //获取学员
+        StuEntity stu = stuService.findById(cs.getSid());
+
         //学生情况 改期
         if (CodeDef.SIGN_CHANGE.equals(cs.getSignStatus())) {
-            // 如果是改期，修改学员状态
-            StuEntity stu = stuService.findById(cs.getSid());
-            stuService.updateStuStatus(stu, CodeDef.STU_WAITING, "因个人原因，课程改期");
+            // 如果是改期，根据学员类型修改学员状态
+            if (CodeDef.TYPE_PROTENTIAL.equals(stu.getType())){
+                //体验课学员
+                stuService.updateStuStatus(stu, CodeDef.STU_BOOKED_PAUSE, "体验课改期");
+            } else if (CodeDef.TYPE_SALE.equals(stu.getType())){
+                //营销课学员
+                stuService.updateStuStatus(stu,CodeDef.STU_SALE_PAUSE,"营销课改期");
+            } else{
+                //TODO 缺正课改期
+            }
+
             //本条课程也不再追踪
             relCs.setSignStatus(CodeDef.SIGN_CHANGE);
             relCs.setTraceStatus(CodeDef.HANDLED);
-            relCs.setTraceNote("改期");
+            relCs.setTraceNote("已改期");
         }
         int r = csMapper.updateByPrimaryKeySelective(relCs);
         if (r>0)
@@ -160,10 +200,11 @@ public class CourseScheduleService {
         if (relCs == null)
             return ComUtils.getResp(40008,"无课程信息",null);
 
-        //如果是198课，查询有无维护家庭信息，没有则不能处理
-        if (relCs.getCourseTypeId()==2){
+        //特殊逻辑 如果是体验课，查询是否已维护了家庭信息，若没有则不能处理
+        CourseTypeEntity course = courseTypeMapper.selectByPrimaryKey(relCs.getCourseTypeId());
+        if (course!=null && course.getPhaseId()==2){
             StuFamilyEntity sf=sfMapper.selectByPrimaryKey(relCs.getSid());
-            if (sf==null || StringUtils.isEmpty(sf.getPayWill())){
+            if (sf==null || StringUtils.isEmpty(sf.getEducationIdea())){
                 return ComUtils.getResp(40008,"未完成家庭信息填写，不能处理本课程追踪",null);
             }
         }
@@ -172,13 +213,23 @@ public class CourseScheduleService {
         relCs.setTraceNote(criteria.getTraceNote());
 
         if (CodeDef.SIGN_WAITING.equals(relCs.getSignStatus()) && CodeDef.SIGN_TRUANCY.equals(criteria.getSignStatus())){
-            // 学员未签到，是旷课情况 处理
+            // 学员未签到，是 旷课情况 的处理
             relCs.setSignStatus(CodeDef.SIGN_TRUANCY);
             StuEntity stu = stuService.findById(criteria.getSid());
             if (stu==null){
                 throw new CommonException(40008,"无学员信息");
             }
-            stuService.updateStuStatus(stu,CodeDef.STU_TRUANCY,"爽约未上课，及时跟进");
+            // 根据学员类型置不同状态
+            if (CodeDef.TYPE_PROTENTIAL.equals(stu.getType())){
+                //体验课学员
+                stuService.updateStuStatus(stu, CodeDef.STU_BOOKED_PAUSE, "体验课旷课");
+            } else if (CodeDef.TYPE_SALE.equals(stu.getType())){
+                //营销课学员
+                stuService.updateStuStatus(stu,CodeDef.STU_SALE_PAUSE,"营销课旷课");
+            } else {
+                //TODO 正课旷课的情况
+            }
+
         }
         int r = csMapper.updateByPrimaryKeySelective(relCs);
         if (r>0)
@@ -205,14 +256,14 @@ public class CourseScheduleService {
         // 本次课签到
         CourseScheduleEntity course = csMapper.selectByPrimaryKey(cs.getPkid());
         if (course == null)
-            return ComUtils.getResp(40008,"未找到上课信息",null);
+            return ComUtils.getResp(40008,"未找到课程信息",null);
         // 更新此次上课签到状态
         course.setSignStatus(CodeDef.SIGN_OK);
         course.setCloseEid(cs.getCloseEid());  //聊天人
         course.setTeachEid(cs.getTeachEid());  //上课老师
         csMapper.updateByPrimaryKeySelective(course);
 
-        // 加入流程：如果签的是198小课包，则查询有无ishow课激活，若无，则插入ishow课
+        /*暂废弃加入流程：如果签的是198小课包，则查询有无ishow课激活，若无，则插入ishow课
         if (course.getCourseTypeId()==2){
             StuCourseEntity sc=new StuCourseEntity();
             sc.setSid(course.getSid());
@@ -230,28 +281,36 @@ public class CourseScheduleService {
                 sc.setEid(course.getEid());  //订课的人
                 stuCoureMapper.insertSelective(sc);
             }
-        }
+        }*/
 
-        // 减此学员签到课的课时信息
+        // 签完到的后续处理
+        // 1.减此学员签到课的课时信息
         StuCourseEntity c = new StuCourseEntity();
         c.setSid(cs.getSid());
         c.setCourseTypeId(cs.getCourseTypeId());
         StuCourseEntity sc = stuCoureMapper.getStuCourseSelective(c);
-        System.out.println("买的课："+sc);
         if (sc == null){
-            return ComUtils.getResp(40008,"学员已无课时信息！",null);
+            throw new CommonException(40008,"学员无购买课程信息");
         }
         sc.setNum(sc.getNum() - 1);
         sc.setUpdateDate(new Date()); //更新时间
         stuCoureMapper.updateByPrimaryKeySelective(sc);
 
-        //更新学员状态 如果课时已为0了 则学员上完课了
+        // 2.根据学员类型来更新学员状态 如果课时已为0 则学员上完课
         StuEntity stu = stuService.findById(cs.getSid());
         if (sc.getNum() > 0) {
-            //还有课
-            stuService.updateStuStatus(stu, CodeDef.STU_COURSE_SIGNED, "正常上课中");
+            //还有课 无需处理状态
         } else {
-            stuService.updateStuStatus(stu, CodeDef.STU_COURSE_OVER, "课程完成！及时跟进营销！");
+            // 已上完课，改状态
+            if (CodeDef.TYPE_PROTENTIAL.equals(stu.getType())){
+                //体验课学员
+                stuService.updateStuStatus(stu, CodeDef.STU_BOOKED_NODEAL, "上完体验课");
+            } else if (CodeDef.TYPE_SALE.equals(stu.getType())){
+                //营销课学员
+                stuService.updateStuStatus(stu,CodeDef.STU_SALE_NODEAL,"上完营销课");
+            } else {
+                //TODO 上完正课
+            }
         }
         return ComUtils.getResp(20000,"成功签到",null);
     }
@@ -289,26 +348,24 @@ public class CourseScheduleService {
         c.setCourseTypeId(cs.getCourseTypeId());
         StuCourseEntity sc = stuCoureMapper.getStuCourseSelective(c);
         if (sc == null){
-            return ComUtils.getResp(40008,"学员无此购买课程信息",null);
-        }
-        //看课程类型与数量信息，分别处理
-        if (sc.getNum()==2 && sc.getCourseTypeId()==2){
-            //是198课且签到的是第一节，则反删除加的ishow课
-            StuCourseEntity ishow=new StuCourseEntity();
-            ishow.setSid(cs.getSid());
-            ishow.setCourseTypeId(4);
-            ishow=stuCoureMapper.getStuCourseSelective(ishow);
-            if (ishow!=null && ishow.getPkid()!=null){
-                stuCoureMapper.deleteByPrimaryKey(ishow.getPkid());
-            }
+            throw new CommonException(40008,"学员无购买课程信息");
         }
         //恢复此课程的一节课程
         sc.setNum(sc.getNum() + 1);
+        sc.setUpdateDate(new Date());
         stuCoureMapper.updateByPrimaryKeySelective(sc);
 
         //更新学员状态 更新为待上课
         StuEntity stu = stuService.findById(cs.getSid());
-        stuService.updateStuStatus(stu, CodeDef.STU_BOOKED, "撤销签到，等待签到上课");
+        if (CodeDef.TYPE_PROTENTIAL.equals(stu.getType())){
+            //体验课学员
+            stuService.updateStuStatus(stu, CodeDef.STU_BOOKED, "撤销体验课签到");
+        } else if (CodeDef.TYPE_SALE.equals(stu.getType())){
+            //营销课学员
+            stuService.updateStuStatus(stu,CodeDef.STU_SALE_STUDY,"撤销营销课签到");
+        } else {
+            //TODO 正课撤销
+        }
         return ComUtils.getResp(20000,"撤销签到成功",null);
     }
 

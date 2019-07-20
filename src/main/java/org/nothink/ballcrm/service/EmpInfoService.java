@@ -204,14 +204,15 @@ public class EmpInfoService {
 
     //注销
     public Map<String, Object> logout(Integer eid) {
+        if (eid==null)
+            return ComUtils.getResp(40008,"无员工信息",null);
         LoginTokenEntity lt = ltMapper.selectByPrimaryKey(eid);
         if (lt != null) {
             lt.setStatus(0);
             ltMapper.updateByPrimaryKeySelective(lt);
-            return ComUtils.getResp(20000, "注销成功", null);
-        } else {
-            return ComUtils.getResp(40008, "注销失败", null);
+
         }
+        return ComUtils.getResp(20000, "注销成功", null);
     }
 
     // 查询员工的待办统计信息

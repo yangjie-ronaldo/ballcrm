@@ -1,6 +1,7 @@
 package org.nothink.ballcrm.controller;
 
 import org.nothink.ballcrm.entity.*;
+import org.nothink.ballcrm.mapper.StuMapper;
 import org.nothink.ballcrm.service.EmpInfoService;
 import org.nothink.ballcrm.service.StuService;
 import org.nothink.ballcrm.util.ComUtils;
@@ -101,7 +102,7 @@ public class StuController {
     }
 
     /**
-     * 查询学员已买课程
+     * 查询学员课程列表
      *
      * @return
      */
@@ -109,6 +110,17 @@ public class StuController {
     @ResponseBody
     public Map getStuCourse(StuEntity c) {
         return stuService.getStuCourseList(c);
+    }
+
+    /**
+     * 查询学员能约课程
+     *
+     * @return
+     */
+    @GetMapping("/stucoursetobook")
+    @ResponseBody
+    public Map getStuCourseToBook(StuEntity c) {
+        return stuService.getStuCourseToBook(c);
     }
 
     /**

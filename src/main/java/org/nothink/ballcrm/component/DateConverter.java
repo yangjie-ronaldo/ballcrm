@@ -1,5 +1,6 @@
 package org.nothink.ballcrm.component;
 
+import org.nothink.ballcrm.util.DateUtils;
 import org.springframework.core.convert.converter.Converter;
 
 import java.text.DateFormat;
@@ -10,11 +11,14 @@ import java.util.List;
 
 public class DateConverter implements Converter<String, Date> {
     private static final List<String> formarts = new ArrayList<>(4);
-    static{
+
+    static {
         formarts.add("yyyy-MM");
         formarts.add("yyyy-MM-dd");
         formarts.add("yyyy-MM-dd HH:mm");
         formarts.add("yyyy-MM-dd HH:mm:ss");
+        formarts.add("HH:mm");
+        formarts.add("HH:mm:ss");
     }
 
     @Override
@@ -23,20 +27,24 @@ public class DateConverter implements Converter<String, Date> {
         if ("".equals(value)) {
             return null;
         }
-        if(source.matches("^\\d{4}-\\d{1,2}$")){
+        if (source.matches("^\\d{4}-\\d{1,2}$")) {
             return parseDate(source, formarts.get(0));
-        }else if(source.matches("^\\d{4}-\\d{1,2}-\\d{1,2}$")){
+        } else if (source.matches("^\\d{4}-\\d{1,2}-\\d{1,2}$")) {
             return parseDate(source, formarts.get(1));
-        }else if(source.matches("^\\d{4}-\\d{1,2}-\\d{1,2} {1}\\d{1,2}:\\d{1,2}$")){
+        } else if (source.matches("^\\d{4}-\\d{1,2}-\\d{1,2} {1}\\d{1,2}:\\d{1,2}$")) {
             return parseDate(source, formarts.get(2));
-        }else if(source.matches("^\\d{4}-\\d{1,2}-\\d{1,2} {1}\\d{1,2}:\\d{1,2}:\\d{1,2}$")){
+        } else if (source.matches("^\\d{4}-\\d{1,2}-\\d{1,2} {1}\\d{1,2}:\\d{1,2}:\\d{1,2}$")) {
             return parseDate(source, formarts.get(3));
-        }else {
+        } else if (source.matches("^\\d{1,2}:\\d{1,2}$")) {
+            return parseDate(source, formarts.get(4));
+        } else if (source.matches("^\\d{1,2}:\\d{1,2}:\\d{1,2}$")) {
+            return parseDate(source, formarts.get(5));
+        } else {
             throw new IllegalArgumentException("Invalid boolean value '" + source + "'");
         }
     }
 
-    public  Date parseDate(String dateStr, String format) {
+    public Date parseDate(String dateStr, String format) {
         Date date = null;
         try {
             DateFormat dateFormat = new SimpleDateFormat(format);

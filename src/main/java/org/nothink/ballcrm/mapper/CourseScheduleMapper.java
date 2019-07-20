@@ -15,6 +15,9 @@ public interface CourseScheduleMapper {
     // 按sid查学员的所有课程
     List<CourseScheduleEntity> getCourseScheduleList(CourseScheduleEntity cs);
 
+    // 按sid查学员是否有待上课的课程
+    List<CourseScheduleEntity> getCourseScheduleTodo(CourseScheduleEntity cs);
+
     int deleteByPrimaryKey(Integer pkid);
 
     int insert(CourseScheduleEntity record);

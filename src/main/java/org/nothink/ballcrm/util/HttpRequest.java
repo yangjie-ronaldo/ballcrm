@@ -68,12 +68,12 @@ public class HttpRequest {
      * 向指定 URL 发送POST方法的请求
      *
      * @param url
-     *            发送请求的 URL
-     * @param param
-     *            请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
+     *            发送请求的 URL 如果有url参数，直接加在后面
+     * @param postBody
+     *            请求的内容
      * @return 所代表远程资源的响应结果
      */
-    public static String sendPost(String url, String param) {
+    public static String sendPost(String url, String postBody) {
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";
@@ -92,7 +92,7 @@ public class HttpRequest {
             // 获取URLConnection对象对应的输出流
             out = new PrintWriter(conn.getOutputStream());
             // 发送请求参数
-            out.print(param);
+            out.print(postBody);
             // flush输出流的缓冲
             out.flush();
             // 定义BufferedReader输入流来读取URL的响应
