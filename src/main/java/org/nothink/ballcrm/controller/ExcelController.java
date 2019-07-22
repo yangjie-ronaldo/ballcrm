@@ -4,6 +4,7 @@ import org.nothink.ballcrm.entity.ExcelData;
 import org.nothink.ballcrm.util.ExcelUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
@@ -15,6 +16,7 @@ import java.util.List;
  * 处理excel下载相关的演示
  */
 @Controller
+@RequestMapping("/ballapi")
 public class ExcelController {
 
     @GetMapping("/exceldownload")

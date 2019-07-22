@@ -2,11 +2,13 @@ package org.nothink.ballcrm.interceptor;
 
 import org.nothink.ballcrm.entity.LoginTokenEntity;
 import org.nothink.ballcrm.mapper.LoginTokenMapper;
+import org.nothink.ballcrm.util.ComUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
@@ -16,6 +18,7 @@ import java.util.Date;
  * 定义了一个登录的拦截器，在SpringMVC配置类里注册后拦截所有请求
  */
 public class LoginInterceptor implements HandlerInterceptor {
+    static Logger logger = LoggerFactory.getLogger(LoginInterceptor.class);
     @Autowired
     LoginTokenMapper ltMapper;
 
@@ -28,6 +31,9 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        String url=request.getRequestURL().toString();
+        logger.info("get new request : ["+url+"]");
+        logger.info("start login token check...");
         String token = request.getHeader("token");
         String eid = request.getHeader("eid");
         JSONObject res = new JSONObject();

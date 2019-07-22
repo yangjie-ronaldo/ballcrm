@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/ballapi")
 public class EmpController {
     Logger logger = LoggerFactory.getLogger(getClass());
 

@@ -1,6 +1,9 @@
 package org.nothink.ballcrm.util;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -28,4 +31,5 @@ public class ComUtils {
             return null;
         }
     }
+
 }

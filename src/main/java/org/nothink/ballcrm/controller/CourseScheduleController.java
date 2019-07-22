@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-
-@CrossOrigin
 @Controller
+@RequestMapping("/ballapi")
 public class CourseScheduleController {
 
     Logger logger = LoggerFactory.getLogger(getClass());
