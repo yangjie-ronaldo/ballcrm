@@ -49,6 +49,9 @@ public class CourseScheduleService {
         StuEntity stu = stuService.findById(sid);
         if (stu==null)
             return ComUtils.getResp(40008,"无学员信息",null);
+        if (stu.getType().equals(CodeDef.TYPE_HOUXUAN)){
+            return ComUtils.getResp(40008,"学员已被放弃，不能约课，请购买课程激活",null);
+        }
         //判断约课的情况
         if (book.getCourseTypeId()==null || bookingDate==null){
             return ComUtils.getResp(40008,"未选预约课程或日期",null);

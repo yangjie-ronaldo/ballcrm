@@ -1,5 +1,5 @@
 server:
-  port: 7779
+  port: 8082
 #日志级别
 logging:
   level:
@@ -12,7 +12,7 @@ spring:
     username: nothink
     password: nothink123
     #mysql8 以上后面要指定时区
-    url: jdbc:mysql://127.0.0.1:3306/ballcrm?useUnicode=true&characterEncoding=utf8&useSSL=true
+    url: jdbc:mysql://127.0.0.1:3306/ballcrmtest?useUnicode=true&characterEncoding=utf8&useSSL=true
     #mysql8 以上要用新的驱动类
     #driver-class-name: com.mysql.cj.jdbc.Driver
     driver-class-name: com.mysql.jdbc.Driver

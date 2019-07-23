@@ -171,8 +171,14 @@ public class EmpInfoService {
             return ComUtils.getResp(40008, "用户名或密码错误", null);
         }
 
-        String passMD5=ComUtils.encodeByMd5(rel.getLoginid()+e.getPass());
-        if (!rel.getPass().equals(e.getPass()) && !rel.getPass().equals(passMD5) ) {
+        //如果表里没加密，拼接的原密码
+        String loginPass=rel.getLoginid()+rel.getPass();
+        String loginPassMD5=ComUtils.encodeByMd5(loginPass);
+        //如果表格加了密，则直接取
+        String relPass=rel.getPass();
+
+        //如果密码直接相比不等，加密后相比也不等，则出错
+        if (!relPass.equals(e.getPass()) && !loginPassMD5.equals(e.getPass()) ) {
             return ComUtils.getResp(40008, "用户名或密码错误", null);
         }
 

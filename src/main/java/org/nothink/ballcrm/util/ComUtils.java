@@ -1,5 +1,7 @@
 package org.nothink.ballcrm.util;
 
+import org.springframework.util.DigestUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
@@ -21,15 +23,13 @@ public class ComUtils {
     }
 
     public static String encodeByMd5(String string){
-        try {
-            // 确定计算方法
-            MessageDigest md5 = MessageDigest.getInstance("MD5");
-            Base64.Encoder base64Encoder = Base64.getEncoder();
-            // 加密字符串
-            return base64Encoder.encodeToString(md5.digest(string.getBytes("utf-8")));
-        }catch (Exception e){
-            return null;
-        }
+        if(string==null)
+            return "";
+        return DigestUtils.md5DigestAsHex(string.getBytes());
     }
 
+    public static void main(String[] args){
+        String pass=DigestUtils.md5DigestAsHex("123".getBytes());
+        System.out.println(pass);
+    }
 }
