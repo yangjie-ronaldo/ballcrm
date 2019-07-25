@@ -203,9 +203,9 @@ public class CourseScheduleService {
         if (relCs == null)
             return ComUtils.getResp(40008,"无课程信息",null);
 
-        //特殊逻辑 如果是体验课，查询是否已维护了家庭信息，若没有则不能处理
+        //特殊逻辑 如果是营销课，查询是否已维护了家庭信息，若没有则不能处理
         CourseTypeEntity course = courseTypeMapper.selectByPrimaryKey(relCs.getCourseTypeId());
-        if (course!=null && course.getPhaseId()==2){
+        if (course!=null && course.getPhaseId()==3){  //3是营销课
             StuFamilyEntity sf=sfMapper.selectByPrimaryKey(relCs.getSid());
             if (sf==null || StringUtils.isEmpty(sf.getEducationIdea())){
                 return ComUtils.getResp(40008,"未完成家庭信息填写，不能处理本课程追踪",null);
