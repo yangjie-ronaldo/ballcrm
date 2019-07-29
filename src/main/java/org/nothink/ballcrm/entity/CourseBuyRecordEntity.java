@@ -14,6 +14,48 @@ public class CourseBuyRecordEntity {
     private Integer fee;
 
     private Date createDate;
+    private String note;
+    private Integer teacherId;
+    private Integer hasMarket;
+
+    @Override
+    public String toString() {
+        return "CourseBuyRecordEntity{" +
+                "pkid=" + pkid +
+                ", sid=" + sid +
+                ", eid=" + eid +
+                ", courseTypeId=" + courseTypeId +
+                ", fee=" + fee +
+                ", createDate=" + createDate +
+                ", note='" + note + '\'' +
+                ", teacherId=" + teacherId +
+                ", hasMarket=" + hasMarket +
+                '}';
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
+    }
+
+    public Integer getHasMarket() {
+        return hasMarket;
+    }
+
+    public void setHasMarket(Integer hasMarket) {
+        this.hasMarket = hasMarket;
+    }
 
     public Integer getPkid() {
         return pkid;

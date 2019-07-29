@@ -1,5 +1,7 @@
 package org.nothink.ballcrm.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 public class CourseScheduleEntity extends PagedCriteria {
@@ -9,6 +11,7 @@ public class CourseScheduleEntity extends PagedCriteria {
     private Integer sid;
     private String tel;
     private String sName;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date bookingDate;
     private Integer courseTypeId;
     private String courseTypeName;
@@ -30,6 +33,81 @@ public class CourseScheduleEntity extends PagedCriteria {
 
     private Date startDate;
     private Date endDate;
+
+    private String channel;
+    private String channelName;
+    private String consultNote;
+    private Date birthday;
+
+    @Override
+    public String toString() {
+        return "CourseScheduleEntity{" +
+                "eid=" + eid +
+                ", nid=" + nid +
+                ", pkid=" + pkid +
+                ", sid=" + sid +
+                ", tel='" + tel + '\'' +
+                ", sName='" + sName + '\'' +
+                ", bookingDate=" + bookingDate +
+                ", courseTypeId=" + courseTypeId +
+                ", courseTypeName='" + courseTypeName + '\'' +
+                ", teachEid=" + teachEid +
+                ", teacheName='" + teacheName + '\'' +
+                ", notifyStatus='" + notifyStatus + '\'' +
+                ", notifyStatusDef='" + notifyStatusDef + '\'' +
+                ", notifyNote='" + notifyNote + '\'' +
+                ", signStatus='" + signStatus + '\'' +
+                ", signStatusDef='" + signStatusDef + '\'' +
+                ", traceStatus='" + traceStatus + '\'' +
+                ", traceStatusDef='" + traceStatusDef + '\'' +
+                ", traceNote='" + traceNote + '\'' +
+                ", traceEid=" + traceEid +
+                ", traceEName='" + traceEName + '\'' +
+                ", closeEid=" + closeEid +
+                ", closeEname='" + closeEname + '\'' +
+                ", createDate=" + createDate +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", channel='" + channel + '\'' +
+                ", channelName='" + channelName + '\'' +
+                ", consultNote='" + consultNote + '\'' +
+                ", birthday=" + birthday +
+                ", currentPage=" + currentPage +
+                ", pageSize=" + pageSize +
+                '}';
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    public String getChannelName() {
+        return channelName;
+    }
+
+    public void setChannelName(String channelName) {
+        this.channelName = channelName;
+    }
+
+    public String getConsultNote() {
+        return consultNote;
+    }
+
+    public void setConsultNote(String consultNote) {
+        this.consultNote = consultNote;
+    }
 
     public String getTel() {
         return tel;
@@ -239,34 +317,4 @@ public class CourseScheduleEntity extends PagedCriteria {
         this.createDate = createDate;
     }
 
-    @Override
-    public String toString() {
-        return "CourseScheduleEntity{" +
-                "eid=" + eid +
-                ", nid=" + nid +
-                ", pkid=" + pkid +
-                ", sid=" + sid +
-                ", sName='" + sName + '\'' +
-                ", bookingDate=" + bookingDate +
-                ", courseTypeId=" + courseTypeId +
-                ", courseTypeName='" + courseTypeName + '\'' +
-                ", teachEid=" + teachEid +
-                ", teacheName='" + teacheName + '\'' +
-                ", notifyStatus='" + notifyStatus + '\'' +
-                ", notifyStatusDef='" + notifyStatusDef + '\'' +
-                ", notifyNote='" + notifyNote + '\'' +
-                ", signStatus='" + signStatus + '\'' +
-                ", signStatusDef='" + signStatusDef + '\'' +
-                ", traceStatus='" + traceStatus + '\'' +
-                ", traceStatusDef='" + traceStatusDef + '\'' +
-                ", traceNote='" + traceNote + '\'' +
-                ", traceEid=" + traceEid +
-                ", traceEName='" + traceEName + '\'' +
-                ", closeEid=" + closeEid +
-                ", closeEname='" + closeEname + '\'' +
-                ", createDate=" + createDate +
-                ", currentPage=" + currentPage +
-                ", pageSize=" + pageSize +
-                '}';
-    }
 }

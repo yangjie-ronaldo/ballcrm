@@ -145,6 +145,13 @@ public class StuController {
         return stuService.courseBuyList();
     }
 
+    //查询所有课程列表
+    @GetMapping("/courseall")
+    @ResponseBody
+    public Map courseAll() {
+        return stuService.courseAll();
+    }
+
     /**
      * 查询学员家庭信息
      *

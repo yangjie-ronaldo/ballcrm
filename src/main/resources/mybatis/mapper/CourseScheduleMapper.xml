@@ -44,11 +44,15 @@
     select
     c.*,
     s.name as sName,
-    s.tel as tel
+    s.tel as tel,
+    s.channel as channel,
+    s.consult_note as consultNote,
+    s.birthday as birthday
     from course_schedule c inner join stu s on s.sid=c.sid
     where 1=1
     <if test="eid!=null"> and s.cc=#{eid} </if>
     <if test="nid!=null"> and s.node=#{nid} </if>
+    <if test="courseTypeId!=null and courseTypeId!=''"> and c.course_type_id=#{courseTypeId} </if>
     <if test="traceStatus!=null and traceStatus!='' "> and c.trace_status = #{traceStatus} </if>
     <if test="startDate!=null or endDate!=null">
       <!-- 选了时间段，查时间段的所有 -->
@@ -80,7 +84,7 @@
       course_type_id, teach_eid, notify_status, 
       notify_note, sign_status, trace_status, 
       trace_note, create_date,trace_eid,close_eid)
-    values (#{pkid,jdbcType=INTEGER}, #{sid,jdbcType=INTEGER}, #{bookingDate,jdbcType=DATE}, 
+    values (#{pkid,jdbcType=INTEGER}, #{sid,jdbcType=INTEGER}, #{bookingDate,jdbcType=TIMESTAMP},
       #{courseTypeId,jdbcType=INTEGER}, #{teachEid,jdbcType=INTEGER}, #{notifyStatus,jdbcType=VARCHAR}, 
       #{notifyNote,jdbcType=VARCHAR}, #{signStatus,jdbcType=VARCHAR}, #{traceStatus,jdbcType=VARCHAR}, 
       #{traceNote,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP},#{traceEid,jdbcType=INTEGER},#{closeEid,jdbcType=INTEGER})
@@ -136,7 +140,7 @@
         #{sid,jdbcType=INTEGER},
       </if>
       <if test="bookingDate != null" >
-        #{bookingDate,jdbcType=DATE},
+        #{bookingDate,jdbcType=TIMESTAMP},
       </if>
       <if test="courseTypeId != null" >
         #{courseTypeId,jdbcType=INTEGER},
@@ -177,7 +181,7 @@
         sid = #{sid,jdbcType=INTEGER},
       </if>
       <if test="bookingDate != null" >
-        booking_date = #{bookingDate,jdbcType=DATE},
+        booking_date = #{bookingDate,jdbcType=TIMESTAMP},
       </if>
       <if test="courseTypeId != null" >
         course_type_id = #{courseTypeId,jdbcType=INTEGER},
@@ -215,7 +219,7 @@
   <update id="updateByPrimaryKey" parameterType="org.nothink.ballcrm.entity.CourseScheduleEntity" >
     update course_schedule
     set sid = #{sid,jdbcType=INTEGER},
-      booking_date = #{bookingDate,jdbcType=DATE},
+      booking_date = #{bookingDate,jdbcType=TIMESTAMP},
       course_type_id = #{courseTypeId,jdbcType=INTEGER},
       teach_eid = #{teachEid,jdbcType=INTEGER},
       notify_status = #{notifyStatus,jdbcType=VARCHAR},

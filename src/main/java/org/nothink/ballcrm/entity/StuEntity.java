@@ -32,6 +32,8 @@ public class StuEntity extends PagedCriteria {
     private String popularizeIdName;
     private Integer node;
     private String nodeName;
+    private Integer rentBall;
+    private String consultNote;
 
     private Boolean hasCourse198;
     private Integer Course198Num;
@@ -69,11 +71,31 @@ public class StuEntity extends PagedCriteria {
                 ", popularizeIdName='" + popularizeIdName + '\'' +
                 ", node=" + node +
                 ", nodeName='" + nodeName + '\'' +
+                ", rentBall=" + rentBall +
+                ", consultNote='" + consultNote + '\'' +
                 ", hasCourse198=" + hasCourse198 +
                 ", Course198Num=" + Course198Num +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", currentPage=" + currentPage +
+                ", pageSize=" + pageSize +
                 '}';
+    }
+
+    public Integer getRentBall() {
+        return rentBall;
+    }
+
+    public void setRentBall(Integer rentBall) {
+        this.rentBall = rentBall;
+    }
+
+    public String getConsultNote() {
+        return consultNote;
+    }
+
+    public void setConsultNote(String consultNote) {
+        this.consultNote = consultNote;
     }
 
     public String getPopularizeIdName() {

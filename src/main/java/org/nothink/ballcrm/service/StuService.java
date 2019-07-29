@@ -10,6 +10,7 @@ import org.nothink.ballcrm.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -38,6 +39,8 @@ public class StuService {
     EmpInfoMapper empMapper;
     @Autowired
     CourseBuyRecordMapper courseBuyRecordMapper;
+    @Autowired
+    CourseTypeMapper courseTypeMapper;
 
     /**
      * 根据id查询学员
@@ -210,12 +213,26 @@ public class StuService {
             return ComUtils.getResp(40008,"无关单人",null);
 
         Date now=new Date();
+        //查看是否有买过营销类课程
+        CourseBuyRecordEntity buyCriteria=new CourseBuyRecordEntity();
+        buyCriteria.setSid(sc.getSid());
+        List marketCourseList=courseBuyRecordMapper.getMarketCourseBuyedList(buyCriteria);
+
         //1.记录买课流水
         CourseBuyRecordEntity record=new CourseBuyRecordEntity();
         record.setSid(sc.getSid());
         record.setEid(sc.getEid());
         record.setCourseTypeId(sc.getCourseTypeId());
         record.setFee(sc.getFee());
+        //新增买课备注
+        record.setNote(sc.getNote());
+        //新增买课配合老师
+        record.setTeacherId(sc.getTeacherId());
+        if (marketCourseList!=null && marketCourseList.size()>=1){
+            record.setHasMarket(1);  //记录这次买课前有买过营销课
+        } else {
+            record.setHasMarket(0);  //记录这次买课前未买过营销课
+        }
         record.setCreateDate(now);
         courseBuyRecordMapper.insertSelective(record);
 
@@ -284,6 +301,12 @@ public class StuService {
     //能买的课程
     public Map courseBuyList() {
         return ComUtils.getResp(20000, "查询成功", courseMapper.getCourseForBuy());
+    }
+
+    //所有课程
+    public Map courseAll(){
+        List<CourseTypeEntity> course= courseTypeMapper.getCourse();
+        return ComUtils.getResp(20000,"查询成功",course);
     }
 
     /**

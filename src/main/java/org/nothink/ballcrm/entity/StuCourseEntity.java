@@ -14,6 +14,8 @@ public class StuCourseEntity {
     private Date createDate;
     private Date endDate;
     private Date updateDate;
+    private String note;
+    private Integer teacherId;
 
     @Override
     public String toString() {
@@ -29,7 +31,25 @@ public class StuCourseEntity {
                 ", createDate=" + createDate +
                 ", endDate=" + endDate +
                 ", updateDate=" + updateDate +
+                ", note='" + note + '\'' +
+                ", teacherId=" + teacherId +
                 '}';
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 
     public Integer getPkid() {

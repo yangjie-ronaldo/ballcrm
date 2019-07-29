@@ -106,13 +106,13 @@
       niki_name, birthday, sex,
       tel, status, verify_status,
       channel, channel_note, type,
-      wechat, pre_cc, cc, node,teacher_id,popularize_id)
+      wechat, pre_cc, cc, node,teacher_id,popularize_id,rent_ball,consult_note)
     values (#{sid,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},#{updateDate,jdbcType=TIMESTAMP}, #{name,jdbcType=VARCHAR},
       #{nikiName,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{sex,jdbcType=VARCHAR},
       #{tel,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{verifyStatus,jdbcType=VARCHAR},
       #{channel,jdbcType=VARCHAR}, #{channelNote,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
       #{wechat,jdbcType=VARCHAR}, #{preCc,jdbcType=INTEGER}, #{cc,jdbcType=INTEGER}, #{node,jdbcType=INTEGER},
-      #{teacherId,jdbcType=INTEGER},#{popularizeId,jdbcType=INTEGER})
+      #{teacherId,jdbcType=INTEGER},#{popularizeId,jdbcType=INTEGER},#{rentBall,jdbcType=INTEGER},#{consultNote,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelectiveAndGetKey" useGeneratedKeys="true" keyProperty="sid"  parameterType="org.nothink.ballcrm.entity.StuEntity" >
     insert into stu
@@ -174,6 +174,12 @@
       <if test="popularizeId != null" >
         popularize_id,
       </if>
+      <if test="rentBall != null" >
+        rent_ball,
+      </if>
+      <if test="consultNote != null" >
+        consult_note,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sid != null" >
@@ -232,6 +238,12 @@
       </if>
       <if test="popularizeId != null" >
         #{popularizeId,jdbcType=INTEGER},
+      </if>
+      <if test="rentBall != null" >
+        #{rentBall,jdbcType=INTEGER},
+      </if>
+      <if test="consultNote != null" >
+        #{consultNote,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -292,6 +304,12 @@
       <if test="popularizeId != null" >
         popularize_id = #{popularizeId,jdbcType=INTEGER},
       </if>
+      <if test="rentBall != null" >
+        rent_ball = #{rentBall,jdbcType=INTEGER},
+      </if>
+      <if test="consultNote != null" >
+        consult_note = #{consultNote,jdbcType=VARCHAR},
+      </if>
     </set>
     where sid = #{sid,jdbcType=INTEGER}
   </update>
@@ -314,8 +332,9 @@
       cc = #{cc,jdbcType=INTEGER},
       node = #{node,jdbcType=INTEGER},
       teacher_id = #{teacherId,jdbcType=INTEGER},
-      popularize_id = #{popularizeId,jdbcType=INTEGER}
+      popularize_id = #{popularizeId,jdbcType=INTEGER},
+      rent_ball = #{rentBall,jdbcType=INTEGER},
+      consult_note = #{consultNote,jdbcType=VARCHAR}
     where sid = #{sid,jdbcType=INTEGER}
   </update>
-
 </mapper>

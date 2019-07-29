@@ -121,6 +121,10 @@ public class CourseScheduleService {
      */
     public Map notifyScheduleList(CourseScheduleEntity cs) {
         Page p = PageHelper.startPage(cs.getCurrentPage(), cs.getPageSize());
+        if (cs.getEndDate()!=null){
+            //如果有结束时间，设一下结束时间为当天结束
+            cs.setEndDate(DateUtils.getDayEndTime(cs.getEndDate()));
+        }
         List<CourseScheduleEntity> list = csMapper.getNotifyScheduleList(cs);
         PagedResult<CourseScheduleEntity> result = new PagedResult<>(cs.getCurrentPage(), cs.getPageSize(), (int) p.getTotal());
         //翻译代码值
@@ -137,9 +141,15 @@ public class CourseScheduleService {
      */
     public Map scheduleListToday(CourseScheduleEntity cs) {
         Page p = PageHelper.startPage(cs.getCurrentPage(), cs.getPageSize());
-        //如果没有选时间条件，则设为查当日
+
         if (cs.getStartDate()==null && cs.getEndDate()==null){
+            //如果没有选时间条件，则设为查当日
             cs.setBookingDate(DateUtils.getToday());
+        } else {
+            //否则如果选结束时间，设一下结束时间为当天结束
+            if (cs.getEndDate()!=null){
+                cs.setEndDate(DateUtils.getDayEndTime(cs.getEndDate()));
+            }
         }
         List<CourseScheduleEntity> list = csMapper.getScheduleToday(cs);
         PagedResult<CourseScheduleEntity> result = new PagedResult<>(cs.getCurrentPage(), cs.getPageSize(), (int) p.getTotal());
@@ -378,10 +388,13 @@ public class CourseScheduleService {
             cs.setNotifyStatusDef(cache.CodeDefCache().get(cs.getNotifyStatus()));
             cs.setSignStatusDef(cache.CodeDefCache().get(cs.getSignStatus()));
             cs.setTraceStatusDef(cache.CodeDefCache().get(cs.getTraceStatus()));
+            // 渠道名
+            cs.setChannelName(cache.CodeDefCache().get(cs.getChannel()));
             // 上课老师
             cs.setTeacheName(cache.EmpCache().get(cs.getTeachEid()));
             // 课程名
             cs.setCourseTypeName(cache.CourseCache().get(cs.getCourseTypeId()));
+
         }
     }
 }
