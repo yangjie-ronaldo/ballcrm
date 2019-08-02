@@ -459,7 +459,7 @@ public class StuService {
     }
 
     //客户代码值翻译
-    private void stuCodeTrans(StuEntity stu) {
+    public void stuCodeTrans(StuEntity stu) {
         //代码翻译
         if (stu != null) {
             stu.setSexDef(cache.CodeDefCache().get(stu.getSex()));

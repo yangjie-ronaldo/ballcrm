@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.CourseTypeMapper" >
+  <!--查询报表中的课程 营销课、正课类-->
+  <select id="getCourseForStatistics" resultType="org.nothink.ballcrm.entity.CourseTypeEntity">
+    select
+      c.*,
+      p.name as phaseName
+    from course_type c inner join course_phase p on c.phase_id=p.pkid and p.pkid in (3,4)
+  </select>
+
   <!-- 查询所有课程 按条件 -->
   <select id="getCourse" resultType="org.nothink.ballcrm.entity.CourseTypeEntity">
     select

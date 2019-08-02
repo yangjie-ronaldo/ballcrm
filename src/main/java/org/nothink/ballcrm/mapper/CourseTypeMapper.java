@@ -5,6 +5,7 @@ import org.nothink.ballcrm.entity.CourseTypeEntity;
 import java.util.List;
 
 public interface CourseTypeMapper {
+    List<CourseTypeEntity> getCourseForStatistics();
     List<CourseTypeEntity> getCourse();
 
     List<CourseTypeEntity> getCourseByCriteria(CourseTypeEntity criteria);

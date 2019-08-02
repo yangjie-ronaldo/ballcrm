@@ -15,7 +15,7 @@ import java.util.Date;
 public class ScheduledService {
     Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Scheduled(cron = "0 */2 * * * *")
+    @Scheduled(cron = "0 */20 * * * *")
     public void doTask() {
         logger.info("后台服务检测...正在运行中...当前时间：" + DateUtils.parseDateToStr(new Date(), DateUtils.DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI_SS));
     }

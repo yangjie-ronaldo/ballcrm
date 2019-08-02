@@ -2,96 +2,224 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.nothink.ballcrm.mapper.StatisticMapper" >
 
+  <!--学员新增数量-->
   <select id="getNewStuNum" resultType="org.nothink.ballcrm.entity.Statistics">
     select
-      e.eid as eid,
-      count(s.sid) as num
+    e.eid as eid,
+    count(s.sid) as num
     from
-      emp_info e left outer join stu s on s.cc=e.eid
-      <if test="startDate!=null">and s.create_date &gt;= #{startDate}</if>
-      <if test="endDate!=null">and s.create_date &lt;= #{endDate}</if>
-    <where>
-      <if test="nid!=null">e.nid=#{nid}</if>
-    </where>
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    left outer join stu s on s.cc=e.eid
+    <if test="startDate!=null">and s.create_date &gt;= #{startDate}</if>
+    <if test="endDate!=null">and s.create_date &lt;= #{endDate}</if>
     group by e.eid
     order by e.eid
   </select>
+  <!--明细-->
+  <select id="getNewStuNumDetails" resultType="org.nothink.ballcrm.entity.StuEntity">
+    select
+    s.*
+    from
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    inner join stu s on s.cc=e.eid
+    <if test="startDate!=null"> and s.create_date &gt;= #{startDate}</if>
+    <if test="endDate!=null"> and s.create_date &lt;= #{endDate}</if>
+  </select>
+
+
+  <!--体验类课的约课数量-->
   <select id="getDemoScheduleNum" resultType="org.nothink.ballcrm.entity.Statistics">
     select
     e.eid as eid,
-    count(c.course_type_id) as num
+    count(t.pkid) as num
     from
-    emp_info e left outer join stu s on s.cc=e.eid
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    left outer join stu s on s.cc=e.eid
     left outer join course_schedule c on s.sid=c.sid
-    and c.course_type_id=1
     <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
     <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
-    <where>
-      <if test="nid!=null">e.nid=#{nid}</if>
-    </where>
+    left outer join course_type t on c.course_type_id=t.pkid and t.phase_id=2
     group by e.eid
     order by e.eid
   </select>
+  <!--明细-->
+  <select id="getDemoScheduleNumDetails" resultType="org.nothink.ballcrm.entity.StuEntity">
+    select
+    s.*
+    from
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    inner join stu s on s.cc=e.eid
+    inner join course_schedule c on s.sid=c.sid
+    <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
+    <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
+    inner join course_type t on c.course_type_id=t.pkid and t.phase_id=2
+  </select>
+
+  <!--体验类的课程签到的数量-->
   <select id="getDemoSignNum" resultType="org.nothink.ballcrm.entity.Statistics">
     select
     e.eid as eid,
-    count(c.course_type_id) as num
+    count(t.pkid) as num
     from
-    emp_info e left outer join stu s on s.cc=e.eid
-    left outer join course_schedule c on s.sid=c.sid
-    and c.course_type_id=1 and c.sign_status='SIG01'
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    left outer join stu s on s.cc=e.eid
+    left outer join course_schedule c on s.sid=c.sid and c.sign_status='SIG01'
     <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
     <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
-    <where>
-      <if test="nid!=null">e.nid=#{nid}</if>
-    </where>
+    left outer join course_type t on c.course_type_id=t.pkid and t.phase_id=2
     group by e.eid
     order by e.eid
   </select>
+  <!--明细-->
+  <select id="getDemoSignNumDetails" resultType="org.nothink.ballcrm.entity.StuEntity">
+    select
+    s.*
+    from
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    inner join stu s on s.cc=e.eid
+    inner join course_schedule c on s.sid=c.sid and c.sign_status='SIG01'
+    <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
+    <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
+    inner join course_type t on c.course_type_id=t.pkid and t.phase_id=2
+  </select>
+
+  <!--体验课关单，即体验课签到时选的哪个员工关的单-->
   <select id="getDemoCloseNum" resultType="org.nothink.ballcrm.entity.Statistics">
     select
     e.eid as eid,
-    count(c.course_type_id) as num
+    count(t.pkid) as num
     from
-    emp_info e left outer join course_schedule c on e.eid=c.close_eid
-    and c.course_type_id=1 and c.sign_status='SIG01'
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    left outer join course_schedule c on e.eid=c.close_eid
     <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
     <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
-    <where>
-      <if test="nid!=null">e.nid=#{nid}</if>
-    </where>
+    and c.sign_status='SIG01'
+    left outer join course_type t on c.course_type_id=t.pkid and t.phase_id=2
     group by e.eid
     order by e.eid
   </select>
-  <select id="getBuy198Num" resultType="org.nothink.ballcrm.entity.Statistics">
+  <!--明细-->
+  <select id="getDemoCloseNumDetails" resultType="org.nothink.ballcrm.entity.StuEntity">
+    select
+    s.*
+    from
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    inner join course_schedule c on e.eid=c.close_eid
+    <if test="startDate!=null">and c.booking_date &gt;= #{startDate}</if>
+    <if test="endDate!=null">and c.booking_date &lt;= #{endDate}</if>
+    and c.sign_status='SIG01'
+    inner join course_type t on c.course_type_id=t.pkid and t.phase_id=2
+    inner join stu s on s.sid=c.sid
+  </select>
+
+  <!--学员按状态统计数量-->
+  <select id="getStuStatusNum" resultType="org.nothink.ballcrm.entity.Statistics">
     select
     e.eid as eid,
-    count(s.course_type_id) as num
+    count(s.sid) as num
     from
-    emp_info e left outer join stu_course s on s.eid=e.eid
-    and s.course_type_id=2
-    <if test="startDate!=null">and s.create_date &gt;= #{startDate}</if>
-    <if test="endDate!=null">and s.create_date &lt;= #{endDate}</if>
-    <where>
-      <if test="nid!=null">e.nid=#{nid}</if>
-    </where>
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    left outer join stu s on s.cc=e.eid
+    <if test="status!=null">and s.status = #{status}</if>
     group by e.eid
     order by e.eid
   </select>
-  <select id="getMyStu198Num" resultType="org.nothink.ballcrm.entity.Statistics">
+  <!--明细-->
+  <select id="getStuStatusNumDetails" resultType="org.nothink.ballcrm.entity.StuEntity">
+    select
+    s.*
+    from
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    inner join stu s on s.cc=e.eid
+    <if test="status!=null">and s.status = #{status}</if>
+  </select>
+  <!--按课程类别的关单统计-->
+  <select id="getCourseCloseNum" resultType="org.nothink.ballcrm.entity.Statistics">
     select
     e.eid as eid,
     count(c.course_type_id) as num
     from
-    emp_info e left outer join stu s on s.cc=e.eid
-    left outer join stu_course c on s.sid=c.sid
-    and c.course_type_id=2
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    left outer join course_buy_record c on c.eid=e.eid
     <if test="startDate!=null">and c.create_date &gt;= #{startDate}</if>
     <if test="endDate!=null">and c.create_date &lt;= #{endDate}</if>
-    <where>
-      <if test="nid!=null">e.nid=#{nid}</if>
-    </where>
+    <if test="courseTypeId!=null">and c.course_type_id = #{courseTypeId}</if>
+    <if test="hasMarket!=null and hasMarket==0">and (c.has_market = #{hasMarket} or c.has_market is null)</if>
+    <if test="hasMarket!=null and hasMarket==1">and c.has_market = #{hasMarket}</if>
     group by e.eid
     order by e.eid
   </select>
+  <!--明细-->
+  <select id="getCourseCloseNumDetails" resultType="org.nothink.ballcrm.entity.StuEntity">
+    select
+    s.*
+    from
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    inner join course_buy_record c on c.eid=e.eid
+    <if test="startDate!=null">and c.create_date &gt;= #{startDate}</if>
+    <if test="endDate!=null">and c.create_date &lt;= #{endDate}</if>
+    <if test="courseTypeId!=null">and c.course_type_id = #{courseTypeId}</if>
+    <if test="hasMarket!=null and hasMarket==0">and (c.has_market = #{hasMarket} or c.has_market is null)</if>
+    <if test="hasMarket!=null and hasMarket==1">and c.has_market = #{hasMarket}</if>
+    inner join stu s on s.sid=c.sid
+  </select>
+  <!--买课老师配合数-->
+  <select id="getCourseCloseTeacherNum" resultType="org.nothink.ballcrm.entity.Statistics">
+    select
+    e.eid as eid,
+    count(c.course_type_id) as num
+    from
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    left outer join course_buy_record c on c.teacher_id=e.eid
+    <if test="startDate!=null">and c.create_date &gt;= #{startDate}</if>
+    <if test="endDate!=null">and c.create_date &lt;= #{endDate}</if>
+    <if test="courseTypeId!=null">and c.course_type_id = #{courseTypeId}</if>
+    <if test="hasMarket!=null and hasMarket==0">and (c.has_market = #{hasMarket} or c.has_market is null)</if>
+    <if test="hasMarket!=null and hasMarket==1">and c.has_market = #{hasMarket}</if>
+    group by e.eid
+    order by e.eid
+  </select>
+  <!--明细-->
+  <select id="getCourseCloseTeacherNumDetails" resultType="org.nothink.ballcrm.entity.StuEntity">
+    select
+    s.*
+    from
+    (select * from emp_info e where 1=1
+    <if test="nid!=null">and e.nid=#{nid}</if>
+    <if test="eid!=null">and e.eid=#{eid}</if>) e
+    inner join course_buy_record c on c.teacher_id=e.eid
+    <if test="startDate!=null">and c.create_date &gt;= #{startDate}</if>
+    <if test="endDate!=null">and c.create_date &lt;= #{endDate}</if>
+    <if test="courseTypeId!=null">and c.course_type_id = #{courseTypeId}</if>
+    <if test="hasMarket!=null and hasMarket==0">and (c.has_market = #{hasMarket} or c.has_market is null)</if>
+    <if test="hasMarket!=null and hasMarket==1">and c.has_market = #{hasMarket}</if>
+    inner join stu s on s.sid=c.sid
+  </select>
+
 </mapper>

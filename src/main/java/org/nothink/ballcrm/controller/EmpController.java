@@ -95,10 +95,6 @@ public class EmpController {
         return eService.getAllRoles();
     }
 
-    @GetMapping("/ccstatistics")
-    @ResponseBody
-    public Map getccStatistics(StatisticsCriteria c){return statisticsService.getCcStatistics(c);}
-
     /**
      * 注销用户
      */
@@ -119,5 +115,46 @@ public class EmpController {
     public Map getEmpInfo(EmpInfoEntity e){
         return eService.getEmpInfo(e);
     }
+
+
+    /**
+     * 查询常规统计数量 版本1
+     */
+    @GetMapping("/ccstatistics")
+    @ResponseBody
+    public Map getccStatistics(StatisticsCriteria c){return statisticsService.getCcStatistics(c);}
+
+    /**
+     * 查询常规统计数量 版本2
+     */
+    @GetMapping("/normalstatistics")
+    @ResponseBody
+    public Map getnormalStatistics(StatisticsCriteria c){return statisticsService.getNormalStatistics(c);}
+
+    /**
+     * 查询学员按状态统计数量
+     */
+    @GetMapping("/stustatusnums")
+    @ResponseBody
+    public Map getStuStatusNums(StatisticsCriteria c){return statisticsService.getStatusStatistics(c);}
+    /**
+     * 查询按课程买课关单统计
+     */
+    @GetMapping("/courseclosenums")
+    @ResponseBody
+    public Map getCourseCloseNums(StatisticsCriteria c){return statisticsService.getCourseCloseNumStatistics(c);}
+
+    /**
+     * 查询课程买课配合老师统计
+     */
+    @GetMapping("/coursecloseteachernums")
+    @ResponseBody
+    public Map getCourseCloseTeacherNums(StatisticsCriteria c){return statisticsService.getCourseCloseTeacherStatistics(c);}
+    /**
+     * 查询报表点击详情
+     */
+    @GetMapping("/statisticsdetails")
+    @ResponseBody
+    public Map getStatisticsDetails(StatisticsCriteria c){return statisticsService.getStuDetailfromStatistics(c);}
 
 }
