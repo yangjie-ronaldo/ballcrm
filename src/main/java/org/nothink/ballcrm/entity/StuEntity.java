@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class StuEntity extends PagedCriteria {
     private Integer sid;
+    private Integer age;
     private Date createDate;
     private Date updateDate;
     private String name;
@@ -44,6 +45,7 @@ public class StuEntity extends PagedCriteria {
     public String toString() {
         return "StuEntity{" +
                 "sid=" + sid +
+                ", age=" + age +
                 ", createDate=" + createDate +
                 ", updateDate=" + updateDate +
                 ", name='" + name + '\'' +
@@ -77,9 +79,15 @@ public class StuEntity extends PagedCriteria {
                 ", Course198Num=" + Course198Num +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
-                ", currentPage=" + currentPage +
-                ", pageSize=" + pageSize +
                 '}';
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public Integer getRentBall() {

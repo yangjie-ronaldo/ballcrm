@@ -458,7 +458,7 @@ public class StuService {
         return true;
     }
 
-    //客户代码值翻译
+    //客户代码值翻译 通用处理
     public void stuCodeTrans(StuEntity stu) {
         //代码翻译
         if (stu != null) {
@@ -476,6 +476,13 @@ public class StuService {
             stu.setTeacherIdName(cache.EmpCache().get(stu.getTeacherId()));
             // 新增关联推广员翻译
             stu.setPopularizeIdName(cache.EmpCache().get(stu.getPopularizeId()));
+
+            // 年龄翻译
+            if (stu.getBirthday()!=null){
+                Integer age=Math.toIntExact(DateUtils.getDistanceYears(stu.getBirthday(), new Date()));
+                stu.setAge(age);
+            }
+
         }
     }
 

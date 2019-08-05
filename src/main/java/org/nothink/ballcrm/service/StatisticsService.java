@@ -448,14 +448,21 @@ public class StatisticsService {
         JSONObject url=new JSONObject();
         url.put("key",numName);
         url.put("eid",eid);
-        url.put("startDate", DateUtils.parseDateToStr(criteria.getStartDate(), DateUtils.DATE_FORMAT_YY_MM_DD));
-        url.put("endDate", DateUtils.parseDateToStr(criteria.getEndDate(), DateUtils.DATE_FORMAT_YY_MM_DD));
-        if (criteria.getStatus()!=null)
-            url.put("status",criteria.getStatus());
-        if (criteria.getCourseTypeId()!=null)
+        if (criteria.getStartDate()!=null){
+            url.put("startDate", DateUtils.parseDateToStr(criteria.getStartDate(), DateUtils.DATE_FORMAT_YYYY_MM_DD));
+        }
+        if (criteria.getEndDate()!=null){
+            url.put("endDate", DateUtils.parseDateToStr(criteria.getEndDate(), DateUtils.DATE_FORMAT_YYYY_MM_DD));
+        }
+        if (criteria.getStatus()!=null) {
+            url.put("status", criteria.getStatus());
+        }
+        if (criteria.getCourseTypeId()!=null){
             url.put("courseTypeId",criteria.getCourseTypeId());
-        if (criteria.getHasMarket()!=null)
+        }
+        if (criteria.getHasMarket()!=null){
             url.put("hasMarket",criteria.getHasMarket());
+        }
         cell.put("url",url);
         return cell;
     }

@@ -48,11 +48,11 @@
     where pkid = #{pkid,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="org.nothink.ballcrm.entity.ContactPlanEntity" >
-    insert into contact_plan (pkid, plan_note, finish_note,
+    insert into contact_plan ( plan_note, finish_note,
       create_date, plan_date, finish_date,
       sid, eid, status, verify_note,
       verify_eid)
-    values (#{pkid,jdbcType=INTEGER}, #{planNote,jdbcType=VARCHAR}, #{finishNote,jdbcType=VARCHAR},
+    values ( #{planNote,jdbcType=VARCHAR}, #{finishNote,jdbcType=VARCHAR},
       #{createDate,jdbcType=TIMESTAMP}, #{planDate,jdbcType=DATE}, #{finishDate,jdbcType=DATE},
       #{sid,jdbcType=INTEGER}, #{eid,jdbcType=INTEGER}, #{status,jdbcType=VARCHAR}, #{verifyNote,jdbcType=VARCHAR},
       #{verifyEid,jdbcType=INTEGER})
@@ -60,9 +60,6 @@
   <insert id="insertSelective" parameterType="org.nothink.ballcrm.entity.ContactPlanEntity" >
     insert into contact_plan
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="pkid != null" >
-        pkid,
-      </if>
       <if test="planNote != null" >
         plan_note,
       </if>
@@ -95,9 +92,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="pkid != null" >
-        #{pkid,jdbcType=INTEGER},
-      </if>
       <if test="planNote != null" >
         #{planNote,jdbcType=VARCHAR},
       </if>

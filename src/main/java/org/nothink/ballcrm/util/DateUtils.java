@@ -897,6 +897,24 @@ public class DateUtils {
     }
 
     /**
+     * 两个时间之间相差距离多少年
+     *
+     * @param date1 时间参数 1
+     * @param date2 时间参数 2
+     * @return 相差年，舍小数
+     */
+    public static Long getDistanceYears(Date date1,Date date2) {
+        try {
+            long days=getDistanceDays(date1,date2);
+            long years=days/365;
+            return years;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0L;
+        }
+    }
+
+    /**
      * 获取指定时间的那天 00:00:00.000 的时间
      *
      * @param date
