@@ -2,6 +2,7 @@ package org.nothink.ballcrm.mapper;
 
 import org.nothink.ballcrm.entity.EmpInfoEntity;
 import org.nothink.ballcrm.entity.Statistics;
+import org.nothink.ballcrm.entity.StuEntity;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ public interface EmpInfoMapper {
     EmpInfoEntity getEmpByLoginid(String loginid);
 
     List<EmpInfoEntity> getEmpList(EmpInfoEntity e);
+    List<StuEntity> hasStu(EmpInfoEntity e);
 
     int deleteByPrimaryKey(Integer eid);
 

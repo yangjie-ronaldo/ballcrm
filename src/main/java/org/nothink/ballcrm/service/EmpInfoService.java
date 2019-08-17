@@ -156,6 +156,20 @@ public class EmpInfoService {
         return ComUtils.getResp(20000, "注册成功", null);
     }
 
+    //删除员工
+    @Transactional
+    public Map delEmp(EmpInfoEntity e){
+        if (e==null || e.getEid()==null) {
+            return ComUtils.getResp(40008,"删除员工编号不存在",null);
+        }
+        List<StuEntity> stuList = eMapper.hasStu(e);
+        if (stuList!=null && stuList.size()>0){
+            return ComUtils.getResp(40008,"员工名下还有资源，请转移资源后再删除",null);
+        }
+        eMapper.deleteByPrimaryKey(e.getEid());
+        return ComUtils.getResp(20000,"删除成功",null);
+    }
+
     //员工登录
     public Map<String, Object> loginin(EmpInfoEntity e) {
         if (StringUtils.isEmpty(e.getLoginid())) {

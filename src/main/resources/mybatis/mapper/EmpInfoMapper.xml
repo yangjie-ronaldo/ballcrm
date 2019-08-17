@@ -72,6 +72,10 @@
     group by s.cc
   </select>
 
+  <!--查看员工名下还有无客户-->
+  <select id="hasStu" resultType="org.nothink.ballcrm.entity.StuEntity">
+    select * from stu where cc=#{eid} limit 2
+  </select>
 
   <select id="selectByPrimaryKey" resultType="org.nothink.ballcrm.entity.EmpInfoEntity" parameterType="java.lang.Integer" >
     select

@@ -395,6 +395,11 @@ public class CourseScheduleService {
             // 课程名
             cs.setCourseTypeName(cache.CourseCache().get(cs.getCourseTypeId()));
 
+            // 年龄翻译
+            if (cs.getBirthday()!=null){
+                Integer age=Math.toIntExact(DateUtils.getDistanceYears(cs.getBirthday(), new Date()));
+                cs.setAge(age);
+            }
         }
     }
 }

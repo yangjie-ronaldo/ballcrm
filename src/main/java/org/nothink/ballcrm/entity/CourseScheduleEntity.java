@@ -38,6 +38,7 @@ public class CourseScheduleEntity extends PagedCriteria {
     private String channelName;
     private String consultNote;
     private Date birthday;
+    private Integer age;
 
     @Override
     public String toString() {
@@ -72,9 +73,18 @@ public class CourseScheduleEntity extends PagedCriteria {
                 ", channelName='" + channelName + '\'' +
                 ", consultNote='" + consultNote + '\'' +
                 ", birthday=" + birthday +
+                ", age=" + age +
                 ", currentPage=" + currentPage +
                 ", pageSize=" + pageSize +
                 '}';
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public Date getBirthday() {

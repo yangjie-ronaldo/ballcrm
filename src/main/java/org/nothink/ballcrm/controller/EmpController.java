@@ -25,23 +25,25 @@ public class EmpController {
 
     /**
      * 查询本店员工列表 不分页
+     *
      * @param e
      * @return
      */
     @GetMapping("/emp")
     @ResponseBody
-    public Map getEmpList(EmpInfoEntity e){
+    public Map getEmpList(EmpInfoEntity e) {
         return eService.getEmpList(e);
     }
 
     /**
      * 查询本店员工列表 分页
+     *
      * @param e
      * @return
      */
     @GetMapping("/emppaged")
     @ResponseBody
-    public Map getEmpListPaged(EmpInfoEntity e){
+    public Map getEmpListPaged(EmpInfoEntity e) {
         return eService.getEmpListPaged(e);
     }
 
@@ -57,8 +59,17 @@ public class EmpController {
      */
     @PostMapping("/reg")
     @ResponseBody
-    public Map regEmp(EmpInfoEntity e){
+    public Map regEmp(EmpInfoEntity e) {
         return eService.register(e);
+    }
+
+    /**
+     * 删除用户
+     */
+    @DeleteMapping("/emp")
+    @ResponseBody
+    public Map deleteEmp(EmpInfoEntity e) {
+        return eService.delEmp(e);
     }
 
     /**
@@ -66,7 +77,7 @@ public class EmpController {
      */
     @PostMapping("/login")
     @ResponseBody
-    public Map loginEmp(EmpInfoEntity e){
+    public Map loginEmp(EmpInfoEntity e) {
         return eService.loginin(e);
     }
 
@@ -75,7 +86,7 @@ public class EmpController {
      */
     @PostMapping("/editemp")
     @ResponseBody
-    public Map editEmp(@RequestBody EmpInfoEntity e){
+    public Map editEmp(@RequestBody EmpInfoEntity e) {
         return eService.editEmp(e);
     }
 
@@ -84,35 +95,37 @@ public class EmpController {
      */
     @PutMapping("/editpass")
     @ResponseBody
-    public Map editPass(EmpPass pass){return eService.editPass(pass);}
+    public Map editPass(EmpPass pass) {
+        return eService.editPass(pass);
+    }
 
     /**
      * 查询所有角色列表
      */
     @GetMapping("/roles")
     @ResponseBody
-    public Map getRoles(){
+    public Map getRoles() {
         return eService.getAllRoles();
     }
 
     /**
-     * 注销用户
+     * 用户登出
      */
     @GetMapping("/logout")
     @ResponseBody
-    public Map logout(Integer eid){
+    public Map logout(Integer eid) {
         return eService.logout(eid);
     }
 
     @GetMapping("/emptodo")
     @ResponseBody
-    public Map empTodoNum(Integer eid){
+    public Map empTodoNum(Integer eid) {
         return eService.getTodoNums(eid);
     }
 
     @GetMapping("/empinfo")
     @ResponseBody
-    public Map getEmpInfo(EmpInfoEntity e){
+    public Map getEmpInfo(EmpInfoEntity e) {
         return eService.getEmpInfo(e);
     }
 
@@ -122,39 +135,53 @@ public class EmpController {
      */
     @GetMapping("/ccstatistics")
     @ResponseBody
-    public Map getccStatistics(StatisticsCriteria c){return statisticsService.getCcStatistics(c);}
+    public Map getccStatistics(StatisticsCriteria c) {
+        return statisticsService.getCcStatistics(c);
+    }
 
     /**
      * 查询常规统计数量 版本2
      */
     @GetMapping("/normalstatistics")
     @ResponseBody
-    public Map getnormalStatistics(StatisticsCriteria c){return statisticsService.getNormalStatistics(c);}
+    public Map getnormalStatistics(StatisticsCriteria c) {
+        return statisticsService.getNormalStatistics(c);
+    }
 
     /**
      * 查询学员按状态统计数量
      */
     @GetMapping("/stustatusnums")
     @ResponseBody
-    public Map getStuStatusNums(StatisticsCriteria c){return statisticsService.getStatusStatistics(c);}
+    public Map getStuStatusNums(StatisticsCriteria c) {
+        return statisticsService.getStatusStatistics(c);
+    }
+
     /**
      * 查询按课程买课关单统计
      */
     @GetMapping("/courseclosenums")
     @ResponseBody
-    public Map getCourseCloseNums(StatisticsCriteria c){return statisticsService.getCourseCloseNumStatistics(c);}
+    public Map getCourseCloseNums(StatisticsCriteria c) {
+        return statisticsService.getCourseCloseNumStatistics(c);
+    }
 
     /**
      * 查询课程买课配合老师统计
      */
     @GetMapping("/coursecloseteachernums")
     @ResponseBody
-    public Map getCourseCloseTeacherNums(StatisticsCriteria c){return statisticsService.getCourseCloseTeacherStatistics(c);}
+    public Map getCourseCloseTeacherNums(StatisticsCriteria c) {
+        return statisticsService.getCourseCloseTeacherStatistics(c);
+    }
+
     /**
      * 查询报表点击详情
      */
     @GetMapping("/statisticsdetails")
     @ResponseBody
-    public Map getStatisticsDetails(StatisticsCriteria c){return statisticsService.getStuDetailfromStatistics(c);}
+    public Map getStatisticsDetails(StatisticsCriteria c) {
+        return statisticsService.getStuDetailfromStatistics(c);
+    }
 
 }
