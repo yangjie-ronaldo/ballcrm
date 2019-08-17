@@ -100,6 +100,15 @@ public class EmpController {
     }
 
     /**
+     * 重置用户密码
+     */
+    @PutMapping("/resetpass")
+    @ResponseBody
+    public Map resetPass(EmpPass pass) {
+        return eService.resetPass(pass);
+    }
+
+    /**
      * 查询所有角色列表
      */
     @GetMapping("/roles")

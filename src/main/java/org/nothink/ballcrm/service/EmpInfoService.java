@@ -119,6 +119,24 @@ public class EmpInfoService {
         return ComUtils.getResp(20000,"修改成功",e.getLoginid());
     }
 
+    //主管重置员工密码
+    @Transactional
+    public Map resetPass(EmpPass p){
+        if (p==null || p.getEid()==null){
+            return ComUtils.getResp(40008,"员工编号有误",null);
+        }
+        if (p.getNewPass()==null || "".equals(p.getNewPass())){
+            p.setNewPass("123456");
+        }
+        EmpInfoEntity e = eMapper.selectByPrimaryKey(p.getEid());
+        if (e==null){
+            return ComUtils.getResp(40008,"无员工信息",null);
+        }
+        e.setPass(p.getNewPass());
+        eMapper.updateByPrimaryKeySelective(e);
+        return ComUtils.getResp(20000,"重置密码成功",null);
+    }
+
     // 查询所有角色列表
     public Map<String, Object> getAllRoles(){
         return ComUtils.getResp(20000,"查询成功",rMapper.getAllRoles());
