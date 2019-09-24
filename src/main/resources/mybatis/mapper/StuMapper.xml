@@ -7,7 +7,7 @@
     select * from stu where 1=1
     <if test="name != null and name!='' "> and name like CONCAT('%',#{name},'%') </if>
     <if test="status!=null and status!='' "> and status = #{status} </if>
-    <if test="tel!=null and tel!=''"> and tel = #{tel} </if>
+    <if test="tel!=null and tel!=''"> and tel like CONCAT('%',#{tel},'%') </if>
     <if test="type!=null and type!=''"> and type = #{type} </if>
     <if test="verifyStatus!=null and verifyStatus!=''"> and verify_status = #{verifyStatus} </if>
     <if test="cc!=null and cc!='' "> and cc = #{cc} </if>
