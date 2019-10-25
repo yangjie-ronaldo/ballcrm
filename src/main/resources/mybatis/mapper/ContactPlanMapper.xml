@@ -14,7 +14,7 @@
     <if test="eid!=null"> and s.cc = #{eid} </if>
     <if test="startDate!=null"> and p.plan_date &gt;= #{startDate} </if>
     <if test="endDate!=null"> and p.plan_date &lt;= #{endDate} </if>
-    <if test="planDate!=null"> and p.plan_date = #{planDate,jdbcType=DATE} </if>
+    <if test="planDate!=null"> and (p.plan_date = #{planDate,jdbcType=DATE} or p.status='PST01')</if>
     <if test="sName != null and sName!='' "> and s.name like CONCAT('%',#{sName},'%')</if>
     <if test="node!=null"> and s.node = #{node} </if>
     order by p.plan_date desc

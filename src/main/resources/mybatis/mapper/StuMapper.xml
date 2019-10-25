@@ -14,6 +14,7 @@
     <if test="node!=null and node!='' "> and node = #{node} </if>
     <if test="startDate!=null"> and update_date &gt;= #{startDate} </if>
     <if test="endDate!=null"> and update_date &lt;= #{endDate} </if>
+    order by star desc
   </select>
 
   <!-- 查询无追踪危险学员列表 名下 或 机构 -->
@@ -106,13 +107,13 @@
       niki_name, birthday, sex,
       tel, status, verify_status,
       channel, channel_note, type,
-      wechat, pre_cc, cc, node,teacher_id,popularize_id,rent_ball,consult_note)
+      wechat, pre_cc, cc, node,teacher_id,popularize_id,rent_ball,consult_note,star)
     values (#{sid,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},#{updateDate,jdbcType=TIMESTAMP}, #{name,jdbcType=VARCHAR},
       #{nikiName,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{sex,jdbcType=VARCHAR},
       #{tel,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{verifyStatus,jdbcType=VARCHAR},
       #{channel,jdbcType=VARCHAR}, #{channelNote,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
       #{wechat,jdbcType=VARCHAR}, #{preCc,jdbcType=INTEGER}, #{cc,jdbcType=INTEGER}, #{node,jdbcType=INTEGER},
-      #{teacherId,jdbcType=INTEGER},#{popularizeId,jdbcType=INTEGER},#{rentBall,jdbcType=INTEGER},#{consultNote,jdbcType=VARCHAR})
+      #{teacherId,jdbcType=INTEGER},#{popularizeId,jdbcType=INTEGER},#{rentBall,jdbcType=INTEGER},#{consultNote,jdbcType=VARCHAR},#{star,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelectiveAndGetKey" useGeneratedKeys="true" keyProperty="sid"  parameterType="org.nothink.ballcrm.entity.StuEntity" >
     insert into stu
@@ -180,6 +181,9 @@
       <if test="consultNote != null" >
         consult_note,
       </if>
+      <if test="star != null" >
+        star,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="sid != null" >
@@ -244,6 +248,9 @@
       </if>
       <if test="consultNote != null" >
         #{consultNote,jdbcType=VARCHAR},
+      </if>
+      <if test="star != null" >
+        #{star,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -310,6 +317,9 @@
       <if test="consultNote != null" >
         consult_note = #{consultNote,jdbcType=VARCHAR},
       </if>
+      <if test="star != null" >
+        star = #{star,jdbcType=VARCHAR},
+      </if>
     </set>
     where sid = #{sid,jdbcType=INTEGER}
   </update>
@@ -334,7 +344,8 @@
       teacher_id = #{teacherId,jdbcType=INTEGER},
       popularize_id = #{popularizeId,jdbcType=INTEGER},
       rent_ball = #{rentBall,jdbcType=INTEGER},
-      consult_note = #{consultNote,jdbcType=VARCHAR}
+      consult_note = #{consultNote,jdbcType=VARCHAR},
+      star = #{star,jdbcType=VARCHAR}
     where sid = #{sid,jdbcType=INTEGER}
   </update>
 </mapper>

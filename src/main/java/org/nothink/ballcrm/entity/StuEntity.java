@@ -35,6 +35,7 @@ public class StuEntity extends PagedCriteria {
     private String nodeName;
     private Integer rentBall;
     private String consultNote;
+    private String star;
 
     private Boolean hasCourse198;
     private Integer Course198Num;
@@ -75,11 +76,20 @@ public class StuEntity extends PagedCriteria {
                 ", nodeName='" + nodeName + '\'' +
                 ", rentBall=" + rentBall +
                 ", consultNote='" + consultNote + '\'' +
+                ", star='" + star + '\'' +
                 ", hasCourse198=" + hasCourse198 +
                 ", Course198Num=" + Course198Num +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 '}';
+    }
+
+    public String getStar() {
+        return star;
+    }
+
+    public void setStar(String star) {
+        this.star = star;
     }
 
     public Integer getAge() {
